@@ -1,0 +1,10 @@
+dist/
+.DS_Store
+
+# Packaged theme directories live here too (one per omarchy theme variant).
+# They're built by scripts/package-themes.py in the Wallpapers repo and
+# uploaded to Hetzner by scripts/sync-hetzner.sh, so don't commit them.
+# Only the site files (index.html, sw.js, build-site.sh, wallpapers.json,
+# .github/) need to be in git.
+/*/
+!.github/
