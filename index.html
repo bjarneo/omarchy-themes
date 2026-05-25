@@ -892,10 +892,15 @@ function cardEl([name, m]) {
 
   // Quick-apply via aether:// scheme. Sits in the card image corner and
   // doesn't bubble its click to the card (which would open the lightbox).
+  // silent=true skips Aether's confirmation dialog. Safe to do here because
+  // the user is already in our own gallery and has clicked apply on this
+  // specific theme - they've opted in. Don't copy this flag onto links
+  // shared into third-party contexts.
   if (m.colors_toml) {
     const params = new URLSearchParams();
     params.set('colors', mediaUrl(m.colors_toml));
     if (m.background) params.set('wallpaper', mediaUrl(m.background));
+    params.set('silent', 'true');
     const apply = document.createElement('a');
     apply.className = 'apply-btn';
     apply.href = `aether://apply?${params.toString()}`;
@@ -1051,14 +1056,17 @@ function renderSide(name, m) {
   const bgUrl   = mediaUrl(m.background);
 
   // One-click Apply via Aether's custom URL scheme. The handler downloads
-  // colors.toml + the wallpaper and applies them in-place.
-  // Example: aether://apply?colors=<toml>&wallpaper=<bg>
+  // colors.toml + the wallpaper and applies them in-place. silent=true is
+  // safe here: this is our own gallery and the user explicitly clicked
+  // apply on a specific theme from the lightbox they opened. Don't carry
+  // silent=true onto links posted into third-party contexts.
   if (tomlUrl) {
     const applySec = el('div', 'lb-section');
     applySec.appendChild(el('div', 'lb-sec-label', 'one-click apply'));
     const params = new URLSearchParams();
     params.set('colors', tomlUrl);
     if (bgUrl) params.set('wallpaper', bgUrl);
+    params.set('silent', 'true');
     const applyHref = `aether://apply?${params.toString()}`;
     const applyBtn = el('a', 'btn primary', 'Apply with Aether');
     applyBtn.href = applyHref;
