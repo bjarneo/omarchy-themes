@@ -81,14 +81,14 @@
     border-bottom: 1px solid var(--border);
   }
   .head-row {
-    display: flex; align-items: center; gap: 14px;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 10px 12px;
     padding: 12px 18px;
     max-width: 1600px; margin: 0 auto;
   }
   .brand { font-weight: 700; letter-spacing: -0.01em; font-size: 15px; display: flex; align-items: center; gap: 8px; }
   .brand .brand-logo { width: 22px; height: 22px; display: block; flex-shrink: 0; }
   .brand .count { color: var(--text-faint); font-weight: 500; font-size: 12px; font-family: var(--mono); }
-  .search { flex: 1; max-width: 520px; position: relative; }
+  .search { flex: 1 1 220px; max-width: 380px; min-width: 180px; position: relative; }
   .search input {
     width: 100%;
     background: var(--bg-elev); color: var(--text);
@@ -107,10 +107,13 @@
   }
   .head-meta button:hover { color: var(--text); border-color: var(--text-faint); }
 
-  .filters { max-width: 1600px; margin: 0 auto; padding: 0 18px 12px; }
-  .frow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-  .flabel { font-size: 10px; font-family: var(--mono); color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; width: 50px; flex-shrink: 0; }
-  .sep { width: 1px; height: 18px; background: var(--border); margin: 0 6px; }
+  /* Filters used to live on a second row; now they sit inline on the
+     head-row with the search input. .filters-inline is the flex
+     container buildFilters() targets so layout stays self-contained. */
+  .filters-inline { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .frow { display: contents; }  /* legacy hook used by buildFilters */
+  .flabel { display: none; }    /* no "filter" label needed inline */
+  .sep { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
   .chip {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 4px 10px;
@@ -515,11 +518,12 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Search title, tags, path...">
     </div>
+    <!-- Filters are populated inline on the same row as the search by buildFilters(). -->
+    <div class="filters-inline" id="filters"></div>
     <div class="head-meta">
       <button id="reset">reset</button>
     </div>
   </div>
-  <div class="filters" id="filters"></div>
 </header>
 
 <main>
