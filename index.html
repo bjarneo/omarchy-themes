@@ -453,13 +453,15 @@ const STATE = {
   entries: [],
   byPath: {},
   filtered: [],
-  filters: { tone: null, color: null, resolution: null, q: '' },
+  // res_min / res_max are tier names from RES_TIERS. Either can be set
+  // alone (open-ended bound) or together (range).
+  filters: { tone: null, color: null, res_min: null, res_max: null, q: '' },
   facetCounts: {},
   rendered: 0,
   pageSize: 80,
 };
 
-const FILTER_KEYS = ['tone','color','resolution'];
+const FILTER_KEYS = ['tone','color','res_min','res_max'];
 
 function readUrl() {
   const sp = new URLSearchParams(location.search);
@@ -552,6 +554,7 @@ function buildFilters() {
   filtersEl.replaceChildren();
   const toneItems   = ['dark','light'].filter(t => tones.has(t)).map(t => ['tone', t, tones.get(t)]);
   const colorItems  = COLOR_ORDER.filter(c => colors.has(c)).map(c => ['color', c, colors.get(c)]);
+  const resItems    = RES_TIERS.filter(t => resolutions.has(t));
 
   const row = el('div', 'frow');
   row.appendChild(el('div', 'flabel', 'filter'));
@@ -559,31 +562,68 @@ function buildFilters() {
   row.appendChild(el('span', 'sep'));
   colorItems.forEach(([k, v, c]) => row.appendChild(chipEl(k, v, c)));
   row.appendChild(el('span', 'sep'));
-  row.appendChild(dropdownEl('resolution', resolutions, RES_TIERS.filter(t => resolutions.has(t))));
+  // Two range dropdowns instead of one exact-match. Together they
+  // express "at least this big" and "at most this big" - leave either
+  // unset for an open-ended bound.
+  row.appendChild(dropdownEl('res_min', resolutions, resItems, 'res >='));
+  row.appendChild(dropdownEl('res_max', resolutions, resItems, 'res <='));
   filtersEl.appendChild(row);
 }
 
-function facetField(m, key) { return key === 'resolution' ? m._resTier : m[key]; }
+function facetField(m, key) {
+  if (key === 'res_min' || key === 'res_max') return m._resTier;
+  return m[key];
+}
+
+// True if entry m passes the filter for `key` given value `v`. Handles
+// the range semantics for res_min / res_max (open-ended bounds).
+function passesFilterKey(m, key, v) {
+  if (!v) return true;
+  if (key === 'res_min' || key === 'res_max') {
+    const entIdx = RES_TIERS.indexOf(m._resTier);
+    const filtIdx = RES_TIERS.indexOf(v);
+    if (entIdx < 0 || filtIdx < 0) return false;
+    return key === 'res_min' ? entIdx >= filtIdx : entIdx <= filtIdx;
+  }
+  return facetField(m, key) === v;
+}
 
 function computeFacetCounts() {
   const f = STATE.filters;
   const q = f.q.trim().toLowerCase();
-  const out = { tone: {}, color: {}, resolution: {} };
+  const out = { tone: {}, color: {}, res_min: {}, res_max: {} };
   for (const [path, m] of STATE.entries) {
     if (q) {
       const hay = (path + ' ' + (m.title||'') + ' ' + (m.tags||[]).join(' ')).toLowerCase();
       if (!hay.includes(q)) continue;
     }
     for (const k of FILTER_KEYS) {
+      // The count under k is "how many entries match if I set k to its
+      // value(s)" - so all OTHER filters must pass. Range filters
+      // (res_min/res_max) participate the same way.
       let match = true;
       for (const k2 of FILTER_KEYS) {
         if (k2 === k) continue;
-        if (f[k2] && facetField(m, k2) !== f[k2]) { match = false; break; }
+        if (!passesFilterKey(m, k2, f[k2])) { match = false; break; }
       }
       if (!match) continue;
       const v = facetField(m, k);
       if (!v) continue;
-      out[k][v] = (out[k][v] || 0) + 1;
+      if (k === 'res_min') {
+        // Counts the entry under every tier <= entry's tier (would
+        // still pass a "min >= tier" filter).
+        const entIdx = RES_TIERS.indexOf(v);
+        for (let i = 0; i <= entIdx; i++) {
+          out[k][RES_TIERS[i]] = (out[k][RES_TIERS[i]] || 0) + 1;
+        }
+      } else if (k === 'res_max') {
+        const entIdx = RES_TIERS.indexOf(v);
+        for (let i = entIdx; i < RES_TIERS.length; i++) {
+          out[k][RES_TIERS[i]] = (out[k][RES_TIERS[i]] || 0) + 1;
+        }
+      } else {
+        out[k][v] = (out[k][v] || 0) + 1;
+      }
     }
   }
   return out;
@@ -619,12 +659,12 @@ function chipEl(filterKey, value, count) {
   return chip;
 }
 
-function dropdownEl(filterKey, counts, orderedItems) {
+function dropdownEl(filterKey, counts, orderedItems, displayLabel) {
   const items = orderedItems || sortedKeys(counts);
   const wrap = el('div', 'dd');
   const btn = el('button', 'dd-btn');
   btn.type = 'button';
-  const lab = el('span', 'dd-label', filterKey);
+  const lab = el('span', 'dd-label', displayLabel || filterKey);
   const val = el('span', 'dd-val', 'all');
   const clr = el('span', 'dd-clear', '×');
   clr.title = 'clear';
@@ -713,9 +753,9 @@ function applyFilters(opts = {}) {
   const f = STATE.filters;
   const q = f.q.trim().toLowerCase();
   STATE.filtered = STATE.entries.filter(([path, m]) => {
-    if (f.tone   && m.tone   !== f.tone)   return false;
-    if (f.color  && m.color  !== f.color)  return false;
-    if (f.resolution && m._resTier !== f.resolution) return false;
+    for (const k of FILTER_KEYS) {
+      if (!passesFilterKey(m, k, f[k])) return false;
+    }
     if (q) {
       const hay = (path + ' ' + (m.title||'') + ' ' + (m.tags||[]).join(' ')).toLowerCase();
       if (!hay.includes(q)) return false;
@@ -1082,7 +1122,7 @@ $('#q').addEventListener('input', debounce((e) => {
 }, 120));
 
 $('#reset').addEventListener('click', () => {
-  STATE.filters = { tone: null, color: null, resolution: null, q: '' };
+  STATE.filters = { tone: null, color: null, res_min: null, res_max: null, q: '' };
   $('#q').value = '';
   buildFilters();
   applyFilters();
