@@ -23,6 +23,11 @@ mkdir -p "$OUT"
 
 cp index.html "$OUT/"
 cp sw.js "$OUT/"
+# Static assets the page references: Omarchy logo + Cascadia Code fonts.
+# Skipped silently if missing so a partial checkout still builds.
+[ -f favicon.png ]          && cp favicon.png          "$OUT/"
+[ -f apple-touch-icon.png ] && cp apple-touch-icon.png "$OUT/"
+[ -d fonts ]                && cp -r fonts             "$OUT/"
 
 # wallpapers.json is theme-keyed here (one entry per omarchy theme variant).
 {
