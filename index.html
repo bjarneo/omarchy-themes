@@ -50,25 +50,15 @@
     padding: 12px 18px;
     max-width: 1600px; margin: 0 auto;
   }
-  .brand {
-    font-weight: 700; letter-spacing: -0.01em; font-size: 15px;
-    display: flex; align-items: baseline; gap: 8px;
-  }
+  .brand { font-weight: 700; letter-spacing: -0.01em; font-size: 15px; display: flex; align-items: baseline; gap: 8px; }
   .brand .count { color: var(--text-faint); font-weight: 500; font-size: 12px; font-family: var(--mono); }
-  .search {
-    flex: 1; max-width: 520px;
-    position: relative;
-  }
+  .search { flex: 1; max-width: 520px; position: relative; }
   .search input {
     width: 100%;
-    background: var(--bg-elev);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    background: var(--bg-elev); color: var(--text);
+    border: 1px solid var(--border); border-radius: var(--radius);
     padding: 9px 12px 9px 34px;
-    font-size: 13px;
-    font-family: var(--font);
-    outline: none;
+    font-size: 13px; font-family: var(--font); outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
   }
   .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
@@ -81,52 +71,29 @@
   }
   .head-meta button:hover { color: var(--text); border-color: var(--text-faint); }
 
-  .filters {
-    max-width: 1600px; margin: 0 auto;
-    padding: 0 18px 12px;
-  }
+  .filters { max-width: 1600px; margin: 0 auto; padding: 0 18px 12px; }
   .frow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-  .flabel {
-    font-size: 10px; font-family: var(--mono); color: var(--text-faint);
-    text-transform: uppercase; letter-spacing: 0.1em;
-    width: 50px; flex-shrink: 0;
-  }
-  .sep {
-    width: 1px; height: 18px; background: var(--border); margin: 0 6px;
-  }
+  .flabel { font-size: 10px; font-family: var(--mono); color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; width: 50px; flex-shrink: 0; }
+  .sep { width: 1px; height: 18px; background: var(--border); margin: 0 6px; }
   .chip {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 4px 10px;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--text-dim);
-    font-size: 12px;
-    font-family: var(--mono);
-    cursor: pointer;
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 999px;
+    color: var(--text-dim); font-size: 12px; font-family: var(--mono);
+    cursor: pointer; user-select: none;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
-    user-select: none;
   }
   .chip:hover { color: var(--text); border-color: var(--text-faint); }
   .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .chip.active:hover { color: #fff; }
   .chip.zero { opacity: 0.4; }
   .chip .dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18); }
   .chip .num { font-size: 10px; color: var(--text-faint); margin-left: 2px; }
   .chip.active .num { color: rgba(255,255,255,0.75); }
 
   .dd { position: relative; }
-  .dd-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 8px 4px 10px;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--text-dim);
-    font-size: 12px;
-    font-family: var(--mono);
-    cursor: pointer;
-  }
+  .dd-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 10px;
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 999px;
+    color: var(--text-dim); font-size: 12px; font-family: var(--mono); cursor: pointer; }
   .dd-btn:hover { color: var(--text); border-color: var(--text-faint); }
   .dd-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .dd-btn .dd-label { text-transform: uppercase; font-size: 10px; letter-spacing: 0.08em; opacity: 0.8; }
@@ -138,13 +105,8 @@
   .dd-menu {
     position: absolute; top: calc(100% + 6px); left: 0;
     min-width: 220px; max-height: 320px;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    z-index: 60;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius);
+    z-index: 60; display: none; flex-direction: column; overflow: hidden;
     box-shadow: 0 12px 28px rgba(0,0,0,0.4);
   }
   .dd-menu.open { display: flex; }
@@ -158,22 +120,14 @@
   .dd-item {
     display: flex; align-items: center; justify-content: space-between;
     padding: 7px 10px; border-radius: var(--radius-sm);
-    font-size: 12px; cursor: pointer;
-    color: var(--text-dim);
-    font-family: var(--mono);
+    font-size: 12px; cursor: pointer; color: var(--text-dim); font-family: var(--mono);
   }
   .dd-item:hover { background: var(--bg-elev-2); color: var(--text); }
   .dd-item.selected { background: var(--accent-soft); color: var(--text); }
   .dd-item-count { font-size: 10px; color: var(--text-faint); }
   .dd-item.zero { opacity: 0.4; }
-  .dd-item.dd-any { color: var(--text-dim); font-style: italic; border-bottom: 1px solid var(--border); border-radius: 0; margin-bottom: 4px; padding-bottom: 8px; }
-  .dd-item.dd-any:hover { background: var(--bg-elev-2); font-style: italic; }
-  .dd-empty { padding: 16px; text-align: center; color: var(--text-faint); font-size: 11px; font-family: var(--mono); }
 
-  main {
-    max-width: 1600px; margin: 0 auto;
-    padding: 18px;
-  }
+  main { max-width: 1600px; margin: 0 auto; padding: 18px; }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -181,242 +135,133 @@
   }
   .card {
     position: relative;
-    background: var(--bg-elev);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    cursor: pointer;
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; cursor: pointer;
     transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
     display: flex; flex-direction: column;
   }
   .card:hover { transform: translateY(-2px); border-color: var(--text-faint); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
-  .card-image {
-    position: relative;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-  }
+  .card-image { position: relative; aspect-ratio: 16 / 10; overflow: hidden; }
   .card-image img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block;
+    width: 100%; height: 100%; object-fit: cover; display: block;
     opacity: 0; transition: opacity 0.3s;
   }
   .card-image img.loaded { opacity: 1; }
-  .card .scheme-badge {
-    position: absolute; top: 8px; right: 8px;
-    background: rgba(0,0,0,0.6); color: #fff;
-    padding: 3px 8px; border-radius: var(--radius-sm);
-    font-size: 10px; font-family: var(--mono); letter-spacing: 0.04em;
-    backdrop-filter: blur(4px);
-    text-transform: uppercase;
-  }
-  .card .apply-btn {
-    position: absolute; bottom: 8px; right: 8px;
-    background: rgba(0,0,0,0.7); color: #fff;
-    padding: 5px 10px; border-radius: var(--radius-sm);
-    font-size: 11px; font-family: var(--mono);
-    text-decoration: none;
-    backdrop-filter: blur(4px);
-    opacity: 0; transition: opacity 0.15s, background 0.15s;
-    border: 1px solid rgba(255,255,255,0.15);
-  }
-  .card:hover .apply-btn { opacity: 1; }
-  .card .apply-btn:hover { background: var(--accent); border-color: var(--accent); }
-  .card .tone-badge {
+  .card .badge {
     position: absolute; top: 8px; left: 8px;
     background: rgba(0,0,0,0.55); color: #fff;
     padding: 3px 7px; border-radius: var(--radius-sm);
     font-size: 10px; font-family: var(--mono);
     backdrop-filter: blur(4px);
   }
-  .card-body {
-    padding: 10px 12px 12px;
-  }
+  .card-body { padding: 10px 12px 12px; }
   .card-title {
     font-weight: 600; font-size: 13px; line-height: 1.3;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .card-sub {
-    margin-top: 2px;
-    font-family: var(--mono); font-size: 10px; color: var(--text-faint);
-    text-transform: uppercase; letter-spacing: 0.06em;
-  }
-  /* 16-color ANSI swatch strip at the bottom of the card.
-     Renders as a hairline-tall horizontal bar so each color is a thin slice. */
-  .ramp {
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    height: 14px;
+  .card-sub { margin-top: 2px; font-family: var(--mono); font-size: 10px; color: var(--text-faint); }
+  /* Three stacked 16-color strips - one per variant - give a glanceable
+     preview of what each apply option looks like before opening the lightbox. */
+  .ramps {
+    display: flex; flex-direction: column; gap: 2px;
     margin-top: 10px;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
+    border-radius: var(--radius-sm); overflow: hidden;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .ramp {
+    display: grid; grid-template-columns: repeat(16, 1fr);
+    height: 9px;
   }
   .ramp .sl { height: 100%; }
 
   .empty {
-    grid-column: 1 / -1;
-    padding: 80px 20px;
-    text-align: center;
-    color: var(--text-dim);
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.6;
+    grid-column: 1 / -1; padding: 80px 20px;
+    text-align: center; color: var(--text-dim);
+    font-family: var(--mono); font-size: 13px; line-height: 1.6;
   }
-  .empty code { background: var(--bg-elev-2); padding: 4px 8px; border-radius: 4px; color: var(--text); }
   .sentinel { grid-column: 1 / -1; height: 1px; }
 
-  .lb {
-    position: fixed; inset: 0;
-    background: rgba(8, 9, 12, 0.92);
-    z-index: 100;
-    display: none;
-    align-items: stretch;
-  }
+  .lb { position: fixed; inset: 0; background: rgba(8, 9, 12, 0.92); z-index: 100; display: none; align-items: stretch; }
   .lb.open { display: flex; }
   .lb-image-wrap {
-    flex: 1;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-    min-width: 0;
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 24px; min-width: 0;
   }
   .lb-image-wrap img {
-    max-width: 100%; max-height: 100%;
-    object-fit: contain;
-    border-radius: var(--radius);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    background: #000;
+    max-width: 100%; max-height: 100%; object-fit: contain;
+    border-radius: var(--radius); box-shadow: 0 20px 60px rgba(0,0,0,0.5); background: #000;
   }
   .lb-side {
-    width: 380px;
-    background: var(--bg-elev);
-    border-left: 1px solid var(--border);
-    padding: 22px;
-    overflow-y: auto;
+    width: 420px;
+    background: var(--bg-elev); border-left: 1px solid var(--border);
+    padding: 22px; overflow-y: auto;
     display: flex; flex-direction: column; gap: 18px;
   }
   .lb-close {
     position: absolute; top: 14px; right: 14px;
     width: 32px; height: 32px; border-radius: 999px;
-    background: rgba(0,0,0,0.4);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-    z-index: 1;
+    background: rgba(0,0,0,0.4); color: #fff; border: none;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; z-index: 1;
   }
   .lb-close:hover { background: rgba(0,0,0,0.7); }
   .lb-title { font-size: 18px; font-weight: 700; line-height: 1.25; word-break: break-word; }
-  .lb-name {
-    font-family: var(--mono); font-size: 11px;
-    color: var(--text-faint);
+  .lb-path {
+    font-family: var(--mono); font-size: 11px; color: var(--text-faint);
     word-break: break-all;
     padding: 8px 10px;
-    background: var(--bg-elev-2);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
+    background: var(--bg-elev-2); border-radius: var(--radius-sm); border: 1px solid var(--border);
   }
-  .lb-section { display: flex; flex-direction: column; gap: 8px; }
   .lb-sec-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-family: var(--mono); }
-
-  .ansi-grid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 4px;
-  }
-  .ansi-cell {
-    aspect-ratio: 1;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    position: relative;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
-  }
-  .ansi-cell:hover::after {
-    content: attr(data-label);
-    position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
-    font-family: var(--mono); font-size: 10px;
-    color: var(--text); background: var(--bg-elev-2);
-    padding: 2px 5px; border-radius: 3px;
-    border: 1px solid var(--border);
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .lb-roles {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  .role {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 8px;
-    background: var(--bg-elev-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-family: var(--mono); font-size: 11px;
-  }
-  .role .swatch {
-    width: 18px; height: 18px;
-    border-radius: 4px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-    flex-shrink: 0;
-  }
-  .role .info { display: flex; flex-direction: column; min-width: 0; }
-  .role .info .label { color: var(--text-faint); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .role .info .hex { color: var(--text); }
-
-  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
-  .tag {
-    font-size: 11px; padding: 3px 8px;
-    background: var(--bg-elev-2);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--text-dim);
-    font-family: var(--mono);
-  }
-
   .kv { display: grid; grid-template-columns: 80px 1fr; gap: 6px 12px; font-size: 12px; margin: 0; }
   .kv dt { color: var(--text-faint); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; padding-top: 2px; }
   .kv dd { margin: 0; color: var(--text); word-break: break-word; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    font-size: 11px; padding: 3px 8px;
+    background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 999px;
+    color: var(--text-dim); font-family: var(--mono);
+  }
 
-  .install-snippet {
+  /* Variant card inside the lightbox: one per apply option (Deep / Warm / Cool). */
+  .variant {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden;
     background: var(--bg-elev-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    font-family: var(--mono); font-size: 11px;
-    color: var(--text);
-    white-space: pre-wrap;
-    word-break: break-all;
-    position: relative;
   }
-  .install-snippet button {
-    position: absolute; top: 6px; right: 6px;
-    background: rgba(255,255,255,0.06);
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-family: var(--mono); font-size: 9px;
-    cursor: pointer;
+  .variant-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 12px; gap: 8px;
+    border-bottom: 1px solid var(--border);
   }
-  .install-snippet button:hover { color: var(--text); }
+  .variant-name { font-weight: 600; font-size: 13px; letter-spacing: -0.01em; }
+  .variant-slug { font-family: var(--mono); font-size: 10px; color: var(--text-faint); }
+  .variant-body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .variant .ramp { height: 14px; border-radius: var(--radius-sm); overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06); }
+  .variant .roles {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+    margin-top: 2px;
+  }
+  .role-pill {
+    display: flex; align-items: center; gap: 6px;
+    padding: 4px 6px;
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    cursor: pointer; font-family: var(--mono); font-size: 10px;
+    overflow: hidden;
+  }
+  .role-pill .sw { width: 12px; height: 12px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); flex-shrink: 0; }
+  .role-pill .lbl { color: var(--text-faint); text-transform: uppercase; font-size: 9px; letter-spacing: 0.05em; }
+  .variant-actions { display: flex; gap: 6px; margin-top: 4px; }
+  .variant-actions .btn { padding: 7px 10px; font-size: 11px; }
 
-  .lb-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); flex-wrap: wrap; }
   .btn {
-    flex: 1; min-width: 100px;
+    flex: 1; min-width: 0;
     padding: 9px 12px;
-    background: var(--bg-elev-2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: var(--radius-sm);
-    font-family: var(--font);
-    font-size: 12px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
+    background: var(--bg-elev-2); border: 1px solid var(--border);
+    color: var(--text); border-radius: var(--radius-sm);
+    font-family: var(--font); font-size: 12px; cursor: pointer;
+    text-align: center; text-decoration: none;
+    white-space: nowrap;
   }
   .btn:hover { border-color: var(--text-faint); }
   .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -424,7 +269,7 @@
 
   @media (max-width: 760px) {
     .lb { flex-direction: column; }
-    .lb-side { width: auto; max-height: 55vh; border-left: none; border-top: 1px solid var(--border); }
+    .lb-side { width: auto; max-height: 60vh; border-left: none; border-top: 1px solid var(--border); }
     .flabel { width: 44px; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
     .head-meta { display: none; }
@@ -438,24 +283,16 @@
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     gap: 14px;
-    background: var(--bg);
-    z-index: 200;
+    background: var(--bg); z-index: 200;
     transition: opacity 0.3s ease, visibility 0.3s ease;
   }
   .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
   .loader-spinner {
     width: 28px; height: 28px;
-    border: 2.5px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: lspin 0.8s linear infinite;
+    border: 2.5px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: lspin 0.8s linear infinite;
   }
-  .loader-text {
-    font-family: var(--mono); font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
+  .loader-text { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; }
   @keyframes lspin { to { transform: rotate(360deg); } }
 </style>
 </head>
@@ -471,7 +308,7 @@
     <div class="brand">Omarchy Themes <span class="count" id="count">loading...</span></div>
     <div class="search">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="Search name, scheme, tags...">
+      <input id="q" type="search" placeholder="Search title, tags, path...">
     </div>
     <div class="head-meta">
       <button id="reset">reset</button>
@@ -493,24 +330,22 @@
 <script src="wallpapers.js"></script>
 <script>
 const COLOR_DOTS = {
-  red:        '#e74c5b',
-  orange:     '#f5994f',
-  yellow:     '#f0d869',
-  green:      '#7bbf6f',
-  cyan:       '#5ec3d0',
-  blue:       '#6d8fee',
-  purple:     '#a87cd9',
-  pink:       '#e88abf',
-  monochrome: '#9aa0ab',
+  red:'#e74c5b', orange:'#f5994f', yellow:'#f0d869', green:'#7bbf6f',
+  cyan:'#5ec3d0', blue:'#6d8fee', purple:'#a87cd9', pink:'#e88abf',
+  monochrome:'#9aa0ab',
 };
 const TONE_DOTS = { dark: '#1b1e25', light: '#e7e9ee' };
-
-const SCHEME_ORDER = ['tokyo-night', 'gruvbox', 'nord'];
 const COLOR_ORDER = ['monochrome','red','orange','yellow','green','cyan','blue','purple','pink'];
 const RES_TIERS = ['<=720p','720p','1080p','1440p','4K','5K','8K+'];
 
-// The 16 ANSI slots, in the order they appear on a typical terminal palette.
-// Used both for the card swatch strip and the lightbox ANSI grid.
+// The reference scheme keys in the manifest map to user-facing variant
+// labels. The mapping intentionally hides the source-scheme identity --
+// each variant's actual palette is wallpaper-derived. "deep" = darkest bg
+// + most vivid; "warm" = warm-biased accent; "cool" = muted + cool-biased.
+const VARIANT_ORDER = ['tokyo-night', 'gruvbox', 'nord'];
+const VARIANT_LABEL = { 'tokyo-night': 'Deep', 'gruvbox': 'Warm', 'nord': 'Cool' };
+
+// ANSI slots in their canonical 0..15 order.
 const ANSI_KEYS = [
   'color0','color1','color2','color3','color4','color5','color6','color7',
   'color8','color9','color10','color11','color12','color13','color14','color15',
@@ -518,22 +353,21 @@ const ANSI_KEYS = [
 
 const STATE = {
   entries: [],
-  byName: {},
+  byPath: {},
   filtered: [],
-  filters: { tone: null, color: null, scheme: null, resolution: null, q: '' },
+  filters: { tone: null, color: null, resolution: null, q: '' },
   facetCounts: {},
   rendered: 0,
   pageSize: 80,
 };
 
-const FILTER_KEYS = ['tone','color','scheme','resolution'];
+const FILTER_KEYS = ['tone','color','resolution'];
 
 function readUrl() {
   const sp = new URLSearchParams(location.search);
   for (const k of FILTER_KEYS) STATE.filters[k] = sp.get(k) || null;
   STATE.filters.q = sp.get('q') || '';
 }
-
 function buildUrl({ withHash = true } = {}) {
   const sp = new URLSearchParams();
   for (const k of FILTER_KEYS) if (STATE.filters[k]) sp.set(k, STATE.filters[k]);
@@ -542,13 +376,11 @@ function buildUrl({ withHash = true } = {}) {
   const hash = withHash ? location.hash : '';
   return location.pathname + (qs ? '?' + qs : '') + hash;
 }
-
 function writeUrl() { history.replaceState(null, '', buildUrl()); }
-
-function decodeHashName() {
+function encodePath(p) { return p.split('/').map(encodeURIComponent).join('/'); }
+function decodeHashPath() {
   if (!location.hash) return null;
-  try { return decodeURIComponent(location.hash.slice(1)); }
-  catch { return null; }
+  try { return decodeURIComponent(location.hash.slice(1)); } catch { return null; }
 }
 
 const $ = (s) => document.querySelector(s);
@@ -561,7 +393,6 @@ function el(tag, cls, text) {
   if (text != null) e.textContent = text;
   return e;
 }
-
 function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
 
 function bucketRes(w, h) {
@@ -595,17 +426,17 @@ async function load() {
     m._resTier = bucketRes(m.width, m.height);
   }
   STATE.entries = Object.entries(data);
-  STATE.byName = data;
-  $('#count').textContent = STATE.entries.length.toLocaleString() + ' themes';
+  STATE.byPath = data;
+  $('#count').textContent = STATE.entries.length.toLocaleString() + ' wallpapers';
 
   readUrl();
   $('#q').value = STATE.filters.q || '';
   buildFilters();
   applyFilters({ writeUrl: false });
 
-  const hashName = decodeHashName();
-  if (hashName && STATE.byName[hashName]) {
-    openLightbox(hashName, STATE.byName[hashName], { push: false });
+  const hashPath = decodeHashPath();
+  if (hashPath && STATE.byPath[hashPath]) {
+    openLightbox(hashPath, STATE.byPath[hashPath], { push: false });
   }
 }
 
@@ -613,24 +444,20 @@ function inc(m, k) { if (!k) return; m.set(k, (m.get(k) || 0) + 1); }
 function sortedKeys(m) { return [...m.entries()].sort((a,b) => b[1] - a[1]).map(([k]) => k); }
 
 function buildFilters() {
-  const tones = new Map(), colors = new Map(), schemes = new Map(), resolutions = new Map();
+  const tones = new Map(), colors = new Map(), resolutions = new Map();
   for (const [, m] of STATE.entries) {
     inc(tones, m.tone);
     inc(colors, m.color);
-    inc(schemes, m.scheme);
     inc(resolutions, m._resTier);
   }
 
   filtersEl.replaceChildren();
   const toneItems   = ['dark','light'].filter(t => tones.has(t)).map(t => ['tone', t, tones.get(t)]);
   const colorItems  = COLOR_ORDER.filter(c => colors.has(c)).map(c => ['color', c, colors.get(c)]);
-  const schemeItems = SCHEME_ORDER.filter(s => schemes.has(s)).map(s => ['scheme', s, schemes.get(s)]);
 
   const row = el('div', 'frow');
   row.appendChild(el('div', 'flabel', 'filter'));
   toneItems.forEach(([k, v, c]) => row.appendChild(chipEl(k, v, c)));
-  row.appendChild(el('span', 'sep'));
-  schemeItems.forEach(([k, v, c]) => row.appendChild(chipEl(k, v, c)));
   row.appendChild(el('span', 'sep'));
   colorItems.forEach(([k, v, c]) => row.appendChild(chipEl(k, v, c)));
   row.appendChild(el('span', 'sep'));
@@ -643,10 +470,10 @@ function facetField(m, key) { return key === 'resolution' ? m._resTier : m[key];
 function computeFacetCounts() {
   const f = STATE.filters;
   const q = f.q.trim().toLowerCase();
-  const out = { tone: {}, color: {}, scheme: {}, resolution: {} };
-  for (const [, m] of STATE.entries) {
+  const out = { tone: {}, color: {}, resolution: {} };
+  for (const [path, m] of STATE.entries) {
     if (q) {
-      const hay = (m.name + ' ' + (m.title||'') + ' ' + (m.wallpaper_title||'') + ' ' + (m.tags||[]).join(' ')).toLowerCase();
+      const hay = (path + ' ' + (m.title||'') + ' ' + (m.tags||[]).join(' ')).toLowerCase();
       if (!hay.includes(q)) continue;
     }
     for (const k of FILTER_KEYS) {
@@ -696,9 +523,7 @@ function chipEl(filterKey, value, count) {
 
 function dropdownEl(filterKey, counts, orderedItems) {
   const items = orderedItems || sortedKeys(counts);
-
   const wrap = el('div', 'dd');
-
   const btn = el('button', 'dd-btn');
   btn.type = 'button';
   const lab = el('span', 'dd-label', filterKey);
@@ -719,22 +544,8 @@ function dropdownEl(filterKey, counts, orderedItems) {
   function refresh(query = '') {
     list.replaceChildren();
     const q = query.trim().toLowerCase();
-
-    const anyItem = el('div', 'dd-item dd-any', `any ${filterKey}`);
-    anyItem.addEventListener('click', () => {
-      STATE.filters[filterKey] = null;
-      close();
-      paintBtn();
-      applyFilters();
-    });
-    list.appendChild(anyItem);
-
     const live = STATE.facetCounts[filterKey] || {};
     const filtered = items.filter(k => !q || k.toLowerCase().includes(q));
-    if (filtered.length === 0) {
-      list.appendChild(el('div', 'dd-empty', 'no matches'));
-      return;
-    }
     for (const k of filtered) {
       const c = live[k] || 0;
       const item = el('div', 'dd-item');
@@ -744,20 +555,16 @@ function dropdownEl(filterKey, counts, orderedItems) {
       item.appendChild(el('span', 'dd-item-count', String(c)));
       item.addEventListener('click', () => {
         STATE.filters[filterKey] = k;
-        close();
-        paintBtn();
-        applyFilters();
+        close(); paintBtn(); applyFilters();
       });
       list.appendChild(item);
     }
   }
-
   function paintBtn() {
     const current = STATE.filters[filterKey];
     if (current) { btn.classList.add('active'); val.textContent = current; }
     else { btn.classList.remove('active'); val.textContent = 'all'; }
   }
-
   function open() {
     document.querySelectorAll('.dd-menu.open').forEach(m => m !== menu && m.classList.remove('open'));
     menu.classList.add('open');
@@ -770,8 +577,7 @@ function dropdownEl(filterKey, counts, orderedItems) {
     e.stopPropagation();
     if (e.target === clr || clr.contains(e.target)) {
       STATE.filters[filterKey] = null;
-      paintBtn();
-      applyFilters();
+      paintBtn(); applyFilters();
       return;
     }
     menu.classList.contains('open') ? close() : open();
@@ -780,10 +586,7 @@ function dropdownEl(filterKey, counts, orderedItems) {
   search.addEventListener('input', () => refresh(search.value));
   search.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
-    if (e.key === 'Enter') {
-      const first = list.querySelector('.dd-item:not(.dd-any)');
-      if (first) first.click();
-    }
+    if (e.key === 'Enter') { const first = list.querySelector('.dd-item'); if (first) first.click(); }
   });
 
   wrap.append(btn, menu);
@@ -799,10 +602,8 @@ document.addEventListener('pointerdown', (e) => {
 
 function toggleFilter(key, val) {
   STATE.filters[key] = STATE.filters[key] === val ? null : val;
-  syncChipState();
-  applyFilters();
+  syncChipState(); applyFilters();
 }
-
 function syncChipState() {
   for (const chip of filtersEl.querySelectorAll('.chip')) {
     const k = chip.dataset.filter, v = chip.dataset.value;
@@ -813,13 +614,12 @@ function syncChipState() {
 function applyFilters(opts = {}) {
   const f = STATE.filters;
   const q = f.q.trim().toLowerCase();
-  STATE.filtered = STATE.entries.filter(([, m]) => {
+  STATE.filtered = STATE.entries.filter(([path, m]) => {
     if (f.tone   && m.tone   !== f.tone)   return false;
     if (f.color  && m.color  !== f.color)  return false;
-    if (f.scheme && m.scheme !== f.scheme) return false;
     if (f.resolution && m._resTier !== f.resolution) return false;
     if (q) {
-      const hay = (m.name + ' ' + (m.title||'') + ' ' + (m.wallpaper_title||'') + ' ' + (m.tags||[]).join(' ')).toLowerCase();
+      const hay = (path + ' ' + (m.title||'') + ' ' + (m.tags||[]).join(' ')).toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -850,8 +650,7 @@ const sentinelIo = new IntersectionObserver((entries) => {
 
 function renderMore() {
   if (STATE.rendered === 0 && STATE.filtered.length === 0) {
-    const empty = el('div', 'empty', 'No matches. Try clearing a filter.');
-    grid.appendChild(empty);
+    grid.appendChild(el('div', 'empty', 'No matches. Try clearing a filter.'));
     return;
   }
   const oldSentinel = grid.querySelector('.sentinel');
@@ -875,80 +674,68 @@ function renderMore() {
   }
 }
 
-function cardEl([name, m]) {
+function cardEl([path, m]) {
   const card = el('div', 'card');
-  card.title = m.title || name;
+  card.title = m.title || path;
 
   const imgWrap = el('div', 'card-image');
   const img = document.createElement('img');
-  img.alt = m.wallpaper_title || name;
+  img.alt = m.title || path;
   img.loading = 'lazy';
   img.dataset.src = mediaUrl(m.thumb_path);
   img.addEventListener('load', () => img.classList.add('loaded'));
   io.observe(img);
   imgWrap.appendChild(img);
-  if (m.tone) imgWrap.appendChild(el('div', 'tone-badge', m.tone));
-  if (m.scheme_label) imgWrap.appendChild(el('div', 'scheme-badge', m.scheme_label));
-
-  // Quick-apply via aether:// scheme. Sits in the card image corner and
-  // doesn't bubble its click to the card (which would open the lightbox).
-  // silent=true skips Aether's confirmation dialog. Safe to do here because
-  // the user is already in our own gallery and has clicked apply on this
-  // specific theme - they've opted in. Don't copy this flag onto links
-  // shared into third-party contexts.
-  if (m.colors_toml) {
-    const params = new URLSearchParams();
-    params.set('colors', mediaUrl(m.colors_toml));
-    if (m.background) params.set('wallpaper', mediaUrl(m.background));
-    params.set('silent', 'true');
-    const apply = document.createElement('a');
-    apply.className = 'apply-btn';
-    apply.href = `aether://apply?${params.toString()}`;
-    apply.textContent = 'apply';
-    apply.title = 'Apply this theme with Aether';
-    apply.addEventListener('click', (e) => e.stopPropagation());
-    imgWrap.appendChild(apply);
-  }
-
+  imgWrap.appendChild(el('div', 'badge', `${m.tone || ''} ${m.color || ''}`.trim()));
   card.appendChild(imgWrap);
 
   const body = el('div', 'card-body');
-  body.appendChild(el('div', 'card-title', m.wallpaper_title || name));
-  body.appendChild(el('div', 'card-sub', `${m.scheme_label || m.scheme} -- ${m.color || ''}`));
+  body.appendChild(el('div', 'card-title', m.title || path.split('/').pop()));
+  // Number of variants the wallpaper has packaged (almost always 3).
+  const variantCount = Object.keys(m.themes || {}).length;
+  body.appendChild(el('div', 'card-sub', `${variantCount} variants -- click to apply`));
 
-  // 16-color ANSI strip pulled straight from the theme's colors.toml.
-  if (m.colors) {
-    const ramp = el('div', 'ramp');
-    for (const k of ANSI_KEYS) {
-      const sl = el('div', 'sl');
-      sl.style.background = m.colors[k] || 'transparent';
-      ramp.appendChild(sl);
+  // Three stacked swatch strips: one per variant. The whole row functions
+  // as a visual identity for the wallpaper -- shows that there are 3
+  // distinct palettes inside before you open the lightbox.
+  if (m.themes) {
+    const ramps = el('div', 'ramps');
+    for (const scheme of VARIANT_ORDER) {
+      const t = m.themes[scheme];
+      if (!t || !t.colors) continue;
+      const ramp = el('div', 'ramp');
+      for (const k of ANSI_KEYS) {
+        const sl = el('div', 'sl');
+        sl.style.background = t.colors[k] || 'transparent';
+        ramp.appendChild(sl);
+      }
+      ramps.appendChild(ramp);
     }
-    body.appendChild(ramp);
+    body.appendChild(ramps);
   }
 
   card.appendChild(body);
-  card.addEventListener('click', () => openLightbox(name, m));
+  card.addEventListener('click', () => openLightbox(path, m));
   return card;
 }
 
 const lb = $('#lb');
 const lbSide = $('#lbside');
 
-function openLightbox(name, m, opts = {}) {
+function openLightbox(path, m, opts = {}) {
   const wrap = document.querySelector('.lb-image-wrap');
   wrap.replaceChildren();
   const img = document.createElement('img');
-  img.src = mediaUrl(m.medium_path || m.thumb_path);
-  img.alt = m.wallpaper_title || name;
+  img.src = mediaUrl(m.medium_path || path);
+  img.alt = m.title || path;
   wrap.appendChild(img);
-  renderSide(name, m);
+  renderSide(path, m);
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
 
   if (opts.push !== false) {
-    const newUrl = buildUrl({ withHash: false }) + '#' + encodeURIComponent(name);
-    history.pushState({ lightbox: name }, '', newUrl);
+    const newUrl = buildUrl({ withHash: false }) + '#' + encodePath(path);
+    history.pushState({ lightbox: path }, '', newUrl);
   }
 }
 
@@ -961,39 +748,110 @@ function copyText(text, target) {
   }
 }
 
-function flash(target) {
-  const orig = target.style.boxShadow;
-  target.style.boxShadow = 'inset 0 0 0 2px #fff, 0 0 0 2px var(--accent)';
-  setTimeout(() => target.style.boxShadow = orig, 250);
-}
-
-const ANSI_LABELS = [
-  'black','red','green','yellow','blue','magenta','cyan','white',
-  'bright black','bright red','bright green','bright yellow',
-  'bright blue','bright magenta','bright cyan','bright white',
-];
-
-const ROLE_KEYS = [
+const ROLE_PREVIEW = [
   ['background', 'bg'],
   ['foreground', 'fg'],
   ['accent', 'accent'],
-  ['cursor', 'cursor'],
-  ['selection_background', 'sel bg'],
-  ['selection_foreground', 'sel fg'],
 ];
 
-function renderSide(name, m) {
+function variantPanel(path, wallpaperEntry, scheme, theme) {
+  const label = VARIANT_LABEL[scheme] || scheme;
+  const slug = theme.name || '';
+
+  const panel = el('div', 'variant');
+
+  const head = el('div', 'variant-head');
+  const left = el('div');
+  left.appendChild(el('div', 'variant-name', label));
+  left.appendChild(el('div', 'variant-slug', slug));
+  head.appendChild(left);
+  panel.appendChild(head);
+
+  const body = el('div', 'variant-body');
+
+  // Full 16-color ANSI strip.
+  if (theme.colors) {
+    const ramp = el('div', 'ramp');
+    for (const k of ANSI_KEYS) {
+      const sl = el('div', 'sl');
+      sl.style.background = theme.colors[k] || 'transparent';
+      sl.title = `${k}: ${theme.colors[k] || ''}`;
+      sl.style.cursor = 'pointer';
+      sl.addEventListener('click', (e) => { e.stopPropagation(); copyText(theme.colors[k] || ''); });
+      ramp.appendChild(sl);
+    }
+    body.appendChild(ramp);
+
+    // bg / fg / accent role pills.
+    const roles = el('div', 'roles');
+    for (const [k, lbl] of ROLE_PREVIEW) {
+      const hex = theme.colors[k];
+      if (!hex) continue;
+      const pill = el('div', 'role-pill');
+      const sw = el('div', 'sw');
+      sw.style.background = hex;
+      pill.appendChild(sw);
+      const info = el('div');
+      info.appendChild(el('div', 'lbl', lbl));
+      info.appendChild(el('div', null, hex));
+      pill.appendChild(info);
+      pill.title = `${lbl} ${hex} (click to copy)`;
+      pill.addEventListener('click', (e) => { e.stopPropagation(); copyText(hex); });
+      roles.appendChild(pill);
+    }
+    body.appendChild(roles);
+  }
+
+  // Apply button: one-click install + activate via aether://.
+  // silent=true skips Aether's confirmation dialog -- safe here because the
+  // user explicitly clicked apply on this specific variant inside our own
+  // gallery. Don't carry silent=true onto links posted into third-party
+  // contexts; any web page can produce a silent-apply link.
+  // as_omarchy_theme=<slug> tells Aether the install dir name to use under
+  // ~/.config/omarchy/themes/<slug>/.
+  const actions = el('div', 'variant-actions');
+  if (theme.colors_toml) {
+    const params = new URLSearchParams();
+    params.set('colors', mediaUrl(theme.colors_toml));
+    // Wallpaper URL: use the original full-res file already on Hetzner
+    // (under dark/*, light/*) rather than the per-theme symlinked path,
+    // which we excluded from the omarchy-themes sync to avoid duplicate
+    // uploads. The path is the manifest entry's own key.
+    params.set('wallpaper', mediaUrl(path));
+    params.set('silent', 'true');
+    params.set('as_omarchy_theme', slug);
+    const apply = el('a', 'btn primary', 'Apply');
+    apply.href = `aether://apply?${params.toString()}`;
+    apply.title = `Apply ${label} with Aether (installs as ${slug})`;
+    actions.appendChild(apply);
+  }
+  if (theme.colors_toml) {
+    const a = el('a', 'btn', 'colors.toml');
+    a.href = mediaUrl(theme.colors_toml); a.setAttribute('download', '');
+    actions.appendChild(a);
+  }
+  if (theme.neovim_lua) {
+    const a = el('a', 'btn', 'neovim.lua');
+    a.href = mediaUrl(theme.neovim_lua); a.setAttribute('download', '');
+    actions.appendChild(a);
+  }
+  body.appendChild(actions);
+
+  panel.appendChild(body);
+  return panel;
+}
+
+function renderSide(path, m) {
   lbSide.replaceChildren();
 
-  lbSide.appendChild(el('div', 'lb-title', m.title || name));
-  lbSide.appendChild(el('div', 'lb-name', name));
+  lbSide.appendChild(el('div', 'lb-title', m.title || path.split('/').pop()));
+  lbSide.appendChild(el('div', 'lb-path', path));
 
   const kv = el('dl', 'kv');
   const rows = [
-    ['scheme', m.scheme_label || m.scheme],
+    ['res',    m.dimensions],
     ['tone',   m.tone],
     ['color',  m.color],
-    ['size',   m.dimensions],
   ];
   for (const [k, v] of rows) {
     if (!v) continue;
@@ -1003,128 +861,35 @@ function renderSide(name, m) {
   lbSide.appendChild(kv);
 
   if (m.tags && m.tags.length) {
-    const sec = el('div', 'lb-section');
-    sec.appendChild(el('div', 'lb-sec-label', 'tags'));
     const wrap = el('div', 'tags');
     m.tags.forEach(t => wrap.appendChild(el('span', 'tag', t)));
-    sec.appendChild(wrap);
-    lbSide.appendChild(sec);
+    lbSide.appendChild(wrap);
   }
 
-  if (m.colors) {
-    // Role colors (bg, fg, accent, cursor, selection)
-    const sec1 = el('div', 'lb-section');
-    sec1.appendChild(el('div', 'lb-sec-label', 'roles (click to copy)'));
-    const roles = el('div', 'lb-roles');
-    for (const [k, label] of ROLE_KEYS) {
-      const hex = m.colors[k];
-      if (!hex) continue;
-      const role = el('div', 'role');
-      const sw = el('div', 'swatch');
-      sw.style.background = hex;
-      const info = el('div', 'info');
-      info.appendChild(el('div', 'label', label));
-      info.appendChild(el('div', 'hex', hex));
-      role.appendChild(sw);
-      role.appendChild(info);
-      role.addEventListener('click', () => { copyText(hex); flash(role); });
-      roles.appendChild(role);
+  // Variants section -- one panel per packaged variant. Iterating in
+  // VARIANT_ORDER (not Object.keys order) keeps Deep > Warm > Cool stable.
+  if (m.themes) {
+    lbSide.appendChild(el('div', 'lb-sec-label', 'apply one of three variants'));
+    for (const scheme of VARIANT_ORDER) {
+      const theme = m.themes[scheme];
+      if (!theme) continue;
+      lbSide.appendChild(variantPanel(path, m, scheme, theme));
     }
-    sec1.appendChild(roles);
-    lbSide.appendChild(sec1);
-
-    // ANSI 16 grid
-    const sec2 = el('div', 'lb-section');
-    sec2.appendChild(el('div', 'lb-sec-label', 'ansi 16 (click to copy hex)'));
-    const ansi = el('div', 'ansi-grid');
-    for (let i = 0; i < ANSI_KEYS.length; i++) {
-      const k = ANSI_KEYS[i];
-      const hex = m.colors[k];
-      if (!hex) continue;
-      const cell = el('div', 'ansi-cell');
-      cell.style.background = hex;
-      cell.dataset.label = `${ANSI_LABELS[i]}: ${hex}`;
-      cell.addEventListener('click', () => { copyText(hex); flash(cell); });
-      ansi.appendChild(cell);
-    }
-    sec2.appendChild(ansi);
-    lbSide.appendChild(sec2);
   }
 
-  const tomlUrl = mediaUrl(m.colors_toml);
-  const luaUrl  = mediaUrl(m.neovim_lua);
-  const bgUrl   = mediaUrl(m.background);
-
-  // One-click Apply via Aether's custom URL scheme. The handler downloads
-  // colors.toml + the wallpaper and applies them in-place. silent=true is
-  // safe here: this is our own gallery and the user explicitly clicked
-  // apply on a specific theme from the lightbox they opened. Don't carry
-  // silent=true onto links posted into third-party contexts.
-  if (tomlUrl) {
-    const applySec = el('div', 'lb-section');
-    applySec.appendChild(el('div', 'lb-sec-label', 'one-click apply'));
-    const params = new URLSearchParams();
-    params.set('colors', tomlUrl);
-    if (bgUrl) params.set('wallpaper', bgUrl);
-    params.set('silent', 'true');
-    const applyHref = `aether://apply?${params.toString()}`;
-    const applyBtn = el('a', 'btn primary', 'Apply with Aether');
-    applyBtn.href = applyHref;
-    applyBtn.style.flex = '1';
-    applyBtn.style.minWidth = '0';
-    applyBtn.title = 'Opens aether:// to apply this theme + wallpaper';
-    const wrap = el('div');
-    wrap.style.display = 'flex';
-    wrap.style.gap = '8px';
-    wrap.appendChild(applyBtn);
-    applySec.appendChild(wrap);
-    lbSide.appendChild(applySec);
-  }
-
-  // Install via direct file downloads (no tarball; users grab the pieces they want).
-  const installSec = el('div', 'lb-section');
-  installSec.appendChild(el('div', 'lb-sec-label', 'install (theme dir)'));
-  const snippet = el('div', 'install-snippet');
-  const cmd = [
-    `mkdir -p ~/.config/omarchy/themes/${name}/backgrounds`,
-    `curl -fLo ~/.config/omarchy/themes/${name}/colors.toml ${tomlUrl}`,
-    `curl -fLo ~/.config/omarchy/themes/${name}/neovim.lua ${luaUrl}`,
-    `curl -fLo ~/.config/omarchy/themes/${name}/backgrounds/01.jpg ${bgUrl}`,
-    `omarchy theme set ${name}`,
-  ].join('\n');
-  snippet.textContent = cmd;
-  const copyBtn = document.createElement('button');
-  copyBtn.textContent = 'copy';
-  copyBtn.addEventListener('click', (e) => { e.stopPropagation(); copyText(cmd, copyBtn); });
-  snippet.appendChild(copyBtn);
-  installSec.appendChild(snippet);
-  lbSide.appendChild(installSec);
-
-  // Direct file links
-  const actions = el('div', 'lb-actions');
-  if (m.colors_toml) {
-    const a = el('a', 'btn', 'colors.toml');
-    a.href = tomlUrl; a.setAttribute('download', '');
-    actions.appendChild(a);
-  }
-  if (m.neovim_lua) {
-    const a = el('a', 'btn', 'neovim.lua');
-    a.href = luaUrl; a.setAttribute('download', '');
-    actions.appendChild(a);
-  }
-  if (m.background) {
-    const a = el('a', 'btn', 'background');
-    a.href = bgUrl; a.setAttribute('download', '');
-    actions.appendChild(a);
-  }
-  lbSide.appendChild(actions);
+  // Direct download link to the wallpaper itself, separate from the
+  // per-variant action rows.
+  const wallpaperBtn = el('a', 'btn', 'Download wallpaper');
+  wallpaperBtn.href = mediaUrl(path);
+  wallpaperBtn.setAttribute('download', '');
+  wallpaperBtn.style.marginTop = 'auto';
+  lbSide.appendChild(wallpaperBtn);
 }
 
 function closeLightbox(opts = {}) {
   if (!lb.classList.contains('open')) return;
   lb.classList.remove('open');
-  const wrap = document.querySelector('.lb-image-wrap');
-  wrap.replaceChildren();
+  document.querySelector('.lb-image-wrap').replaceChildren();
   document.body.style.overflow = '';
 
   if (opts.pop !== false && history.state && history.state.lightbox) {
@@ -1143,10 +908,10 @@ window.addEventListener('popstate', () => {
   buildFilters();
   applyFilters({ writeUrl: false });
 
-  const hashName = decodeHashName();
+  const hashPath = decodeHashPath();
   const isOpen = lb.classList.contains('open');
-  if (hashName && STATE.byName[hashName]) {
-    if (!isOpen) openLightbox(hashName, STATE.byName[hashName], { push: false });
+  if (hashPath && STATE.byPath[hashPath]) {
+    if (!isOpen) openLightbox(hashPath, STATE.byPath[hashPath], { push: false });
   } else if (isOpen) {
     closeLightbox({ pop: false });
   }
@@ -1158,7 +923,7 @@ $('#q').addEventListener('input', debounce((e) => {
 }, 120));
 
 $('#reset').addEventListener('click', () => {
-  STATE.filters = { tone: null, color: null, scheme: null, resolution: null, q: '' };
+  STATE.filters = { tone: null, color: null, resolution: null, q: '' };
   $('#q').value = '';
   buildFilters();
   applyFilters();
@@ -1168,19 +933,9 @@ function showLoadError(err) {
   grid.replaceChildren();
   const wrap = el('div', 'empty');
   wrap.appendChild(el('div', null, 'Could not load wallpapers.json.'));
-  wrap.appendChild(el('div', null, ' '));
-  wrap.appendChild(el('div', null, 'Opening this file directly with file:// blocks fetch().'));
-  wrap.appendChild(el('div', null, 'Serve the folder instead:'));
-  wrap.appendChild(el('div', null, ' '));
-  const code = el('code', null, 'python3 -m http.server');
-  wrap.appendChild(code);
-  wrap.appendChild(el('div', null, ' '));
-  wrap.appendChild(el('div', null, 'then open http://localhost:8000'));
-  wrap.appendChild(el('div', null, ' '));
   wrap.appendChild(el('div', null, 'Error: ' + (err && err.message || String(err))));
   grid.appendChild(wrap);
 }
-
 function hideLoader() {
   const loader = document.getElementById('loading');
   if (loader) loader.classList.add('hidden');
