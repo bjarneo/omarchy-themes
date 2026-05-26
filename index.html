@@ -187,6 +187,7 @@
   }
   .op-btn:hover { color: var(--text); border-color: var(--text-faint); }
   .op-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chip-dot-inline { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18); flex-shrink: 0; }
 
   main { max-width: 1600px; margin: 0 auto; padding: 18px; }
   .grid {
@@ -460,12 +461,13 @@ const RES_TIERS = ['<=720p','720p','1080p','1440p','4K','5K','8K+'];
 // labels. The mapping intentionally hides the source-scheme identity --
 // each variant's actual palette is wallpaper-derived. "deep" = darkest bg
 // + most vivid; "warm" = warm-biased accent; "cool" = muted + cool-biased.
-const VARIANT_ORDER = ['tokyo-night', 'gruvbox', 'nord', 'material'];
+const VARIANT_ORDER = ['tokyo-night', 'gruvbox', 'nord', 'material', 'aether'];
 const VARIANT_LABEL = {
   'tokyo-night': 'Deep',
   'gruvbox':     'Warm',
   'nord':        'Cool',
   'material':    'Material',
+  'aether':      'Aether',
 };
 
 // ANSI slots in their canonical 0..15 order.
@@ -577,15 +579,22 @@ function buildFilters() {
   }
 
   filtersEl.replaceChildren();
-  const toneItems   = ['dark','light'].filter(t => tones.has(t)).map(t => ['tone', t, tones.get(t)]);
-  const colorItems  = COLOR_ORDER.filter(c => colors.has(c)).map(c => ['color', c, colors.get(c)]);
-  const resItems    = RES_TIERS.filter(t => resolutions.has(t));
+  const toneItems  = ['dark','light'].filter(t => tones.has(t)).map(t => ['tone', t, tones.get(t)]);
+  const colorList  = COLOR_ORDER.filter(c => colors.has(c));
+  const resItems   = RES_TIERS.filter(t => resolutions.has(t));
 
   const row = el('div', 'frow');
   row.appendChild(el('div', 'flabel', 'filter'));
   toneItems.forEach(([k, v, c]) => row.appendChild(chipEl(k, v, c)));
   row.appendChild(el('span', 'sep'));
-  colorItems.forEach(([k, v, c]) => row.appendChild(chipEl(k, v, c)));
+  // Color was 9 inline chips - reads as noise. As a dropdown each
+  // item gets a small colored dot adornment so the list stays
+  // visually identifiable.
+  row.appendChild(dropdownEl('color', colors, colorList, 'color', (name) => {
+    const dot = el('span', 'chip-dot-inline');
+    dot.style.background = COLOR_DOTS[name] || '#999';
+    return dot;
+  }));
   row.appendChild(el('span', 'sep'));
   // One dropdown that controls both the lower and upper resolution
   // bound. Each row inside has a name, the live count, and two
@@ -684,7 +693,7 @@ function chipEl(filterKey, value, count) {
   return chip;
 }
 
-function dropdownEl(filterKey, counts, orderedItems, displayLabel) {
+function dropdownEl(filterKey, counts, orderedItems, displayLabel, adornFn) {
   const items = orderedItems || sortedKeys(counts);
   const wrap = el('div', 'dd');
   const btn = el('button', 'dd-btn');
@@ -714,7 +723,18 @@ function dropdownEl(filterKey, counts, orderedItems, displayLabel) {
       const item = el('div', 'dd-item');
       if (STATE.filters[filterKey] === k) item.classList.add('selected');
       if (c === 0) item.classList.add('zero');
-      item.appendChild(el('span', null, k));
+      // adornFn lets a caller add a left-side icon (e.g. a colored
+      // dot for the color filter) so items stay visually identifiable.
+      // Wrap dot + text in a single flex group so space-between
+      // doesn't blow them apart.
+      const left = el('span');
+      left.style.display = 'flex'; left.style.alignItems = 'center'; left.style.gap = '8px';
+      if (adornFn) {
+        const adorn = adornFn(k);
+        if (adorn) left.appendChild(adorn);
+      }
+      left.appendChild(el('span', null, k));
+      item.appendChild(left);
       item.appendChild(el('span', 'dd-item-count', String(c)));
       item.addEventListener('click', () => {
         STATE.filters[filterKey] = k;
