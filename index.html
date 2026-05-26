@@ -729,6 +729,9 @@ function applyFilters(opts = {}) {
   STATE.facetCounts = computeFacetCounts();
   updateFacetUI();
   if (opts.writeUrl !== false) writeUrl();
+  // Keep the snapshot the popstate handler diffs against in sync with
+  // whatever filters we just applied.
+  lastFiltersSnap = filtersSnapshot();
 }
 
 const io = new IntersectionObserver((entries) => {
@@ -1041,11 +1044,28 @@ document.addEventListener('click', (e) => {
   }, 3200);
 });
 
+// Snapshot the filter object so popstate can tell whether the navigation
+// actually changed which wallpapers are being shown, or only flipped
+// lightbox state (hash). Closing the lightbox should NOT rebuild the
+// grid - that wipes infinite-scroll progress and scroll position.
+function filtersSnapshot() {
+  return JSON.stringify(STATE.filters);
+}
+let lastFiltersSnap = '';
+
 window.addEventListener('popstate', () => {
+  const prev = lastFiltersSnap;
   readUrl();
-  $('#q').value = STATE.filters.q || '';
-  buildFilters();
-  applyFilters({ writeUrl: false });
+  const curr = filtersSnapshot();
+  lastFiltersSnap = curr;
+
+  if (curr !== prev) {
+    // Filters changed (browser back / forward across a real filter change).
+    // Re-render the gallery; otherwise leave it untouched.
+    $('#q').value = STATE.filters.q || '';
+    buildFilters();
+    applyFilters({ writeUrl: false });
+  }
 
   const hashPath = decodeHashPath();
   const isOpen = lb.classList.contains('open');
