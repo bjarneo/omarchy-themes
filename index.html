@@ -781,25 +781,6 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
       ramp.appendChild(sl);
     }
     body.appendChild(ramp);
-
-    // bg / fg / accent role pills.
-    const roles = el('div', 'roles');
-    for (const [k, lbl] of ROLE_PREVIEW) {
-      const hex = theme.colors[k];
-      if (!hex) continue;
-      const pill = el('div', 'role-pill');
-      const sw = el('div', 'sw');
-      sw.style.background = hex;
-      pill.appendChild(sw);
-      const info = el('div');
-      info.appendChild(el('div', 'lbl', lbl));
-      info.appendChild(el('div', null, hex));
-      pill.appendChild(info);
-      pill.title = `${lbl} ${hex} (click to copy)`;
-      pill.addEventListener('click', (e) => { e.stopPropagation(); copyText(hex); });
-      roles.appendChild(pill);
-    }
-    body.appendChild(roles);
   }
 
   // Apply button: one-click install + activate via aether://.
@@ -877,13 +858,6 @@ function renderSide(path, m) {
     }
   }
 
-  // Direct download link to the wallpaper itself, separate from the
-  // per-variant action rows.
-  const wallpaperBtn = el('a', 'btn', 'Download wallpaper');
-  wallpaperBtn.href = mediaUrl(path);
-  wallpaperBtn.setAttribute('download', '');
-  wallpaperBtn.style.marginTop = 'auto';
-  lbSide.appendChild(wallpaperBtn);
 }
 
 function closeLightbox(opts = {}) {
