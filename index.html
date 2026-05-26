@@ -388,24 +388,119 @@
     position: fixed; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 14px;
+    gap: 22px;
     background: var(--bg); z-index: 200;
     transition: opacity 0.3s ease, visibility 0.3s ease;
   }
   .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  .loader-spinner {
-    width: 28px; height: 28px;
-    border: 2.5px solid var(--border); border-top-color: var(--accent);
-    border-radius: 50%; animation: lspin 0.8s linear infinite;
+  .loader-text {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    /* Subtle CRT flicker for arcade feel. */
+    animation: flicker 1.4s steps(2) infinite;
   }
-  .loader-text { font-family: var(--mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; }
-  @keyframes lspin { to { transform: rotate(360deg); } }
+  @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.78; } }
+
+  /* 8-bit pacman loader: yellow chomper, four pellets being eaten, then
+     a ghost trailing. All animations use steps() so motion feels jumpy
+     and arcade-like rather than smoothly interpolated. */
+  .pac-row {
+    display: flex; align-items: center; gap: 12px;
+    image-rendering: pixelated;
+    /* Faint pixel-grid backdrop to sell the 8-bit vibe. */
+    padding: 18px 22px;
+    background:
+      linear-gradient(var(--border) 1px, transparent 1px) 0 0 / 6px 6px,
+      linear-gradient(90deg, var(--border) 1px, transparent 1px) 0 0 / 6px 6px,
+      var(--bg-elev);
+    background-blend-mode: overlay;
+    border: 1px solid var(--border);
+  }
+  .pacman {
+    position: relative; width: 28px; height: 28px;
+    flex-shrink: 0;
+  }
+  .pacman::before, .pacman::after {
+    content: ''; position: absolute; left: 0;
+    width: 28px; height: 14px;
+    background: #f7c948; /* arcade pacman yellow */
+    /* Hard pixel edge - no smoothing on the cap */
+    transform-origin: 100% 100%;
+    animation: pac-top 0.36s steps(2) infinite alternate;
+  }
+  .pacman::before { top: 0; border-radius: 28px 28px 0 0; }
+  .pacman::after {
+    top: 14px;
+    border-radius: 0 0 28px 28px;
+    transform-origin: 100% 0;
+    animation-name: pac-bottom;
+  }
+  @keyframes pac-top    { 0% { transform: rotate(0deg);  } 100% { transform: rotate(-32deg); } }
+  @keyframes pac-bottom { 0% { transform: rotate(0deg);  } 100% { transform: rotate( 32deg); } }
+
+  /* Pellets. Each one fades out a beat after the previous to read as
+     "pacman eats them one by one". The whole cycle restarts so the
+     pellets reappear on a loop. */
+  .pellet {
+    width: 8px; height: 8px;
+    background: #f7c948;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.25);
+    animation: pellet-eat 1.6s steps(2) infinite;
+  }
+  .pellet:nth-of-type(1) { animation-delay: 0.0s; }
+  .pellet:nth-of-type(2) { animation-delay: 0.2s; }
+  .pellet:nth-of-type(3) { animation-delay: 0.4s; }
+  .pellet:nth-of-type(4) { animation-delay: 0.6s; }
+  @keyframes pellet-eat {
+    0%, 35%   { opacity: 1; transform: scale(1); }
+    40%, 100% { opacity: 0; transform: scale(0.6); }
+  }
+
+  /* Trailing ghost: cyan blinky-style with two square feet and two
+     pixel eyes. Bobs up and down on a steps animation so the motion
+     is choppy / arcade-feeling. */
+  .ghost {
+    position: relative;
+    width: 22px; height: 22px;
+    background: #7dcfff; /* tokyo-night terminal cyan */
+    flex-shrink: 0;
+    border-radius: 11px 11px 0 0;
+    animation: ghost-bob 0.36s steps(2) infinite alternate;
+  }
+  .ghost::before {
+    /* Two square feet via a sharp linear-gradient zigzag */
+    content: ''; position: absolute; left: 0; right: 0; bottom: -4px;
+    height: 5px;
+    background:
+      linear-gradient(135deg, #7dcfff 50%, transparent 50%) 0 0 / 6px 5px repeat-x,
+      linear-gradient(225deg, #7dcfff 50%, transparent 50%) 3px 0 / 6px 5px repeat-x;
+  }
+  .ghost::after {
+    /* Two pixel eyes */
+    content: ''; position: absolute; top: 7px; left: 4px;
+    width: 4px; height: 4px;
+    background: #fff;
+    box-shadow:
+      9px 0 0 #fff,
+      1px 1px 0 #1a1b26,
+      10px 1px 0 #1a1b26;
+  }
+  @keyframes ghost-bob { 0% { transform: translateY(0); } 100% { transform: translateY(-2px); } }
 </style>
 </head>
 <body>
 
 <div id="loading" class="loader">
-  <div class="loader-spinner"></div>
+  <div class="pac-row" aria-hidden="true">
+    <div class="pacman"></div>
+    <div class="pellet"></div>
+    <div class="pellet"></div>
+    <div class="pellet"></div>
+    <div class="pellet"></div>
+    <div class="ghost"></div>
+  </div>
   <div class="loader-text">loading themes</div>
 </div>
 
