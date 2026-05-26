@@ -239,14 +239,51 @@
   }
   .variant-name { font-weight: 600; font-size: 12px; letter-spacing: -0.01em; }
   .variant-apply {
+    display: inline-flex; align-items: center; gap: 5px;
     padding: 4px 10px;
     background: var(--accent); color: #fff;
     border: 1px solid var(--accent); border-radius: 999px;
     font-family: var(--font); font-size: 11px; font-weight: 600;
     cursor: pointer; text-decoration: none;
     flex-shrink: 0;
+    transition: filter 0.15s, background 0.15s;
+    min-width: 64px; justify-content: center;
   }
   .variant-apply:hover { filter: brightness(1.1); }
+  .variant-apply.applying { background: color-mix(in oklab, var(--accent) 70%, #000); }
+  .variant-apply.sent { background: #2c8b56; border-color: #2c8b56; }
+  .variant-apply .spin {
+    width: 10px; height: 10px;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: lspin 0.7s linear infinite;
+  }
+
+  /* Bottom-right toast confirming the protocol handler fired. The
+     browser can't tell us whether Aether actually received the URL, so
+     this is an acknowledgement of the click, not a guarantee. */
+  .toast {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--bg-elev); color: var(--text);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 10px 14px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+    font-family: var(--font); font-size: 12px;
+    display: flex; align-items: center; gap: 10px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.18s, transform 0.18s;
+    z-index: 300;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 30%, transparent);
+  }
+  .toast .dot.ok { background: #2c8b56; box-shadow: 0 0 0 4px color-mix(in oklab, #2c8b56 30%, transparent); }
+  .toast strong { font-weight: 600; }
+  .toast .muted { color: var(--text-faint); font-family: var(--mono); font-size: 11px; }
   .variant .ramp { height: 10px; }
   .variant-foot {
     display: flex; gap: 8px; align-items: center;
@@ -332,6 +369,15 @@
   <button class="lb-close" id="lbclose" title="Close (esc)">&times;</button>
   <div class="lb-image-wrap"></div>
   <aside class="lb-side" id="lbside"></aside>
+</div>
+
+<!-- Click-acknowledgement toast. Shown when an Apply link fires. We
+     can't observe whether the aether:// handler actually accepted the
+     URL, so the toast is an acknowledgement of the click, not a
+     guarantee that Aether did anything. -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="dot" id="toast-dot"></span>
+  <span><strong id="toast-title">Applying...</strong> <span class="muted" id="toast-detail"></span></span>
 </div>
 
 <script src="wallpapers.js"></script>
@@ -891,7 +937,93 @@ function closeLightbox(opts = {}) {
 }
 $('#lbclose').addEventListener('click', () => closeLightbox());
 lb.addEventListener('click', (e) => { if (e.target === lb || e.target.classList.contains('lb-image-wrap')) closeLightbox(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
+
+// Lightbox navigation: arrows (vertical + horizontal), vim keys h/j/k/l,
+// and Tab (Shift+Tab back). Moves to the adjacent wallpaper in the
+// currently-filtered list and wraps around at the ends.
+function navLightbox(delta) {
+  if (!lb.classList.contains('open')) return;
+  const hashPath = decodeHashPath();
+  if (!hashPath) return;
+  const list = STATE.filtered;
+  if (!list.length) return;
+  const idx = list.findIndex(([p]) => p === hashPath);
+  if (idx < 0) return;
+  const nextIdx = (idx + delta + list.length) % list.length;
+  const [nextPath, nextEntry] = list[nextIdx];
+  openLightbox(nextPath, nextEntry, { push: false });
+  history.replaceState({ lightbox: nextPath }, '',
+    buildUrl({ withHash: false }) + '#' + encodePath(nextPath));
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!lb.classList.contains('open')) return;
+  // Don't hijack keys while the user is typing into an input field.
+  if (e.target && e.target.tagName && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if (e.key === 'Escape') return closeLightbox();
+  const prev = (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'h' || e.key === 'k'
+                || (e.key === 'Tab' && e.shiftKey));
+  const next = (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'l' || e.key === 'j'
+                || (e.key === 'Tab' && !e.shiftKey));
+  if (prev) { e.preventDefault(); navLightbox(-1); }
+  else if (next) { e.preventDefault(); navLightbox(+1); }
+});
+
+// Apply button click acknowledgement. The aether:// URL still fires
+// (we don't preventDefault) -- we just give the user immediate visual
+// confirmation that the click registered, since the browser provides
+// no feedback about whether the protocol handler accepted the URL.
+const TOAST = $('#toast');
+const TOAST_TITLE = $('#toast-title');
+const TOAST_DETAIL = $('#toast-detail');
+const TOAST_DOT = $('#toast-dot');
+let toastTimer = null;
+function showToast(title, detail, ok = false) {
+  TOAST_TITLE.textContent = title;
+  TOAST_DETAIL.textContent = detail || '';
+  TOAST_DOT.classList.toggle('ok', ok);
+  TOAST.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => TOAST.classList.remove('show'), 2800);
+}
+
+function setApplyContent(btn, label, spinning) {
+  btn.replaceChildren();
+  if (spinning) {
+    const spin = document.createElement('span');
+    spin.className = 'spin';
+    btn.appendChild(spin);
+  }
+  btn.appendChild(document.createTextNode(label));
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.variant-apply');
+  if (!btn) return;
+  // Don't block the browser from opening aether://. We only update the UI.
+  const originalText = btn.dataset.originalText || (btn.textContent || 'Apply');
+  btn.dataset.originalText = originalText;
+  const slugMatch = btn.title && btn.title.match(/installs as (\S+)/);
+  const slugStr = slugMatch ? slugMatch[1] : '';
+
+  btn.classList.add('applying');
+  btn.classList.remove('sent');
+  setApplyContent(btn, 'Applying', true);
+
+  showToast('Applying theme...', slugStr ? `via aether:// (${slugStr})` : 'via aether://');
+
+  setTimeout(() => {
+    btn.classList.remove('applying');
+    btn.classList.add('sent');
+    setApplyContent(btn, 'Sent ✓', false);
+    showToast('Theme sent to Aether', slugStr, true);
+  }, 1400);
+
+  setTimeout(() => {
+    btn.classList.remove('sent');
+    setApplyContent(btn, originalText, false);
+  }, 3200);
+});
 
 window.addEventListener('popstate', () => {
   readUrl();
