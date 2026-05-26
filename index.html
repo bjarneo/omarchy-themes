@@ -85,7 +85,8 @@
     padding: 12px 18px;
     max-width: 1600px; margin: 0 auto;
   }
-  .brand { font-weight: 700; letter-spacing: -0.01em; font-size: 15px; display: flex; align-items: baseline; gap: 8px; }
+  .brand { font-weight: 700; letter-spacing: -0.01em; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+  .brand .brand-logo { width: 22px; height: 22px; display: block; flex-shrink: 0; }
   .brand .count { color: var(--text-faint); font-weight: 500; font-size: 12px; font-family: var(--mono); }
   .search { flex: 1; max-width: 520px; position: relative; }
   .search input {
@@ -384,7 +385,11 @@
 
 <header>
   <div class="head-row">
-    <div class="brand">Omarchy Themes <span class="count" id="count">loading...</span></div>
+    <div class="brand">
+      <img src="favicon.png" alt="" class="brand-logo">
+      <span>Omarchy Themes</span>
+      <span class="count" id="count">loading...</span>
+    </div>
     <div class="search">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Search title, tags, path...">
