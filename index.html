@@ -15,8 +15,8 @@
     --text-faint: #5f646f;
     --accent: #7aa2f7;
     --accent-soft: #7aa2f733;
-    --radius: 10px;
-    --radius-sm: 6px;
+    --radius: 0px;
+    --radius-sm: 0px;
     --font: ui-sans-serif, -apple-system, "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
     --mono: ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
   }
@@ -78,7 +78,7 @@
   .chip {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 4px 10px;
-    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 999px;
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 0;
     color: var(--text-dim); font-size: 12px; font-family: var(--mono);
     cursor: pointer; user-select: none;
     transition: border-color 0.15s, color 0.15s, background 0.15s;
@@ -92,7 +92,7 @@
 
   .dd { position: relative; }
   .dd-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 10px;
-    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 999px;
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 0;
     color: var(--text-dim); font-size: 12px; font-family: var(--mono); cursor: pointer; }
   .dd-btn:hover { color: var(--text); border-color: var(--text-faint); }
   .dd-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -220,7 +220,7 @@
   .tags { display: flex; flex-wrap: wrap; gap: 5px; }
   .tag {
     font-size: 11px; padding: 3px 8px;
-    background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 999px;
+    background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 0;
     color: var(--text-dim); font-family: var(--mono);
   }
 
@@ -242,7 +242,7 @@
     display: inline-flex; align-items: center; gap: 5px;
     padding: 4px 10px;
     background: var(--accent); color: #fff;
-    border: 1px solid var(--accent); border-radius: 999px;
+    border: 1px solid var(--accent); border-radius: 0;
     font-family: var(--font); font-size: 11px; font-weight: 600;
     cursor: pointer; text-decoration: none;
     flex-shrink: 0;
@@ -293,7 +293,7 @@
   }
   .variant-foot a {
     color: var(--text-faint); text-decoration: none;
-    padding: 2px 4px; border-radius: 3px;
+    padding: 2px 4px; border-radius: 0;
   }
   .variant-foot a:hover { color: var(--text); background: var(--bg-elev); }
   .variant-foot .slug { margin-left: auto; opacity: 0.7; }
@@ -319,7 +319,7 @@
     .head-meta { display: none; }
   }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 0; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
 
   .loader {
@@ -863,18 +863,11 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
     panel.appendChild(ramp);
   }
 
-  // Footer: small links to the raw files + the theme slug as a hint.
+  // Footer: just the theme slug as a hint of what gets installed.
+  // Direct colors.toml / neovim.lua links removed - the Apply button
+  // handles installation, and power users can find the raw files at
+  // the URLs encoded in the aether:// link.
   const foot = el('div', 'variant-foot');
-  if (theme.colors_toml) {
-    const a = el('a', null, 'colors.toml');
-    a.href = mediaUrl(theme.colors_toml); a.setAttribute('download', '');
-    foot.appendChild(a);
-  }
-  if (theme.neovim_lua) {
-    const a = el('a', null, 'neovim.lua');
-    a.href = mediaUrl(theme.neovim_lua); a.setAttribute('download', '');
-    foot.appendChild(a);
-  }
   foot.appendChild(el('span', 'slug', slug));
   panel.appendChild(foot);
 
