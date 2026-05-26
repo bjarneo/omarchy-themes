@@ -25,32 +25,47 @@
 <meta name="twitter:description" content="2,500+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
 <meta name="twitter:image" content="https://bjarneo.github.io/omarchy-themes/favicon.png">
 <style>
+  /* Cascadia Code is what omarchy.org uses for everything; self-hosting
+     it from this repo keeps the look consistent on every platform. */
+  @font-face { font-display: swap; font-family: 'Cascadia Code'; font-style: normal; font-weight: 300; src: url('fonts/CascadiaCode-SemiLight.woff2') format('woff2'); }
+  @font-face { font-display: swap; font-family: 'Cascadia Code'; font-style: normal; font-weight: 400; src: url('fonts/CascadiaCode-Regular.woff2') format('woff2'); }
+  @font-face { font-display: swap; font-family: 'Cascadia Code'; font-style: normal; font-weight: 600; src: url('fonts/CascadiaCode-SemiBold.woff2') format('woff2'); }
+  @font-face { font-display: swap; font-family: 'Cascadia Code'; font-style: normal; font-weight: 700; src: url('fonts/CascadiaCode-Bold.woff2') format('woff2'); }
+
   :root {
-    --bg: #0c0d10;
-    --bg-elev: #14161b;
-    --bg-elev-2: #1b1e25;
-    --border: #262932;
-    --text: #e7e9ee;
-    --text-dim: #9aa0ab;
-    --text-faint: #5f646f;
-    --accent: #7aa2f7;
+    /* Tokyo Night palette - same source variables omarchy.org uses, so
+       the two sites share an identity. */
+    --bg: #1a1b26;        /* tokyo-night "night" background */
+    --bg-elev: #24283b;   /* "storm" background, used for cards */
+    --bg-elev-2: #2a2e44; /* one step elevated for chips / pills / panels */
+    --border: #414868;    /* terminal-black, subtle dividers */
+    --text: #c0caf5;      /* terminal-white */
+    --text-dim: #9aa5ce;
+    --text-faint: #565f89;
+    --accent: #7aa2f7;    /* terminal-blue, Omarchy's primary accent */
     --accent-soft: #7aa2f733;
+    --green: #9ece6a;
+    --turquoise: #b4f9f8;
     --radius: 0px;
     --radius-sm: 0px;
-    --font: ui-sans-serif, -apple-system, "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
-    --mono: ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+    /* Monospace-first font stack. Cascadia Code (self-hosted) primary,
+       then a sequence of OS / browser monospace fallbacks. */
+    --font: 'Cascadia Code', ui-monospace, 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
+    --mono: 'Cascadia Code', ui-monospace, 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: light) {
+    /* Tokyo Night Day - the light counterpart Omarchy users recognise.
+       Same accent hue, inverted neutrals. */
     :root {
-      --bg: #f7f7f8;
-      --bg-elev: #ffffff;
-      --bg-elev-2: #eef0f3;
-      --border: #d8dbe0;
-      --text: #1b1d22;
-      --text-dim: #585d68;
-      --text-faint: #9aa0ab;
-      --accent: #3b6df0;
-      --accent-soft: #3b6df022;
+      --bg: #e1e2e7;
+      --bg-elev: #cdced3;
+      --bg-elev-2: #c0c2c8;
+      --border: #a8aece;
+      --text: #3760bf;
+      --text-dim: #5a6491;
+      --text-faint: #848cb5;
+      --accent: #2e7de9;
+      --accent-soft: #2e7de933;
     }
   }
   * { box-sizing: border-box; }
@@ -767,30 +782,13 @@ function cardEl([path, m]) {
   imgWrap.appendChild(el('div', 'badge', `${m.tone || ''} ${m.color || ''}`.trim()));
   card.appendChild(imgWrap);
 
+  // Card body is intentionally minimal on the overview: just title
+  // and a tiny variant count. The 16-color swatch strips moved to the
+  // lightbox only - they were too noisy at gallery scale.
   const body = el('div', 'card-body');
   body.appendChild(el('div', 'card-title', m.title || path.split('/').pop()));
-  // Number of variants the wallpaper has packaged (almost always 3).
   const variantCount = Object.keys(m.themes || {}).length;
-  body.appendChild(el('div', 'card-sub', `${variantCount} variants -- click to apply`));
-
-  // Three stacked swatch strips: one per variant. The whole row functions
-  // as a visual identity for the wallpaper -- shows that there are 3
-  // distinct palettes inside before you open the lightbox.
-  if (m.themes) {
-    const ramps = el('div', 'ramps');
-    for (const scheme of VARIANT_ORDER) {
-      const t = m.themes[scheme];
-      if (!t || !t.colors) continue;
-      const ramp = el('div', 'ramp');
-      for (const k of ANSI_KEYS) {
-        const sl = el('div', 'sl');
-        sl.style.background = t.colors[k] || 'transparent';
-        ramp.appendChild(sl);
-      }
-      ramps.appendChild(ramp);
-    }
-    body.appendChild(ramps);
-  }
+  body.appendChild(el('div', 'card-sub', `${variantCount} variants`));
 
   card.appendChild(body);
   card.addEventListener('click', () => openLightbox(path, m));
