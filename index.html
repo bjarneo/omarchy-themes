@@ -342,8 +342,13 @@ const RES_TIERS = ['<=720p','720p','1080p','1440p','4K','5K','8K+'];
 // labels. The mapping intentionally hides the source-scheme identity --
 // each variant's actual palette is wallpaper-derived. "deep" = darkest bg
 // + most vivid; "warm" = warm-biased accent; "cool" = muted + cool-biased.
-const VARIANT_ORDER = ['tokyo-night', 'gruvbox', 'nord'];
-const VARIANT_LABEL = { 'tokyo-night': 'Deep', 'gruvbox': 'Warm', 'nord': 'Cool' };
+const VARIANT_ORDER = ['tokyo-night', 'gruvbox', 'nord', 'material'];
+const VARIANT_LABEL = {
+  'tokyo-night': 'Deep',
+  'gruvbox':     'Warm',
+  'nord':        'Cool',
+  'material':    'Material',
+};
 
 // ANSI slots in their canonical 0..15 order.
 const ANSI_KEYS = [
