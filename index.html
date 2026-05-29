@@ -1149,10 +1149,10 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
   const head = el('div', 'variant-head');
   head.appendChild(el('div', 'variant-name', label));
 
-  // Two buttons: Edit opens the theme editor in Aether pre-loaded with
-  // these colors so the user can tweak before committing; Apply runs
-  // Aether's normal confirm-and-install flow. Same aether:// endpoint,
-  // toggled by `edit=true`.
+  // Two buttons: Edit opens the theme editor in Aether so the user can
+  // tweak the palette and choose where to save it; Apply is the trusted
+  // one-click install path (silent + as_omarchy_theme=<slug>). Same
+  // aether:// endpoint, different flags.
   if (theme.colors_toml) {
     // Wallpaper URL: use the original full-res file already on Hetzner
     // (under dark/*, light/*) rather than the per-theme symlinked path,
@@ -1164,6 +1164,9 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
 
     const actions = el('div', 'variant-actions');
 
+    // Edit: opens the editor. No silent / no as_omarchy_theme - the
+    // editor surfaces its own save UI so the user picks the install
+    // name and gets a chance to confirm before anything lands on disk.
     const editParams = new URLSearchParams(baseParams);
     editParams.set('edit', 'true');
     const edit = el('a', 'variant-edit', 'Edit');
@@ -1171,9 +1174,17 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
     edit.title = `Open ${label} in Aether's editor`;
     actions.appendChild(edit);
 
+    // Apply: trusted one-click install. silent=true skips Aether's
+    // confirmation dialog because the click already represents the
+    // user's explicit consent within our own gallery.
+    // as_omarchy_theme=<slug> tells Aether to install under
+    // ~/.config/omarchy/themes/<slug>/ so the theme name is stable.
+    const applyParams = new URLSearchParams(baseParams);
+    applyParams.set('silent', 'true');
+    applyParams.set('as_omarchy_theme', slug);
     const apply = el('a', 'variant-apply', 'Apply');
-    apply.href = `aether://apply?${baseParams.toString()}`;
-    apply.title = `Apply ${label} with Aether`;
+    apply.href = `aether://apply?${applyParams.toString()}`;
+    apply.title = `Apply ${label} with Aether (installs as ${slug})`;
     actions.appendChild(apply);
 
     head.appendChild(actions);
