@@ -303,20 +303,34 @@
     padding: 6px 8px 6px 10px; gap: 8px;
   }
   .variant-name { font-weight: 600; font-size: 12px; letter-spacing: -0.01em; }
-  .variant-apply {
+  /* Action group at the right edge of the variant header. */
+  .variant-actions {
+    display: inline-flex; align-items: center; gap: 4px;
+    flex-shrink: 0;
+  }
+  .variant-apply, .variant-edit {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 4px 10px;
-    background: var(--accent); color: #fff;
-    border: 1px solid var(--accent); border-radius: 0;
+    border-radius: 0;
     font-family: var(--font); font-size: 11px; font-weight: 600;
     cursor: pointer; text-decoration: none;
-    flex-shrink: 0;
-    transition: filter 0.15s, background 0.15s;
-    min-width: 64px; justify-content: center;
+    transition: filter 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
+    min-width: 56px; justify-content: center;
+  }
+  /* Apply is the primary, filled pill */
+  .variant-apply {
+    background: var(--accent); color: #fff;
+    border: 1px solid var(--accent);
   }
   .variant-apply:hover { filter: brightness(1.1); }
   .variant-apply.applying { background: color-mix(in oklab, var(--accent) 70%, #000); }
   .variant-apply.sent { background: #2c8b56; border-color: #2c8b56; }
+  /* Edit is the secondary, outlined sibling — same shape, transparent body */
+  .variant-edit {
+    background: transparent; color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .variant-edit:hover { color: var(--text); border-color: var(--text-faint); }
   .variant-apply .spin {
     width: 10px; height: 10px;
     border: 1.5px solid rgba(255,255,255,0.35);
@@ -1135,27 +1149,34 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
   const head = el('div', 'variant-head');
   head.appendChild(el('div', 'variant-name', label));
 
-  // Apply: one-click install + activate via aether://.
-  // silent=true skips Aether's confirmation dialog. Safe here because the
-  // user explicitly clicked Apply inside our own gallery. Don't carry
-  // silent=true onto links posted into third-party contexts -- any web
-  // page can produce a silent-apply link.
-  // as_omarchy_theme=<slug> tells Aether the install dir name to use
-  // under ~/.config/omarchy/themes/<slug>/.
+  // Two buttons: Edit opens the theme editor in Aether pre-loaded with
+  // these colors so the user can tweak before committing; Apply runs
+  // Aether's normal confirm-and-install flow. Same aether:// endpoint,
+  // toggled by `edit=true`.
   if (theme.colors_toml) {
-    const params = new URLSearchParams();
-    params.set('colors', mediaUrl(theme.colors_toml));
     // Wallpaper URL: use the original full-res file already on Hetzner
     // (under dark/*, light/*) rather than the per-theme symlinked path,
     // which we excluded from the omarchy-themes sync to avoid duplicate
     // uploads. The path is the manifest entry's own key.
-    params.set('wallpaper', mediaUrl(path));
-    params.set('silent', 'true');
-    params.set('as_omarchy_theme', slug);
+    const baseParams = new URLSearchParams();
+    baseParams.set('colors', mediaUrl(theme.colors_toml));
+    baseParams.set('wallpaper', mediaUrl(path));
+
+    const actions = el('div', 'variant-actions');
+
+    const editParams = new URLSearchParams(baseParams);
+    editParams.set('edit', 'true');
+    const edit = el('a', 'variant-edit', 'Edit');
+    edit.href = `aether://apply?${editParams.toString()}`;
+    edit.title = `Open ${label} in Aether's editor`;
+    actions.appendChild(edit);
+
     const apply = el('a', 'variant-apply', 'Apply');
-    apply.href = `aether://apply?${params.toString()}`;
-    apply.title = `Apply ${label} with Aether (installs as ${slug})`;
-    head.appendChild(apply);
+    apply.href = `aether://apply?${baseParams.toString()}`;
+    apply.title = `Apply ${label} with Aether`;
+    actions.appendChild(apply);
+
+    head.appendChild(actions);
   }
   panel.appendChild(head);
 
@@ -1306,8 +1327,12 @@ document.addEventListener('click', (e) => {
   // Don't block the browser from opening aether://. We only update the UI.
   const originalText = btn.dataset.originalText || (btn.textContent || 'Apply');
   btn.dataset.originalText = originalText;
-  const slugMatch = btn.title && btn.title.match(/installs as (\S+)/);
-  const slugStr = slugMatch ? slugMatch[1] : '';
+  // The label of the variant being applied (Deep / Warm / Cool / etc.)
+  // is rendered as the sibling .variant-name inside the same variant card,
+  // so the toast can name what's being applied without parsing the title.
+  const panel = btn.closest('.variant');
+  const nameEl = panel && panel.querySelector('.variant-name');
+  const slugStr = nameEl ? nameEl.textContent : '';
 
   btn.classList.add('applying');
   btn.classList.remove('sent');
