@@ -78,6 +78,9 @@
     --shadow-1: 0 2px 6px hsl(var(--shadow-color) / 0.30);
     --shadow-2: 0 8px 24px hsl(var(--shadow-color) / 0.38);
     --shadow-3: 0 20px 60px hsl(var(--shadow-color) / 0.50);
+    /* Sidebar layout width. main shifts right by this much; the media
+       query below sets it to 0 when reverting to a top bar. */
+    --sidebar-w: 240px;
     /* Monospace-first font stack. Cascadia Code (self-hosted) primary,
        then a sequence of OS / browser monospace fallbacks. */
     --font: 'Cascadia Code', ui-monospace, 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
@@ -152,19 +155,28 @@
     animation-name: pac-bottom;
   }
 
+  /* Sidebar layout: header pinned to the left as a vertical panel so
+     the gallery grid owns the rest of the viewport instead of fighting
+     a top bar for horizontal real estate. Reverts to a sticky top bar
+     on narrow viewports (see media query below).
+     The sidebar width lives in :root as --sidebar-w (see token block). */
   header {
-    position: sticky; top: 0; z-index: 50;
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    z-index: 50;
     background: color-mix(in oklab, var(--bg) 82%, transparent);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border-bottom: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border));
-    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--text) 8%, transparent), var(--shadow-1);
+    border-right: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border));
+    box-shadow: inset -1px 0 0 color-mix(in oklab, var(--text) 8%, transparent), var(--shadow-1);
+    overflow-y: auto;
   }
   @supports not (backdrop-filter: blur(1px)) { header { background: var(--bg); } }
   .head-row {
-    display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2) var(--space-4);
-    padding: var(--space-3) clamp(var(--space-4), 4vw, var(--space-7));
-    max-width: 1600px; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: stretch;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-4);
+    min-height: 100%;
   }
   .brand { font-weight: 700; letter-spacing: -0.01em; font-size: 15px; display: flex; align-items: center; gap: 8px; }
   .brand .brand-logo { width: 22px; height: 22px; display: block; flex-shrink: 0; }
@@ -177,7 +189,9 @@
     font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1;
     text-shadow: 0 0 8px color-mix(in oklab, var(--accent) 35%, transparent);
   }
-  .search { flex: 1 1 220px; max-width: 380px; min-width: 180px; position: relative; }
+  /* In the sidebar (default) the search stretches full width. The
+     mobile media query below restores flex sizing for the top-bar layout. */
+  .search { width: 100%; max-width: none; min-width: 0; position: relative; }
   .search input {
     width: 100%;
     background: var(--bg-elev); color: var(--text);
@@ -188,7 +202,9 @@
   }
   .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft), 0 0 12px -2px color-mix(in oklab, var(--accent) 45%, transparent); }
   .search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-faint); }
-  .head-meta { color: var(--text-dim); font-size: 12px; font-family: var(--mono); margin-left: auto; }
+  /* Stick reset to the bottom of the sidebar (column flex). The mobile
+     media query restores the right-aligned top-bar behavior. */
+  .head-meta { color: var(--text-dim); font-size: 12px; font-family: var(--mono); margin-top: auto; }
   .head-meta button {
     background: none; border: 1px solid var(--border); color: var(--text-dim);
     border-radius: var(--radius-sm); padding: 6px 10px;
@@ -296,7 +312,11 @@
   .ramp .sl { cursor: pointer; transition: transform var(--dur-fast) var(--ease); }
   .ramp .sl.copied { transform: scaleY(1.6); z-index: 2; box-shadow: 0 0 0 1px var(--accent), 0 0 0 4px var(--accent-soft); }
 
-  main { max-width: 1600px; margin: 0 auto; padding: var(--space-5) clamp(var(--space-4), 4vw, var(--space-7)); }
+  main {
+    margin-left: var(--sidebar-w);
+    padding: var(--space-5) clamp(var(--space-4), 4vw, var(--space-7));
+    max-width: 1600px;
+  }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(clamp(260px, 22vw, 300px), 1fr));
@@ -555,6 +575,26 @@
   .btn.primary:hover { filter: brightness(1.08); }
 
   @media (max-width: 760px) {
+    /* On phones revert to the original top-bar layout - a 240px sidebar
+       takes too much horizontal budget on a 400px screen. */
+    :root { --sidebar-w: 0px; }
+    header {
+      position: sticky; top: 0; bottom: auto; right: 0;
+      width: auto;
+      border-right: none;
+      border-bottom: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border));
+      box-shadow: inset 0 1px 0 color-mix(in oklab, var(--text) 8%, transparent), var(--shadow-1);
+      overflow-y: visible;
+    }
+    .head-row {
+      flex-direction: row; align-items: center; flex-wrap: wrap;
+      gap: var(--space-2) var(--space-4);
+      padding: var(--space-3) clamp(var(--space-4), 4vw, var(--space-7));
+      min-height: 0;
+    }
+    .search { flex: 1 1 220px; max-width: 380px; }
+    main { margin-left: 0; }
+
     .lb { flex-direction: column; }
     .lb-side { width: auto; max-height: 60vh; border-left: none; border-top: 1px solid var(--border); }
     .flabel { width: 44px; }
