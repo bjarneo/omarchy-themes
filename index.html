@@ -159,15 +159,14 @@
     padding: var(--space-5) var(--space-4);
     min-height: 100%;
   }
-  /* Two-line brand: logo + name + chomper on row 1, count badge on
-     row 2 right under the name. Aligns the count under the text by
-     padding the count left enough to skip the 22px logo + 8px gap. */
-  .brand { display: flex; flex-direction: column; gap: 4px; }
+  /* Brand block: logo + wordmark on row 1, the filtered/total count
+     flush-left beneath it. Sharing one left edge keeps the logo anchored
+     instead of floating in an empty top-left pocket. */
+  .brand { display: flex; flex-direction: column; gap: 6px; }
   .brand-row { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: -0.01em; font-size: 15px; }
   .brand .brand-logo { width: 22px; height: 22px; display: block; flex-shrink: 0; }
   .brand .count {
     align-self: flex-start;
-    margin-left: 30px;
     font-family: var(--mono); font-size: var(--fs-xs); font-weight: 700;
     letter-spacing: 0.04em; color: var(--accent);
     background: var(--accent-soft);
