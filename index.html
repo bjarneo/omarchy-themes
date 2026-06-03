@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Omarchy Themes</title>
-<meta name="description" content="2,500+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
+<meta name="description" content="3,000+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#1a1b26">
 
 <!-- Favicons (sourced from omarchy.org). The PNG ships at 300x300 so
      it works as both a tab icon and the home-screen icon. -->
@@ -12,409 +14,522 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
 <!-- Open Graph + Twitter card so links unfurl cleanly on Slack, Discord,
-     iMessage, X, etc. The og:image is the same Omarchy logo used as the
-     favicon - small but recognizable. -->
+     iMessage, X, etc. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Omarchy Themes">
 <meta property="og:title" content="Omarchy Themes -- apply with Aether">
-<meta property="og:description" content="2,500+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
+<meta property="og:description" content="3,000+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
 <meta property="og:url" content="https://bjarneo.github.io/omarchy-themes/">
 <meta property="og:image" content="https://bjarneo.github.io/omarchy-themes/favicon.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Omarchy Themes -- apply with Aether">
-<meta name="twitter:description" content="2,500+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
+<meta name="twitter:description" content="3,000+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
 <meta name="twitter:image" content="https://bjarneo.github.io/omarchy-themes/favicon.png">
 <style>
   /* Cascadia Code is what omarchy.org uses for everything; self-hosting
-     it from this repo keeps the look consistent on every platform. */
+     it from this repo keeps the look consistent on every platform. The
+     whole page is honestly all-mono. The terminal aesthetic is the brand,
+     not a costume, so there is no second typeface to fetch. */
   @font-face { font-display: swap; font-family: 'Cascadia Code'; font-style: normal; font-weight: 300; src: url('fonts/CascadiaCode-SemiLight.woff2') format('woff2'); }
   @font-face { font-display: swap; font-family: 'Cascadia Code'; font-style: normal; font-weight: 400; src: url('fonts/CascadiaCode-Regular.woff2') format('woff2'); }
   @font-face { font-display: swap; font-family: 'Cascadia Code'; font-style: normal; font-weight: 600; src: url('fonts/CascadiaCode-SemiBold.woff2') format('woff2'); }
   @font-face { font-display: swap; font-family: 'Cascadia Code'; font-style: normal; font-weight: 700; src: url('fonts/CascadiaCode-Bold.woff2') format('woff2'); }
 
   :root {
-    /* Tokyo Night palette - same source variables omarchy.org uses, so
-       the two sites share an identity. */
+    /* Tokyo Night palette - the same source variables omarchy.org uses,
+       so the two sites share an identity. */
     --bg: #1a1b26;        /* tokyo-night "night" background */
+    --bg-1: #16161e;      /* one notch under bg, used by the sidebar rail */
     --bg-elev: #24283b;   /* "storm" background, used for cards */
     --bg-elev-2: #2a2e44; /* one step elevated for chips / pills / panels */
-    --border: #414868;    /* terminal-black, subtle dividers */
+    --border: #2c3047;    /* hairline dividers, slightly deeper than terminal-black */
+    --border-2: #414868;  /* brighter divider for emphasis */
     --text: #c0caf5;      /* terminal-white */
     --text-dim: #9aa5ce;
-    --text-faint: #8b94cd;
-    /* Tokyo Night blue is the theme's signature UI highlight - used for
-       focus rings, active controls, links and the apply button. One token
-       drives the whole page's accent, keeping the identity consistent. */
+    --text-faint: #6f7aa6;
+    /* Tokyo Night blue is the theme's signature UI highlight - focus rings,
+       active controls, links, the apply button. One token drives the whole
+       page's accent, keeping the identity consistent. */
     --accent: #7aa2f7;
     --accent-soft: #7aa2f733;
-    --accent-ink: #1a1b26; /* dark night bg, used as text on the blue accent */
-    /* Tokyo Night accent hues. Each theme variant gets a distinct
-       left-border tint in the lightbox, drawn from this palette. */
+    --accent-ink: #11121c;
+    /* Tokyo Night accent hues. */
     --blue:   #7aa2f7;
-    --purple: #bb9af7;
+    --magenta:#bb9af7;
     --cyan:   #7dcfff;
     --green:  #9ece6a;
     --orange: #ff9e64;
     --red:    #f7768e;
-    /* Subtle, consistent rounding across surfaces and controls for a
-       polished, modern feel while staying crisp (no heavy pills). */
-    --radius: 8px;
-    --radius-sm: 6px;
+    --teal:   #2ac3de;
+    --ok:     #41a86a;
+    /* --vibe is the palette-reactive hue. It defaults to the brand accent
+       and is overwritten per-card (--chip) and on the open lightbox so the
+       chrome takes on the color of whatever theme you are looking at. It is
+       always contrast-safe because every use mixes it INTO the dark base,
+       never the other way around. */
+    --vibe: var(--accent);
+    /* Subtle, consistent rounding. */
+    --radius: 10px;
+    --radius-sm: 7px;
+    --radius-xs: 5px;
     /* 4px spacing scale - one source of truth for rhythm. */
     --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
     --space-5: 24px; --space-6: 32px; --space-7: 48px;
-    /* Mono type scale; two largest sizes clamp so the signature type
-       breathes on wide viewports without touching the dense control band. */
-    --fs-2xs: 10px; --fs-xs: 11px; --fs-sm: 12px; --fs-base: 13px;
+    /* Mono type scale. */
+    --fs-3xs: 9px; --fs-2xs: 10px; --fs-xs: 11px; --fs-sm: 12px; --fs-base: 13px;
     --fs-md: clamp(15px, 1rem + 0.3vw, 16px);
-    --fs-lg: clamp(18px, 1.05rem + 0.6vw, 22px);
-    --lh-tight: 1.15; --lh-snug: 1.3; --lh-body: 1.55;
-    --ls-label: 0.09em;
-    /* Motion tokens: fast=in-place flips, base=surfaces, slow=image fade. */
-    --dur-fast: 0.12s; --dur: 0.18s; --dur-slow: 0.32s;
+    --fs-lg: clamp(19px, 1.1rem + 0.7vw, 26px);
+    --fs-xl: clamp(24px, 1.4rem + 1.2vw, 40px);
+    --lh-tight: 1.12; --lh-snug: 1.3; --lh-body: 1.55;
+    --ls-label: 0.14em;
+    /* Motion tokens: fast=in-place flips, base=surfaces, slow=image/blur. */
+    --dur-fast: 0.12s; --dur: 0.18s; --dur-slow: 0.34s; --dur-slower: 0.5s;
     --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    /* Ink-tinted elevation scale (not pure black) so depth matches the palette. */
-    --shadow-color: 220 30% 4%;
-    --shadow-1: 0 2px 6px hsl(var(--shadow-color) / 0.30);
-    --shadow-2: 0 8px 24px hsl(var(--shadow-color) / 0.38);
-    --shadow-3: 0 20px 60px hsl(var(--shadow-color) / 0.50);
-    /* Sidebar layout width. main shifts right by this much; the media
-       query below sets it to 0 when reverting to a top bar. */
-    --sidebar-w: 240px;
-    /* Monospace-first font stack. Cascadia Code (self-hosted) primary,
-       then a sequence of OS / browser monospace fallbacks. */
+    /* Ink-tinted elevation (not pure black) so depth matches the palette. */
+    --shadow-color: 230 40% 3%;
+    --shadow-1: 0 2px 8px hsl(var(--shadow-color) / 0.30);
+    --shadow-2: 0 12px 32px hsl(var(--shadow-color) / 0.42);
+    --shadow-3: 0 28px 70px hsl(var(--shadow-color) / 0.55);
+    /* Glass recipe knobs. */
+    --glass-bg: color-mix(in oklab, var(--bg) 72%, transparent);
+    --glass-lip: inset 0 1px 0 color-mix(in oklab, var(--text) 10%, transparent);
+    /* Sidebar layout width; main shifts right by this much. */
+    --sidebar-w: 250px;
+    /* Sticky chrome heights (status line + heatmap) used to offset content. */
+    --topbar-h: 30px;
+    --heat-h: 42px;
     --font: 'Cascadia Code', ui-monospace, 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
-    --mono: 'Cascadia Code', ui-monospace, 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
-    /* System display stack (no fetch) for the two largest headings only.
-       A straight (non-rounded) sans reads more professional than the
-       rounded variants while still contrasting the mono body. */
-    --display: 'SF Pro Display', 'Segoe UI Variable Display', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    --mono: var(--font);
+    --display: var(--font);
   }
   @media (prefers-color-scheme: light) {
-    /* Tokyo Night Day - the official light variant of Tokyo Night, so the
-       site keeps the same identity whichever color scheme the OS prefers. */
+    /* Tokyo Night Day - the official light variant, so the site keeps its
+       identity whichever color scheme the OS prefers. */
     :root {
       --bg: #e1e2e7;
+      --bg-1: #d5d6db;
       --bg-elev: #d5d6db;
-      --bg-elev-2: #c4c8da;
-      --border: #a1a6c5;
-      --text: #3760bf;
-      --text-dim: #6172b0;
-      --text-faint: #848cb5;
-      --accent: #2e7de9;       /* Tokyo Night Day blue */
+      --bg-elev-2: #c8cad6;
+      --border: #b7bcce;
+      --border-2: #a1a6c5;
+      --text: #2e3550;
+      --text-dim: #565f89;
+      --text-faint: #787e9e;
+      --accent: #2e7de9;
       --accent-soft: #2e7de933;
       --accent-ink: #ffffff;
-      /* Tokyo Night Day hues for the per-variant left borders. */
       --blue:   #2e7de9;
-      --purple: #9854f1;
+      --magenta:#9854f1;
       --cyan:   #007197;
       --green:  #587539;
       --orange: #b15c00;
       --red:    #f52a65;
-      /* Lighter blue-grey shadow so elevation reads as depth, not soot. */
+      --teal:   #118c74;
+      --ok:     #33635c;
+      --glass-bg: color-mix(in oklab, var(--bg) 78%, transparent);
+      --glass-lip: inset 0 1px 0 color-mix(in oklab, #fff 55%, transparent);
       --shadow-color: 230 25% 35%;
-      --shadow-1: 0 2px 6px hsl(var(--shadow-color) / 0.14);
-      --shadow-2: 0 8px 22px hsl(var(--shadow-color) / 0.18);
-      --shadow-3: 0 18px 50px hsl(var(--shadow-color) / 0.22);
+      --shadow-1: 0 2px 8px hsl(var(--shadow-color) / 0.14);
+      --shadow-2: 0 12px 30px hsl(var(--shadow-color) / 0.18);
+      --shadow-3: 0 24px 60px hsl(var(--shadow-color) / 0.24);
     }
   }
+
   * { box-sizing: border-box; }
-  html { font-size: 16px; -webkit-text-size-adjust: 100%; }
-  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); font-size: var(--fs-sm); line-height: var(--lh-body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--text);
+    font-family: var(--font); font-size: var(--fs-sm); line-height: var(--lh-body);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+
+  /* SIGNATURE: a living Tokyo Night aurora pinned behind everything.
+     Three oversized radial gradients (blue / magenta / cyan) drift slowly
+     so the room subtly breathes; the glass chrome floats above it and the
+     lightbox frosts it. background-attachment: fixed keeps it still while
+     the gallery scrolls. */
   body {
     min-height: 100vh;
-    /* A single soft ambient glow behind the sidebar gives the flat
-       background subtle depth - no pattern, no texture. */
+    isolation: isolate;
+    background-color: var(--bg);
     background-image:
-      radial-gradient(1100px 620px at 12% -8%,
-        color-mix(in oklab, var(--accent) 7%, transparent), transparent 60%);
+      radial-gradient(62% 50% at 10% -8%,  color-mix(in oklab, var(--blue) 13%, transparent), transparent 60%),
+      radial-gradient(58% 55% at 94% 6%,   color-mix(in oklab, var(--magenta) 11%, transparent), transparent 62%),
+      radial-gradient(72% 60% at 58% 112%, color-mix(in oklab, var(--cyan) 10%, transparent), transparent 64%);
     background-attachment: fixed;
+    background-repeat: no-repeat;
   }
-  /* Text selection uses the accent so highlighted text stays on-brand. */
+  @media (prefers-reduced-motion: no-preference) {
+    body { animation: aurora-drift 64s ease-in-out infinite alternate; }
+  }
+  @keyframes aurora-drift {
+    from { background-position: 0% 0%, 0% 0%, 0% 0%; }
+    to   { background-position: 6% 4%, -5% 3%, 3% -5%; }
+  }
+  /* Fine film grain so no surface ever reads as a flat fill. SVG
+     feTurbulence as a tiled data-URI, overlay-blended at ~3.5%. */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    opacity: 0.04; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+  @media (prefers-color-scheme: light) { body::before { opacity: 0.03; mix-blend-mode: multiply; } }
+
   ::selection { background: var(--accent); color: var(--accent-ink); }
   ::-moz-selection { background: var(--accent); color: var(--accent-ink); }
   a { color: inherit; }
 
-  /* Sidebar layout: header pinned to the left as a vertical panel so
-     the gallery grid owns the rest of the viewport instead of fighting
-     a top bar for horizontal real estate. Reverts to a sticky top bar
-     on narrow viewports (see media query below).
-     The sidebar width lives in :root as --sidebar-w (see token block). */
+  /* Shared glass recipe for the floating chrome. Reserved for the few
+     large surfaces (sidebar, lightbox, toast, heatbar). Cards do NOT use
+     backdrop-filter - blurring ~80 tiles at once would tank compositing on
+     weak GPUs during fast scroll, so they get a cheap semi-opaque fill. */
+  .glass {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(20px) saturate(165%);
+    backdrop-filter: blur(20px) saturate(165%);
+    box-shadow: var(--glass-lip), var(--shadow-1);
+  }
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .glass { background: var(--bg-1); }
+  }
+
+  /* ---- SIDEBAR ------------------------------------------------------- */
   header {
     position: fixed; top: 0; left: 0; bottom: 0;
     width: var(--sidebar-w);
     z-index: 50;
-    background: color-mix(in oklab, var(--bg) 82%, transparent);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border-right: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border));
-    box-shadow: inset -1px 0 0 color-mix(in oklab, var(--text) 8%, transparent), var(--shadow-1);
-    overflow-y: auto;
+    border-right: 1px solid color-mix(in oklab, var(--accent) 16%, var(--border));
+    overflow-y: auto; overscroll-behavior: contain;
   }
-  @supports not (backdrop-filter: blur(1px)) { header { background: var(--bg); } }
   .head-row {
     display: flex; flex-direction: column; align-items: stretch;
-    gap: var(--space-4);
-    padding: var(--space-5) var(--space-4);
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-4) var(--space-4);
     min-height: 100%;
   }
-  /* Brand block: logo + wordmark on row 1, the filtered/total count
-     flush-left beneath it. Sharing one left edge keeps the logo anchored
-     instead of floating in an empty top-left pocket. */
-  .brand { display: flex; flex-direction: column; gap: 6px; }
-  .brand-row { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: -0.01em; font-size: 15px; }
-  .brand .brand-logo { width: 22px; height: 22px; display: block; flex-shrink: 0; }
-  .brand .count {
-    align-self: flex-start;
+  .brand { display: flex; flex-direction: column; gap: var(--space-3); }
+  .brand-row {
+    display: flex; align-items: center; gap: var(--space-2);
+    font-weight: 700; letter-spacing: -0.01em; font-size: var(--fs-md);
+  }
+  .brand-logo {
+    width: 26px; height: 26px; display: block; flex-shrink: 0;
+    border-radius: 7px;
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 30%, transparent), 0 4px 14px hsl(var(--shadow-color) / 0.5);
+  }
+  .brand-name { display: inline-flex; align-items: baseline; gap: 1px; }
+  .brand-name b { font-weight: 700; }
+  .brand-name span { color: var(--text-dim); font-weight: 400; }
+  /* Blinking block caret after the wordmark - it reads as a live shell. */
+  .caret {
+    display: inline-block; width: 0.5em; height: 1.02em;
+    margin-left: 4px; transform: translateY(0.12em);
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-soft);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .caret { animation: caret-blink 1.1s steps(1, end) infinite; }
+  }
+  @keyframes caret-blink { 50% { opacity: 0; } }
+
+  .count-row { display: flex; align-items: center; gap: var(--space-2); }
+  .count {
     font-family: var(--mono); font-size: var(--fs-xs); font-weight: 700;
     letter-spacing: 0.04em; color: var(--accent);
     background: var(--accent-soft);
-    border: 1px solid color-mix(in oklab, var(--accent) 45%, transparent);
-    padding: 2px var(--space-2); border-radius: var(--radius-sm);
+    border: 1px solid color-mix(in oklab, var(--accent) 42%, transparent);
+    padding: 3px var(--space-2); border-radius: var(--radius-xs);
     font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1;
   }
-  /* In the sidebar (default) the search stretches full width. The
-     mobile media query below restores flex sizing for the top-bar layout. */
-  .search { width: 100%; max-width: none; min-width: 0; position: relative; }
+  .count-label { font-size: var(--fs-2xs); letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-faint); }
+
+  /* Search styled as a shell prompt. */
+  .search { width: 100%; position: relative; }
+  .search .prompt {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    color: var(--accent); font-weight: 700; pointer-events: none;
+    text-shadow: 0 0 8px var(--accent-soft);
+  }
   .search input {
     width: 100%;
-    background: var(--bg-elev); color: var(--text);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 9px 12px 9px 34px;
+    background: color-mix(in oklab, var(--bg-elev) 60%, transparent);
+    color: var(--text);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 9px 30px 9px 28px;
     font-size: var(--fs-base); font-family: var(--mono); outline: none;
-    transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+    transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease);
   }
-  .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-  .search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-faint); }
-  /* Stick reset to the bottom of the sidebar (column flex). The mobile
-     media query restores the right-aligned top-bar behavior. */
-  .head-meta { color: var(--text-dim); font-size: 12px; font-family: var(--mono); margin-top: auto; }
-  .head-meta button {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: none; border: 1px solid var(--border); color: var(--text-dim);
-    border-radius: var(--radius-sm); padding: 6px 10px;
-    font-family: var(--mono); font-size: 11px; cursor: pointer;
+  .search input::placeholder { color: var(--text-faint); }
+  .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); background: color-mix(in oklab, var(--bg-elev) 85%, transparent); }
+  .search .slash {
+    position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
+    font-size: var(--fs-2xs); color: var(--text-faint);
+    border: 1px solid var(--border); border-radius: var(--radius-xs);
+    padding: 1px 5px; pointer-events: none; line-height: 1.4;
   }
-  .head-meta button:hover { color: var(--text); border-color: var(--text-faint); }
+  .search input:focus ~ .slash { opacity: 0; }
 
-  /* Filters in the sidebar are full sections with a small mono header
-     above a vertical clickable list - more discoverable than dropdowns
-     at this width. Each .flist-item is a clickable row showing a
-     colored dot (where relevant), the value name, and a live count. */
-  .filters-inline { display: flex; flex-direction: column; gap: var(--space-4); }
-  .filter-section { display: flex; flex-direction: column; gap: var(--space-1); }
+  /* Filter sections: a labelled header above a vertical clickable list. */
+  .filters-inline { display: flex; flex-direction: column; gap: var(--space-5); }
+  .filter-section { display: flex; flex-direction: column; gap: 3px; }
   .filter-section-label {
-    font-family: var(--mono); font-size: 10px;
-    text-transform: uppercase; letter-spacing: 0.12em;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono); font-size: var(--fs-2xs);
+    text-transform: uppercase; letter-spacing: var(--ls-label);
     color: var(--text-faint);
-    padding: 0 4px 2px;
+    padding: 0 4px 4px;
+  }
+  .filter-section-label .hk {
+    font-size: var(--fs-3xs); letter-spacing: 0.04em;
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 0 4px; color: var(--text-faint);
   }
   .flist { display: flex; flex-direction: column; gap: 1px; }
   .flist-item {
-    display: flex; align-items: center; gap: 8px;
-    padding: 5px 8px;
-    font-family: var(--mono); font-size: 12px;
+    display: flex; align-items: center; gap: var(--space-2);
+    padding: 6px 8px;
+    font-family: var(--mono); font-size: var(--fs-sm);
     color: var(--text-dim);
     cursor: pointer; user-select: none;
+    border-radius: var(--radius-xs);
     border-left: 2px solid transparent;
     transition: color var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease);
   }
-  .flist-item:hover { color: var(--text); background: var(--bg-elev); }
+  .flist-item:hover { color: var(--text); background: color-mix(in oklab, var(--bg-elev) 70%, transparent); }
   .flist-item.selected {
     color: var(--text);
-    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    background: color-mix(in oklab, var(--accent) 16%, transparent);
     border-left-color: var(--accent);
   }
-  .flist-item.zero { opacity: 0.4; }
+  .flist-item.zero { opacity: 0.36; }
   .flist-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
+    width: 11px; height: 11px; border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 0 7px -1px currentColor;
     flex-shrink: 0;
   }
-  .flist-name { flex: 1; }
-  .flist-count {
-    font-size: 10px; color: var(--text-faint);
-    font-variant-numeric: tabular-nums;
-  }
-  /* Resolution range row: tier name + two compact op buttons. */
+  .flist-name { flex: 1; text-transform: capitalize; }
+  .flist-count { font-size: var(--fs-2xs); color: var(--text-faint); font-variant-numeric: tabular-nums; }
+  .flist-item.selected .flist-count { color: var(--accent); }
+
+  /* Resolution range row: tier name + two compact min/max op buttons. */
   .flist-range {
-    display: grid; grid-template-columns: 1fr auto auto; gap: 6px;
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: 6px;
     align-items: center;
     padding: 4px 8px;
-    font-family: var(--mono); font-size: 12px;
+    font-family: var(--mono); font-size: var(--fs-sm);
     color: var(--text-dim);
   }
-  /* Legacy hooks kept so existing JS that builds .frow / .flabel
-     elements doesn't break - we just hide them. */
-  .frow { display: contents; }
-  .flabel { display: none; }
-  .sep { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
-  .chip {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 10px;
-    background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    color: var(--text-dim); font-size: 12px; font-family: var(--mono);
-    cursor: pointer; user-select: none;
-    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
-  }
-  .chip:hover { color: var(--text); border-color: var(--text-faint); }
-  .chip:active { transform: translateY(1px); }
-  .chip.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-  .chip.zero { opacity: 0.4; }
-  .chip .dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18); }
-  .chip .num { font-size: 10px; color: var(--text-faint); margin-left: 2px; }
-  .chip.active .num { color: rgba(255,255,255,0.75); }
-
-  .dd { position: relative; }
-  .dd-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 10px;
-    background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    color: var(--text-dim); font-size: 12px; font-family: var(--mono); cursor: pointer; }
-  .dd-btn:hover { color: var(--text); border-color: var(--text-faint); }
-  .dd-btn.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-  .dd-btn .dd-label { text-transform: uppercase; font-size: 10px; letter-spacing: 0.08em; opacity: 0.8; }
-  .dd-btn .dd-val { font-weight: 600; }
-  .dd-btn .dd-clear { opacity: 0.6; padding: 0 2px; }
-  .dd-btn .dd-clear:hover { opacity: 1; }
-  .dd-btn:not(.active) .dd-clear { display: none; }
-  .dd-btn .dd-caret { font-size: 9px; opacity: 0.6; }
-  .dd-menu {
-    position: absolute; top: calc(100% + 6px); left: 0;
-    min-width: 220px; max-height: 320px;
-    background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm);
-    z-index: 60; display: none; flex-direction: column; overflow: hidden;
-    box-shadow: var(--shadow-2);
-  }
-  .dd-menu.open { display: flex; }
-  .dd-search {
-    width: 100%; padding: 9px 12px;
-    background: transparent; color: var(--text);
-    border: none; border-bottom: 1px solid var(--border);
-    font-family: var(--font); font-size: 12px; outline: none;
-  }
-  .dd-list { overflow-y: auto; max-height: 270px; padding: 4px; }
-  .dd-item {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 7px 10px; border-radius: var(--radius-sm);
-    font-size: 12px; cursor: pointer; color: var(--text-dim); font-family: var(--mono);
-  }
-  .dd-item:hover { background: var(--bg-elev-2); color: var(--text); }
-  .dd-item.selected { background: var(--accent-soft); color: var(--text); }
-  .dd-item-count { font-size: 10px; color: var(--text-faint); }
-  .dd-item.zero { opacity: 0.4; }
-
-  /* Resolution range item: a row with the tier name, count, and two
-     small operator chips ('>=' and '<=') for setting the min / max
-     bound from a single list. */
-  .dd-range {
-    display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px;
-    align-items: center;
-    padding: 5px 8px;
-    color: var(--text-dim); font-family: var(--mono); font-size: 12px;
-    cursor: default;
-  }
-  .dd-range:hover { background: var(--bg-elev-2); color: var(--text); }
-  .dd-range .name { white-space: nowrap; }
-  .dd-range .count { font-size: 10px; color: var(--text-faint); min-width: 32px; text-align: right; }
-  .dd-range.zero .name, .dd-range.zero .count { opacity: 0.4; }
+  .flist-range .rname { font-variant-numeric: tabular-nums; }
+  .flist-range .rcount { font-size: var(--fs-2xs); color: var(--text-faint); font-variant-numeric: tabular-nums; min-width: 30px; text-align: right; }
+  .flist-range.zero { opacity: 0.36; }
   .op-btn {
     background: var(--bg-elev-2); color: var(--text-faint);
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    border: 1px solid var(--border); border-radius: var(--radius-xs);
     padding: 2px 7px;
-    font-family: var(--mono); font-size: 11px;
+    font-family: var(--mono); font-size: var(--fs-xs); line-height: 1.3;
     cursor: pointer;
     transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
   }
   .op-btn:hover { color: var(--text); border-color: var(--text-faint); }
   .op-btn:active { transform: translateY(1px); }
   .op-btn.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-  .chip-dot-inline { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18); flex-shrink: 0; }
-  /* Visible keyboard focus across every control; mouse clicks stay clean. */
-  .chip:focus-visible, .dd-btn:focus-visible, .op-btn:focus-visible, .dd-item:focus-visible,
-  .dd-search:focus-visible, .variant-edit:focus-visible, .lb-close:focus-visible,
-  .head-meta button:focus-visible, .ramp .sl:focus-visible {
-    outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft);
-  }
-  /* Accent-filled controls need a contrasting ring (yellow-on-yellow is invisible). */
-  .chip.active:focus-visible, .dd-btn.active:focus-visible, .op-btn.active:focus-visible,
-  .variant-apply:focus-visible {
-    outline: 2px solid var(--accent-ink); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent);
-  }
-  .ramp .sl { cursor: pointer; transition: transform var(--dur-fast) var(--ease); }
-  .ramp .sl.copied { transform: scaleY(1.6); z-index: 2; box-shadow: 0 0 0 1px var(--accent), 0 0 0 4px var(--accent-soft); }
 
-  main {
-    margin-left: var(--sidebar-w);
-    padding: var(--space-5) clamp(var(--space-4), 4vw, var(--space-7));
-    max-width: 1600px;
+  /* Sidebar footer: reset + a compact keymap legend + links. */
+  .side-foot { margin-top: auto; display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-4); }
+  .reset-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    background: none; border: 1px solid var(--border); color: var(--text-dim);
+    border-radius: var(--radius-sm); padding: 8px 10px;
+    font-family: var(--mono); font-size: var(--fs-xs); cursor: pointer;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
   }
+  .reset-btn:hover { color: var(--text); border-color: var(--text-faint); background: color-mix(in oklab, var(--bg-elev) 60%, transparent); }
+  .reset-btn[disabled] { opacity: 0.4; cursor: default; }
+  .keymap { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: var(--fs-3xs); color: var(--text-faint); font-family: var(--mono); }
+  .keymap div { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .kbd {
+    font-size: var(--fs-3xs); border: 1px solid var(--border); border-radius: 4px;
+    padding: 0 4px; color: var(--text-dim); background: color-mix(in oklab, var(--bg-elev) 50%, transparent);
+    min-width: 14px; text-align: center;
+  }
+  .side-links { display: flex; flex-wrap: wrap; gap: 6px; }
+  .side-links a {
+    font-size: var(--fs-2xs); color: var(--text-faint); text-decoration: none;
+    border: 1px solid var(--border); border-radius: var(--radius-xs);
+    padding: 3px 8px;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+  .side-links a:hover { color: var(--accent); border-color: color-mix(in oklab, var(--accent) 45%, var(--border)); }
+
+  /* ---- MAIN + STICKY CHROME ----------------------------------------- */
+  main { margin-left: var(--sidebar-w); }
+  .topchrome {
+    position: sticky; top: 0; z-index: 40;
+    border-bottom: 1px solid var(--border);
+  }
+  /* tmux/lualine-style status line: mode pill, filter breadcrumbs, count. */
+  .statusline {
+    display: flex; align-items: center; gap: var(--space-2);
+    height: var(--topbar-h); padding: 0 clamp(var(--space-3), 3vw, var(--space-6));
+    font-family: var(--mono); font-size: var(--fs-xs);
+    border-bottom: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+    overflow: hidden; white-space: nowrap;
+  }
+  .mode-pill {
+    flex: none; font-weight: 700; font-size: var(--fs-2xs); letter-spacing: 0.1em;
+    color: var(--accent-ink); background: var(--accent);
+    padding: 3px 8px; border-radius: var(--radius-xs);
+  }
+  .crumbs { display: flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; color: var(--text-dim); }
+  .crumb {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: color-mix(in oklab, var(--bg-elev) 70%, transparent);
+    border: 1px solid var(--border); border-radius: var(--radius-xs);
+    padding: 2px 4px 2px 8px; cursor: pointer; color: var(--text-dim);
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .crumb:hover { color: var(--text); border-color: var(--text-faint); }
+  .crumb .crumb-k { color: var(--text-faint); }
+  .crumb .crumb-dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2); }
+  .crumb .x { font-size: var(--fs-sm); line-height: 1; opacity: 0.6; padding: 0 2px; }
+  .crumb:hover .x { opacity: 1; }
+  .crumbs-empty { color: var(--text-faint); }
+  .status-right { margin-left: auto; display: flex; align-items: center; gap: var(--space-3); flex: none; }
+  .status-count { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .status-count b { color: var(--accent); font-weight: 700; }
+  .status-hint { color: var(--text-faint); }
+  .status-hint .kbd { margin: 0 1px; }
+
+  /* SPECTRUM heatmap: all entries as one canvas, hue from color, dimmed
+     when filtered out. Doubles as a scrubber - hover shows a chip, click
+     opens that theme. One draw call, redrawn only on filter / resize. */
+  .heatwrap { position: relative; height: var(--heat-h); }
+  #heat { display: block; width: 100%; height: 100%; cursor: crosshair; }
+  .heat-cursor {
+    position: absolute; top: 0; bottom: 0; left: 0; width: 1px;
+    background: var(--text); box-shadow: 0 0 0 1px hsl(var(--shadow-color) / 0.4);
+    transform: translateX(-2px); opacity: 0; pointer-events: none;
+    transition: opacity var(--dur-fast) linear;
+  }
+  .heatwrap.scrub .heat-cursor { opacity: 0.9; }
+  .heat-tip {
+    position: absolute; bottom: calc(100% + 8px); left: 0;
+    transform: translateX(-50%); pointer-events: none;
+    background: var(--glass-bg); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--border-2); border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-2);
+    padding: 7px 9px; min-width: 150px; max-width: 240px;
+    opacity: 0; transition: opacity var(--dur-fast) var(--ease);
+    z-index: 5;
+  }
+  .heatwrap.scrub .heat-tip { opacity: 1; }
+  .heat-tip .htitle { font-size: var(--fs-2xs); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+  .heat-tip .hmeta { font-size: var(--fs-3xs); color: var(--text-faint); font-variant-numeric: tabular-nums; margin-bottom: 5px; }
+  .heat-tip .hramp { height: 7px; border-radius: 2px; }
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .heat-tip { background: var(--bg-elev); }
+  }
+
+  .gridwrap { padding: var(--space-5) clamp(var(--space-3), 3vw, var(--space-6)) var(--space-7); }
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(clamp(260px, 22vw, 300px), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(clamp(220px, 20vw, 268px), 1fr));
     gap: var(--space-4);
   }
+
+  /* ---- CARD: a color chip ------------------------------------------- */
   .card {
+    --chip: var(--accent);
     position: relative;
-    background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius);
+    background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
+    border: 1px solid var(--border);
+    border-top: 2px solid color-mix(in oklab, var(--chip) 55%, var(--border));
+    border-radius: var(--radius);
     overflow: hidden; cursor: pointer;
-    transition: transform var(--dur) var(--ease-out), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease-out);
     display: flex; flex-direction: column;
+    transition: transform var(--dur) var(--ease-out), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease-out);
   }
-  .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft); }
+  @supports not (background: color-mix(in oklab, red, blue)) {
+    .card { background: var(--bg-elev); border-top-color: var(--accent); }
+  }
+  .card:focus-visible { outline: none; }
+  .card.kbf {
+    border-color: color-mix(in oklab, var(--chip) 70%, var(--border));
+    box-shadow: 0 0 0 2px var(--chip), 0 0 0 5px color-mix(in oklab, var(--chip) 35%, transparent);
+  }
   .card:active { transform: translateY(0) scale(0.997); transition-duration: var(--dur-fast); }
   .card:hover {
-    transform: translateY(-2px);
-    border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
-    box-shadow: var(--shadow-2);
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--chip) 70%, var(--border));
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--chip) 38%, transparent),
+      0 14px 34px -14px color-mix(in oklab, var(--chip) 60%, transparent),
+      var(--shadow-2);
   }
+  /* Heatmap-linked pulse when the matching bar is scrubbed. */
+  .card.pulse { box-shadow: 0 0 0 2px var(--chip), 0 0 30px -6px var(--chip); }
   .card-image {
     position: relative; aspect-ratio: 16 / 10; overflow: hidden;
     background:
       linear-gradient(115deg,
         color-mix(in oklab, var(--bg-elev-2) 60%, transparent) 0%,
-        color-mix(in oklab, var(--accent) 9%, var(--bg-elev-2)) 45%,
+        color-mix(in oklab, var(--chip) 14%, var(--bg-elev-2)) 45%,
         color-mix(in oklab, var(--bg-elev-2) 60%, transparent) 90%) 0 0 / 220% 100%,
       var(--bg-elev);
-    animation: card-shimmer 1.25s ease-in-out infinite;
+    animation: card-shimmer 1.3s ease-in-out infinite;
   }
   .card-image:has(img.loaded) { animation: none; }
   @keyframes card-shimmer { 0% { background-position: 120% 0; } 100% { background-position: -120% 0; } }
   .card-image img {
     width: 100%; height: 100%; object-fit: cover; display: block;
-    opacity: 0; filter: blur(12px); transform: scale(1.04);
-    transition: opacity 0.45s var(--ease), filter 0.45s var(--ease), transform 0.45s var(--ease);
+    opacity: 0; filter: blur(12px); transform: scale(1.05);
+    transition: opacity 0.5s var(--ease), filter 0.5s var(--ease), transform 0.5s var(--ease);
   }
   .card-image img.loaded { opacity: 1; filter: blur(0); transform: scale(1); }
-  .card .badge {
+  .card:hover .card-image img.loaded { transform: scale(1.035); }
+  .badge {
     position: absolute; top: var(--space-2); left: var(--space-2);
-    background: color-mix(in oklab, var(--bg) 78%, transparent); color: var(--text);
-    border: 1px solid color-mix(in oklab, var(--accent) 55%, var(--border));
-    padding: 3px 7px; border-radius: var(--radius-sm);
-    font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--mono);
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 1;
+    display: inline-flex; align-items: center; gap: 5px;
+    background: color-mix(in oklab, var(--bg) 70%, transparent); color: var(--text);
+    border: 1px solid color-mix(in oklab, var(--chip) 50%, var(--border));
+    padding: 3px 8px; border-radius: var(--radius-xs);
+    font-size: var(--fs-3xs); letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--mono);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); z-index: 1;
   }
-  .card-body { padding: var(--space-2) var(--space-3) var(--space-3); }
+  .badge .bdot { width: 7px; height: 7px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2); }
+  .badge .res {
+    position: absolute; top: var(--space-2); right: var(--space-2); left: auto;
+    border-color: var(--border); color: var(--text-dim); font-variant-numeric: tabular-nums;
+  }
+  .card-body { padding: var(--space-3) var(--space-3) var(--space-2); display: flex; flex-direction: column; gap: 3px; }
   .card-title {
-    font-weight: 700; font-size: var(--fs-base); line-height: var(--lh-snug); letter-spacing: -0.01em; color: var(--text);
+    font-weight: 600; font-size: var(--fs-sm); line-height: var(--lh-snug); letter-spacing: -0.005em; color: var(--text);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .card-sub {
-    margin-top: var(--space-1); font-family: var(--mono); font-size: var(--fs-2xs);
-    color: var(--text-dim); letter-spacing: 0.04em; text-transform: uppercase;
-    display: flex; align-items: center; gap: 5px;
+    font-family: var(--mono); font-size: var(--fs-2xs);
+    color: var(--text-faint); letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 6px;
   }
-  .card-sub::before {
-    content: ''; width: 5px; height: 5px; border-radius: 50%;
-    background: var(--accent); flex-shrink: 0;
+  .card-sub .vcount { color: var(--text-dim); }
+  /* The wallpaper's own extracted palette as a single-gradient fingerprint.
+     Built dynamically from colors[] (variable length) so it never shows a
+     blank cell. Grows on hover. */
+  .card-ramp {
+    height: 8px; margin-top: 1px;
+    transition: height var(--dur) var(--ease);
   }
-  /* Three stacked 16-color strips - one per variant - give a glanceable
-     preview of what each apply option looks like before opening the lightbox. */
+  .card:hover .card-ramp { height: 14px; }
 
-  .ramp {
-    display: grid; grid-template-columns: repeat(16, 1fr);
-    height: 9px;
+  /* First-paint reveal cascade. Only the very first batch gets it; later
+     infinite-scroll batches just appear so scrolling stays smooth. */
+  @media (prefers-reduced-motion: no-preference) {
+    .card.reveal { opacity: 0; transform: translateY(12px); animation: card-in var(--dur-slow) var(--ease-out) forwards; animation-delay: var(--rd, 0ms); }
+    @keyframes card-in { to { opacity: 1; transform: none; } }
   }
-  .ramp .sl { height: 100%; }
 
   .empty {
     grid-column: 1 / -1; padding: var(--space-7) var(--space-5);
@@ -424,239 +539,242 @@
   }
   .empty-icon { color: var(--text-faint); opacity: 0.75; }
   .empty-big { font-family: var(--display); font-size: clamp(18px, 3vw, 24px); font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
-  .empty-sub { font-family: var(--mono); font-size: var(--fs-base); color: var(--text-dim); }
-  .empty-btn { margin-top: var(--space-1); background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent); border-radius: var(--radius-sm); padding: 7px 14px; font-family: var(--mono); font-size: var(--fs-sm); font-weight: 700; cursor: pointer; }
+  .empty-sub { font-size: var(--fs-base); color: var(--text-dim); }
+  .empty-btn { margin-top: var(--space-1); background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent); border-radius: var(--radius-sm); padding: 8px 16px; font-family: var(--mono); font-size: var(--fs-sm); font-weight: 700; cursor: pointer; }
   .empty-btn:hover { filter: brightness(1.08); }
-  .empty-btn:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent); }
   .sentinel { grid-column: 1 / -1; height: 1px; }
 
-  .lb { position: fixed; inset: 0; background: rgba(8, 9, 12, 0.92); z-index: 100; display: none; align-items: stretch; }
+  /* ---- LIGHTBOX (frost-out) ----------------------------------------- */
+  /* Opening does not slam a black overlay over the grid. The backdrop
+     blur ramps up across the whole viewport so the gallery dissolves into
+     soft frosted color behind the focused wallpaper, the aurora still
+     glowing through. The panel tints to the focused theme's hue (--vibe). */
+  .lb {
+    position: fixed; inset: 0; z-index: 100;
+    display: none; align-items: stretch;
+    background: color-mix(in oklab, var(--bg) 30%, transparent);
+    -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
+    transition: backdrop-filter var(--dur-slow) var(--ease-out), -webkit-backdrop-filter var(--dur-slow) var(--ease-out), background var(--dur-slow) var(--ease-out);
+  }
   .lb.open { display: flex; }
+  .lb.frost {
+    background: color-mix(in oklab, var(--bg) 64%, transparent);
+    -webkit-backdrop-filter: blur(30px) saturate(150%); backdrop-filter: blur(30px) saturate(150%);
+  }
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .lb { background: color-mix(in oklab, var(--bg) 94%, #000); }
+    .lb.frost { background: color-mix(in oklab, var(--bg) 94%, #000); }
+  }
   .lb-image-wrap {
     flex: 1; display: flex; align-items: center; justify-content: center;
-    padding: 24px; min-width: 0;
+    padding: clamp(16px, 3vw, 40px); min-width: 0;
   }
   .lb-image-wrap img {
     max-width: 100%; max-height: 100%; object-fit: contain;
-    border-radius: var(--radius-sm); box-shadow: var(--shadow-3); background: #000;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-3), 0 0 0 1px color-mix(in oklab, var(--vibe) 30%, transparent);
+    background: #000;
   }
   .lb.open .lb-image-wrap img { animation: lb-img-in var(--dur-slow) var(--ease-out); }
-  @keyframes lb-img-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
+  @keyframes lb-img-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
   .lb-side {
-    width: 380px;
-    background: var(--bg-elev); border-left: 1px solid var(--border);
-    padding: var(--space-5); overflow-y: auto;
-    display: flex; flex-direction: column; gap: var(--space-3);
+    width: 392px; flex: none;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%);
+    border-left: 1px solid color-mix(in oklab, var(--vibe) 30%, var(--border));
+    box-shadow: var(--glass-lip);
+    padding: var(--space-5); overflow-y: auto; overscroll-behavior: contain;
+    display: flex; flex-direction: column; gap: var(--space-4);
+  }
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .lb-side { background: var(--bg-1); }
   }
   .lb.open .lb-side { animation: lb-side-in var(--dur) var(--ease-out); }
-  @keyframes lb-side-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
-  .lb-variants { display: flex; flex-direction: column; gap: var(--space-2); }
+  @keyframes lb-side-in { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
   .lb-close {
-    position: absolute; top: 14px; right: 14px;
-    width: 32px; height: 32px; border-radius: 999px;
-    background: rgba(0,0,0,0.4); color: #fff; border: none;
+    position: absolute; top: 16px; right: 16px;
+    width: 34px; height: 34px; border-radius: 999px;
+    background: color-mix(in oklab, var(--bg) 60%, transparent); color: var(--text);
+    border: 1px solid var(--border-2);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 18px; z-index: 1;
+    font-size: 18px; line-height: 1; z-index: 2;
+    transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
   }
-  .lb-close:hover { background: rgba(0,0,0,0.7); }
+  .lb-close:hover { background: color-mix(in oklab, var(--bg) 85%, #000); transform: rotate(90deg); }
+
+  .lb-plate { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+  .lb-plate b { color: var(--vibe); font-weight: 700; }
+  .lb-plate i { font-style: normal; color: var(--border-2); }
   .lb-title {
     font-family: var(--display); font-size: var(--fs-lg); font-weight: 700;
     line-height: var(--lh-tight); letter-spacing: -0.015em; word-break: break-word; text-wrap: balance;
-    border-left: 3px solid var(--accent); padding-left: var(--space-3); margin-left: -2px;
+    color: var(--text);
+    border-left: 3px solid var(--vibe); padding-left: var(--space-3); margin: 2px 0 0 -2px;
   }
   .lb-path {
     font-family: var(--mono); font-size: var(--fs-xs); line-height: var(--lh-body); color: var(--text-faint);
     word-break: break-all;
     padding: var(--space-2) 10px;
-    background: var(--bg-elev-2); border-radius: var(--radius-sm); border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--bg-elev-2) 70%, transparent); border-radius: var(--radius-xs); border: 1px solid var(--border);
   }
-  .lb-sec-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 700; font-family: var(--mono); }
-  .kv { display: grid; grid-template-columns: 80px 1fr; gap: var(--space-2) var(--space-3); font-size: var(--fs-sm); line-height: var(--lh-snug); margin: 0; }
-  .kv dt { color: var(--text-faint); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; padding-top: 2px; }
-  .kv dd { margin: 0; color: var(--text); word-break: break-word; }
+  .kv { display: grid; grid-template-columns: 64px 1fr; gap: var(--space-2) var(--space-3); font-size: var(--fs-sm); line-height: var(--lh-snug); margin: 0; }
+  .kv dt { color: var(--text-faint); font-family: var(--mono); font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: 0.08em; padding-top: 2px; }
+  .kv dd { margin: 0; color: var(--text); word-break: break-word; font-variant-numeric: tabular-nums; }
   .tags { display: flex; flex-wrap: wrap; gap: 5px; }
   .tag {
-    font-size: 11px; padding: 3px 8px;
-    background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-size: var(--fs-xs); padding: 3px 8px;
+    background: color-mix(in oklab, var(--bg-elev-2) 70%, transparent); border: 1px solid var(--border); border-radius: var(--radius-xs);
     color: var(--text-dim); font-family: var(--mono);
   }
+  .lb-sec-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.1em; color: var(--vibe); font-weight: 700; font-family: var(--mono); }
 
-  /* Variant card inside the lightbox: one per apply option
-     (Deep / Warm / Cool / Material). Tight layout so all four fit without
-     much scrolling: name + Apply share the header row, ramp underneath,
-     secondary file links as small text. */
+  .lb-variants { display: flex; flex-direction: column; gap: var(--space-2); }
   .variant {
     border: 1px solid var(--border); border-left: 3px solid var(--vhue, var(--border));
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    background: var(--bg-elev-2);
+    border-radius: var(--radius-sm); overflow: hidden;
+    background: color-mix(in oklab, var(--bg-elev-2) 78%, transparent);
     box-shadow: var(--shadow-1), inset 0 1px 0 color-mix(in oklab, var(--text) 6%, transparent);
   }
-  .variant-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 6px 8px 6px 10px; gap: 8px;
-  }
-  .variant-name { font-weight: 600; font-size: 12px; letter-spacing: -0.01em; }
-  /* Action group at the right edge of the variant header. */
-  .variant-actions {
-    display: inline-flex; align-items: center; gap: 4px;
-    flex-shrink: 0;
-  }
+  .variant-head { display: flex; align-items: center; justify-content: space-between; padding: 7px 9px 7px 11px; gap: var(--space-2); }
+  .variant-name { font-weight: 700; font-size: var(--fs-sm); letter-spacing: -0.005em; display: inline-flex; align-items: center; gap: 7px; }
+  .variant-name .vdot { width: 8px; height: 8px; border-radius: 50%; background: var(--vhue, var(--accent)); box-shadow: 0 0 8px -1px var(--vhue, var(--accent)); }
+  .variant-actions { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; }
   .variant-apply, .variant-edit {
     display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 10px;
-    border-radius: var(--radius-sm);
-    font-family: var(--font); font-size: 11px; font-weight: 600;
+    padding: 5px 11px; border-radius: var(--radius-xs);
+    font-family: var(--font); font-size: var(--fs-xs); font-weight: 600;
     cursor: pointer; text-decoration: none;
-    transition: filter var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
-    min-width: 56px; justify-content: center;
+    transition: filter var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+    justify-content: center;
   }
-  /* Apply is the primary, filled pill */
   .variant-apply {
-    background: var(--accent); color: var(--accent-ink);
-    border: 1px solid var(--accent);
-    min-width: 64px; font-weight: 700; letter-spacing: 0.01em;
+    background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent);
+    min-width: 70px; font-weight: 700; letter-spacing: 0.01em;
   }
   .variant-apply:hover { filter: brightness(1.1); }
   .variant-apply:active { transform: translateY(1px); filter: brightness(0.95); }
   .variant-apply.applying { background: color-mix(in oklab, var(--accent) 70%, #000); }
-  .variant-apply.sent { background: #157a44; border-color: #157a44; color: #fff; animation: apply-pop var(--dur-slow) var(--ease-out); }
-  @keyframes apply-pop { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
-  /* Edit is the quieter secondary sibling */
-  .variant-edit {
-    background: transparent; color: var(--text-faint);
-    border: 1px solid var(--border);
-    min-width: auto; padding: 4px 8px; font-weight: 400;
-  }
+  .variant-apply.sent { background: var(--ok); border-color: var(--ok); color: #fff; animation: apply-pop var(--dur-slow) var(--ease-out); }
+  @keyframes apply-pop { 0% { transform: scale(1); } 40% { transform: scale(1.07); } 100% { transform: scale(1); } }
+  .variant-edit { background: transparent; color: var(--text-faint); border: 1px solid var(--border); padding: 5px 9px; font-weight: 400; }
   .variant-edit:hover { color: var(--text); border-color: var(--text-faint); }
   .variant-edit:active { transform: translateY(1px); }
-  .variant-apply .spin {
-    width: 10px; height: 10px;
-    border: 1.5px solid rgba(255,255,255,0.35);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: lspin 0.7s linear infinite;
-  }
+  .variant-apply .spin { width: 10px; height: 10px; border: 1.5px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: lspin 0.7s linear infinite; }
+  .variant .ramp { display: grid; grid-template-columns: repeat(16, 1fr); height: 18px; }
+  .variant .ramp .sl { height: 100%; cursor: pointer; position: relative; transition: transform var(--dur-fast) var(--ease); }
+  .variant .ramp .sl.copied { transform: scaleY(1.5); z-index: 2; box-shadow: 0 0 0 1px var(--accent), 0 0 0 4px var(--accent-soft); }
+  .variant-foot { display: flex; gap: var(--space-2); align-items: center; padding: 5px 11px 7px; font-family: var(--mono); font-size: var(--fs-2xs); color: var(--text-faint); }
+  .variant-foot .slug { margin-left: auto; opacity: 0.8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* Bottom-right toast confirming the protocol handler fired. The
-     browser can't tell us whether Aether actually received the URL, so
-     this is an acknowledgement of the click, not a guarantee. */
+  /* ---- TOAST -------------------------------------------------------- */
   .toast {
-    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--bg-elev); color: var(--text);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 10px 14px;
-    box-shadow: var(--shadow-2);
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
+    color: var(--text);
+    border: 1px solid var(--border-2); border-radius: var(--radius);
+    padding: 11px 15px; box-shadow: var(--shadow-2), var(--glass-lip);
     font-family: var(--mono); font-size: var(--fs-sm);
     display: flex; align-items: center; gap: 10px;
     opacity: 0; pointer-events: none;
     transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease-out);
     z-index: 300;
   }
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .toast { background: var(--bg-elev); } }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 30%, transparent);
-  }
-  .toast .dot.ok { background: #157a44; box-shadow: 0 0 0 4px color-mix(in oklab, #157a44 30%, transparent); }
-  .toast strong { font-weight: 600; }
-  .toast .muted { color: var(--text-faint); font-family: var(--mono); font-size: 11px; }
-  .variant .ramp { height: 10px; }
-  .variant .ramp .sl { position: relative; }
-  .variant-foot {
-    display: flex; gap: 8px; align-items: center;
-    padding: 4px 10px 6px;
-    font-family: var(--mono); font-size: 10px;
-    color: var(--text-faint);
-  }
-  .variant-foot a {
-    color: var(--text-faint); text-decoration: none;
-    padding: 2px 4px; border-radius: var(--radius-sm);
-  }
-  .variant-foot a:hover { color: var(--text); background: var(--bg-elev); }
-  .variant-foot .slug { margin-left: auto; opacity: 0.7; }
+  .toast .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 30%, transparent); }
+  .toast .dot.ok { background: var(--ok); box-shadow: 0 0 0 4px color-mix(in oklab, var(--ok) 30%, transparent); }
+  .toast strong { font-weight: 700; }
+  .toast .muted { color: var(--text-faint); font-size: var(--fs-xs); }
 
-  .btn {
-    flex: 1; min-width: 0;
-    padding: 9px 12px;
-    background: var(--bg-elev-2); border: 1px solid var(--border);
-    color: var(--text); border-radius: var(--radius-sm);
-    font-family: var(--font); font-size: 12px; cursor: pointer;
-    text-align: center; text-decoration: none;
-    white-space: nowrap;
+  /* ---- FOCUS / A11Y ------------------------------------------------- */
+  .flist-item:focus-visible, .op-btn:focus-visible, .reset-btn:focus-visible,
+  .search input:focus-visible, .variant-edit:focus-visible, .lb-close:focus-visible,
+  .crumb:focus-visible, .side-links a:focus-visible, .empty-btn:focus-visible, .ramp .sl:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft);
   }
-  .btn:hover { border-color: var(--text-faint); }
-  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-  .btn.primary:hover { filter: brightness(1.08); }
+  .op-btn.active:focus-visible, .variant-apply:focus-visible {
+    outline: 2px solid var(--accent-ink); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent);
+  }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
-  @media (max-width: 760px) {
-    /* On phones revert to the original top-bar layout - a 240px sidebar
-       takes too much horizontal budget on a 400px screen. */
+  /* ---- SCROLLBARS --------------------------------------------------- */
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--border-2) 80%, transparent); border-radius: 99px; border: 2px solid transparent; background-clip: padding-box; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); background-clip: padding-box; }
+  * { scrollbar-width: thin; scrollbar-color: var(--border-2) transparent; }
+
+  /* ---- LOADER ------------------------------------------------------- */
+  .loader {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px;
+    background: var(--bg); z-index: 200;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+  .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .loader-spinner { width: 36px; height: 36px; border: 3px solid color-mix(in oklab, var(--accent) 22%, transparent); border-top-color: var(--accent); border-radius: 50%; animation: lspin 0.8s linear infinite; }
+  .loader-text { font-family: var(--mono); font-size: clamp(12px, 0.7rem + 0.4vw, 14px); font-weight: 600; color: var(--text-dim); letter-spacing: 0.18em; text-transform: uppercase; }
+  @keyframes lspin { to { transform: rotate(360deg); } }
+
+  /* ---- RESPONSIVE: top-bar layout under 880px ----------------------- */
+  @media (max-width: 880px) {
     :root { --sidebar-w: 0px; }
     header {
       position: sticky; top: 0; bottom: auto; right: 0;
-      width: auto;
-      border-right: none;
-      border-bottom: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border));
-      box-shadow: inset 0 1px 0 color-mix(in oklab, var(--text) 8%, transparent), var(--shadow-1);
+      width: auto; border-right: none;
+      border-bottom: 1px solid color-mix(in oklab, var(--accent) 16%, var(--border));
       overflow-y: visible;
     }
     .head-row {
       flex-direction: row; align-items: center; flex-wrap: wrap;
       gap: var(--space-2) var(--space-4);
-      padding: var(--space-3) clamp(var(--space-4), 4vw, var(--space-7));
+      padding: var(--space-3) clamp(var(--space-3), 4vw, var(--space-6));
       min-height: 0;
     }
-    .search { flex: 1 1 220px; max-width: 380px; }
+    .brand { flex-direction: row; align-items: center; gap: var(--space-3); }
+    .count-row { gap: 6px; }
+    .count-label { display: none; }
+    .search { flex: 1 1 240px; max-width: 420px; }
+    .filters-inline {
+      flex-basis: 100%; flex-direction: row; flex-wrap: wrap; gap: var(--space-3);
+    }
+    .filter-section { flex: 1 1 200px; }
+    .side-foot { flex-basis: 100%; margin-top: 0; flex-direction: row; align-items: center; justify-content: space-between; padding-top: var(--space-2); }
+    .keymap { display: none; }
+    .reset-btn { flex: none; }
     main { margin-left: 0; }
-
+    .topchrome { top: 0; }
     .lb { flex-direction: column; }
-    .lb-side { width: auto; max-height: 60vh; border-left: none; border-top: 1px solid var(--border); }
-    .flabel { width: 44px; }
-    .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
-    .head-meta { display: none; }
+    .lb-side { width: auto; max-height: 56vh; border-left: none; border-top: 1px solid color-mix(in oklab, var(--vibe) 30%, var(--border)); }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-2); }
   }
-  ::-webkit-scrollbar { width: 10px; height: 10px; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-sm); }
-  ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+  @media (max-width: 560px) {
+    .statusline .crumbs { display: none; }
+    .status-hint { display: none; }
+    .heatwrap { height: 30px; }
+    :root { --heat-h: 30px; }
+  }
 
-  .loader {
-    position: fixed; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 18px;
-    background: var(--bg); z-index: 200;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-  }
-  .loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  /* A single accent ring spinner - calm, professional, on-brand. */
-  .loader-spinner {
-    width: 34px; height: 34px;
-    border: 3px solid color-mix(in oklab, var(--accent) 22%, transparent);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: lspin 0.8s linear infinite;
-  }
-  .loader-text {
-    font-family: var(--mono); font-size: clamp(12px, 0.7rem + 0.4vw, 14px); font-weight: 600;
-    color: var(--text-dim);
-    letter-spacing: 0.16em; text-transform: uppercase;
-  }
-  /* Shared spinner rotation, reused by the apply-button spinner. */
-  @keyframes lspin { to { transform: rotate(360deg); } }
+  /* ---- REDUCED MOTION: collapse everything to instant ---------------- */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
       transition-duration: 0.001ms !important; scroll-behavior: auto !important;
     }
-    .loader-text { opacity: 1 !important; }
+    html { scroll-behavior: auto; }
+    body { animation: none !important; }
+    .caret { animation: none !important; }
     .loader-spinner { animation: none !important; }
     .card-image { animation: none !important; }
+    .card.reveal { opacity: 1 !important; transform: none !important; }
+    .card:hover { transform: none !important; }
+    .card:hover .card-image img.loaded { transform: scale(1) !important; }
     .variant-apply .spin { animation: none !important; border-top-color: rgba(255,255,255,0.35) !important; }
     .variant-apply.sent { animation: none !important; }
-    .card:hover { transform: none !important; }
     .lb.open .lb-image-wrap img, .lb.open .lb-side { animation: none !important; }
+    .lb-close:hover { transform: none !important; }
   }
 </style>
 </head>
@@ -667,44 +785,84 @@
   <div class="loader-text">Loading themes</div>
 </div>
 
-<header>
+<header class="glass">
   <div class="head-row">
     <div class="brand">
       <div class="brand-row">
         <img src="favicon.png" alt="" class="brand-logo">
-        <span>Omarchy Themes</span>
+        <span class="brand-name"><b>omarchy</b><span>-themes</span></span>
+        <span class="caret" aria-hidden="true"></span>
       </div>
-      <span class="count" id="count">loading...</span>
+      <div class="count-row">
+        <span class="count" id="count">loading...</span>
+        <span class="count-label">variants</span>
+      </div>
     </div>
+
     <div class="search">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="Search title, tags, path...">
+      <span class="prompt" aria-hidden="true">&#10095;</span>
+      <input id="q" type="search" placeholder="search title, tags, path" aria-label="Search themes" autocomplete="off" spellcheck="false">
+      <span class="slash" aria-hidden="true">/</span>
     </div>
-    <!-- Filters are populated inline on the same row as the search by buildFilters(). -->
+
+    <!-- Filters are populated inline by buildFilters(). -->
     <div class="filters-inline" id="filters"></div>
-    <div class="head-meta">
-      <button id="reset" title="Clear all filters">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-        <span>reset</span>
+
+    <div class="side-foot">
+      <button class="reset-btn" id="reset" title="Clear all filters (x)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <span>reset filters</span>
       </button>
+      <div class="keymap" aria-hidden="true">
+        <div><span class="kbd">/</span> search</div>
+        <div><span class="kbd">x</span> reset</div>
+        <div><span class="kbd">&larr;</span><span class="kbd">&rarr;</span> browse</div>
+        <div><span class="kbd">esc</span> close</div>
+        <div><span class="kbd">g</span><span class="kbd">G</span> top/end</div>
+        <div><span class="kbd">&crarr;</span> open</div>
+      </div>
+      <div class="side-links">
+        <a href="https://github.com/bjarneo/omarchy-themes" target="_blank" rel="noopener">github</a>
+        <a href="https://omarchy.org" target="_blank" rel="noopener">omarchy</a>
+      </div>
     </div>
   </div>
 </header>
 
 <main>
-  <div class="grid" id="grid"></div>
+  <div class="topchrome glass">
+    <div class="statusline">
+      <span class="mode-pill" id="mode">NORMAL</span>
+      <div class="crumbs" id="crumbs"></div>
+      <div class="status-right">
+        <span class="status-count" id="statusCount"></span>
+        <span class="status-hint"><span class="kbd">/</span> to search</span>
+      </div>
+    </div>
+    <div class="heatwrap" id="heatwrap">
+      <canvas id="heat" role="img" aria-label="Color distribution of all theme variants"></canvas>
+      <div class="heat-cursor" id="heatCursor" aria-hidden="true"></div>
+      <div class="heat-tip" id="heatTip" aria-hidden="true">
+        <div class="htitle" id="heatTipTitle"></div>
+        <div class="hmeta" id="heatTipMeta"></div>
+        <div class="hramp" id="heatTipRamp"></div>
+      </div>
+    </div>
+  </div>
+  <div class="gridwrap">
+    <div class="grid" id="grid"></div>
+  </div>
 </main>
 
-<div class="lb" id="lb" role="dialog" aria-modal="true">
-  <button class="lb-close" id="lbclose" title="Close (esc)">&times;</button>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Theme details">
+  <button class="lb-close" id="lbclose" title="Close (esc)" aria-label="Close">&times;</button>
   <div class="lb-image-wrap"></div>
   <aside class="lb-side" id="lbside"></aside>
 </div>
 
-<!-- Click-acknowledgement toast. Shown when an Apply link fires. We
-     can't observe whether the aether:// handler actually accepted the
-     URL, so the toast is an acknowledgement of the click, not a
-     guarantee that Aether did anything. -->
+<!-- Click-acknowledgement toast. Shown when an Apply link fires. We cannot
+     observe whether the aether:// handler accepted the URL, so the toast is
+     an acknowledgement of the click, not a guarantee. -->
 <div class="toast" id="toast" role="status" aria-live="polite">
   <span class="dot" id="toast-dot"></span>
   <span><strong id="toast-title">Applying...</strong> <span class="muted" id="toast-detail"></span></span>
@@ -712,29 +870,32 @@
 
 <script src="wallpapers.js"></script>
 <script>
+"use strict";
+
+/* Filter facet hues. These are display swatches for the sidebar dots and
+   the heatmap bars; they are not the wallpaper's own colors. */
 const COLOR_DOTS = {
   red:'#e74c5b', orange:'#f5994f', yellow:'#f0d869', green:'#7bbf6f',
   cyan:'#5ec3d0', blue:'#6d8fee', purple:'#a87cd9', pink:'#e88abf',
   monochrome:'#9aa0ab',
 };
-const TONE_DOTS = { dark: '#1b1e25', light: '#e7e9ee' };
+const TONE_DOTS = { dark: '#3b4261', light: '#d6dbef' };
 const COLOR_ORDER = ['monochrome','red','orange','yellow','green','cyan','blue','purple','pink'];
 const RES_TIERS = ['<=720p','720p','1080p','1440p','4K','5K','8K+'];
 
-// The reference scheme keys in the manifest map to user-facing variant
-// labels. The mapping intentionally hides the source-scheme identity --
-// each variant's actual palette is wallpaper-derived. "deep" = darkest bg
-// + most vivid; "warm" = warm-biased accent; "cool" = muted + cool-biased.
+/* Reference scheme keys in the manifest map to user-facing variant labels.
+   The mapping intentionally hides the source-scheme identity; each variant's
+   palette is wallpaper-derived. */
 const VARIANT_ORDER = ['tokyo-night', 'gruvbox', 'nord', 'material', 'aether'];
 const VARIANT_LABEL = {
-  'tokyo-night': 'Deep',
-  'gruvbox':     'Warm',
-  'nord':        'Cool',
-  'material':    'Material',
-  'aether':      'Aether',
+  'tokyo-night': 'Deep', 'gruvbox': 'Warm', 'nord': 'Cool', 'material': 'Material', 'aether': 'Aether',
+};
+const HUE_BY_SCHEME = {
+  'tokyo-night': 'var(--blue)', 'gruvbox': 'var(--orange)', 'nord': 'var(--cyan)',
+  'material': 'var(--green)', 'aether': 'var(--magenta)',
 };
 
-// ANSI slots in their canonical 0..15 order.
+/* ANSI slots in their canonical 0..15 order. Every variant carries all 16. */
 const ANSI_KEYS = [
   'color0','color1','color2','color3','color4','color5','color6','color7',
   'color8','color9','color10','color11','color12','color13','color14','color15',
@@ -744,16 +905,19 @@ const STATE = {
   entries: [],
   byPath: {},
   filtered: [],
-  // res_min / res_max are tier names from RES_TIERS. Either can be set
-  // alone (open-ended bound) or together (range).
+  // res_min / res_max are tier names from RES_TIERS. Either can be set alone
+  // (open-ended bound) or together (range).
   filters: { tone: null, color: null, res_min: null, res_max: null, q: '' },
   facetCounts: {},
   rendered: 0,
   pageSize: 80,
+  mask: null,        // Uint8Array: 1 if entry index passes the current filter
+  firstPaint: true,  // gate the one-time reveal cascade to the first batch
 };
 
 const FILTER_KEYS = ['tone','color','res_min','res_max'];
 
+/* ---- URL state ----------------------------------------------------- */
 function readUrl() {
   const sp = new URLSearchParams(location.search);
   for (const k of FILTER_KEYS) STATE.filters[k] = sp.get(k) || null;
@@ -767,13 +931,14 @@ function buildUrl({ withHash = true } = {}) {
   const hash = withHash ? location.hash : '';
   return location.pathname + (qs ? '?' + qs : '') + hash;
 }
-function writeUrl() { history.replaceState(null, '', buildUrl()); }
+function writeUrl() { history.replaceState(history.state, '', buildUrl()); }
 function encodePath(p) { return p.split('/').map(encodeURIComponent).join('/'); }
 function decodeHashPath() {
   if (!location.hash) return null;
   try { return decodeURIComponent(location.hash.slice(1)); } catch { return null; }
 }
 
+/* ---- tiny DOM helpers ---------------------------------------------- */
 const $ = (s) => document.querySelector(s);
 const grid = $('#grid');
 const filtersEl = $('#filters');
@@ -797,6 +962,74 @@ function bucketRes(w, h) {
   return '<=720p';
 }
 
+/* ---- color math (for reactive --chip hue + swatch ink) ------------- */
+function hexToRgb(hex) {
+  if (typeof hex !== 'string') return null;
+  let h = hex.trim().replace(/^#/, '');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  if (h.length !== 6 || /[^0-9a-f]/i.test(h)) return null;
+  return { r: parseInt(h.slice(0,2),16), g: parseInt(h.slice(2,4),16), b: parseInt(h.slice(4,6),16) };
+}
+// Relative luminance (0..1), sRGB. Used to pick contrast ink and clamp hues.
+function luminance(rgb) {
+  const f = (c) => { c /= 255; return c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); };
+  return 0.2126*f(rgb.r) + 0.7152*f(rgb.g) + 0.0722*f(rgb.b);
+}
+function saturation(rgb) {
+  const r = rgb.r/255, g = rgb.g/255, b = rgb.b/255;
+  const mx = Math.max(r,g,b), mn = Math.min(r,g,b), l = (mx+mn)/2;
+  if (mx === mn) return 0;
+  const d = mx - mn;
+  return l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+}
+// Ink color that reads on a given swatch background.
+function contrastInk(hex) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return '#f2f4ff';
+  return luminance(rgb) > 0.45 ? '#0b0b14' : '#f2f4ff';
+}
+/* The reactive per-card hue: the most-saturated mid-luminance swatch in the
+   wallpaper's own extracted palette. NOT a fixed index - the array is
+   variable length (6..16) and a fixed index like colors[8] is near-black for
+   ~11% of entries, which would make the glow invisible. Falls back to the
+   facet hue, then the brand accent. */
+function pickDominant(colors, fallback) {
+  let best = null, bestScore = -1;
+  if (Array.isArray(colors)) {
+    for (const hex of colors) {
+      const rgb = hexToRgb(hex);
+      if (!rgb) continue;
+      const l = luminance(rgb), s = saturation(rgb);
+      if (l < 0.16 || l > 0.85) continue;       // skip near-black / near-white
+      const score = s + (1 - Math.abs(l - 0.5)) * 0.35;
+      if (score > bestScore) { bestScore = score; best = hex; }
+    }
+  }
+  if (best) return best;
+  // No usable mid-tone: take the most saturated of any tone.
+  if (Array.isArray(colors)) {
+    for (const hex of colors) {
+      const rgb = hexToRgb(hex); if (!rgb) continue;
+      const s = saturation(rgb);
+      if (s > bestScore) { bestScore = s; best = hex; }
+    }
+  }
+  return best || fallback || '#7aa2f7';
+}
+/* A wallpaper's extracted palette as a single hard-stop gradient. Built from
+   colors.length so it never renders a blank cell, however many colors exist. */
+function rampGradient(colors) {
+  if (!Array.isArray(colors) || !colors.length) return 'var(--bg-elev-2)';
+  const n = colors.length;
+  const stops = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n * 100).toFixed(3), b = ((i + 1) / n * 100).toFixed(3);
+    stops.push(`${colors[i]} ${a}% ${b}%`);
+  }
+  return `linear-gradient(90deg, ${stops.join(', ')})`;
+}
+
+/* ---- media base url ------------------------------------------------ */
 const MEDIA_BASE = (window.WALLPAPERS_BASE_URL || '').replace(/\/+$/, '');
 function mediaUrl(p) {
   if (!p) return p;
@@ -804,6 +1037,7 @@ function mediaUrl(p) {
   return MEDIA_BASE ? `${MEDIA_BASE}/${p.replace(/^\/+/, '')}` : p;
 }
 
+/* ---- load ---------------------------------------------------------- */
 async function load() {
   let data;
   if (window.WALLPAPERS) {
@@ -813,18 +1047,25 @@ async function load() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     data = await res.json();
   }
+  let i = 0;
   for (const [, m] of Object.entries(data)) {
     m._resTier = bucketRes(m.width, m.height);
+    m._idx = i++;
+    m._chip = pickDominant(m.colors, COLOR_DOTS[m.color]);
+    m._ramp = rampGradient(m.colors);
+    m._barColor = COLOR_DOTS[m.color] || '#6f7aa6';
   }
   STATE.entries = Object.entries(data);
   STATE.byPath = data;
-  // Compact filtered/total counter under the logo (e.g. "3088/3088").
-  $('#count').textContent = `${STATE.entries.length}/${STATE.entries.length}`;
+  STATE.mask = new Uint8Array(STATE.entries.length);
+
+  setCount(STATE.entries.length, STATE.entries.length);
 
   readUrl();
   $('#q').value = STATE.filters.q || '';
   buildFilters();
   applyFilters({ writeUrl: false });
+  initHeatmap();
 
   const hashPath = decodeHashPath();
   if (hashPath && STATE.byPath[hashPath]) {
@@ -832,8 +1073,18 @@ async function load() {
   }
 }
 
+function setCount(filtered, total) {
+  $('#count').textContent = `${filtered}/${total}`;
+  const sc = $('#statusCount');
+  if (sc) {
+    sc.replaceChildren();
+    const b = el('b', null, String(filtered));
+    sc.append(b, document.createTextNode(` / ${total} themes`));
+  }
+}
+
+/* ---- facet counting ------------------------------------------------ */
 function inc(m, k) { if (!k) return; m.set(k, (m.get(k) || 0) + 1); }
-function sortedKeys(m) { return [...m.entries()].sort((a,b) => b[1] - a[1]).map(([k]) => k); }
 
 function buildFilters() {
   const tones = new Map(), colors = new Map(), resolutions = new Map();
@@ -848,60 +1099,72 @@ function buildFilters() {
   const colorItems = COLOR_ORDER.filter(c => colors.has(c));
   const resItems   = RES_TIERS.filter(t => resolutions.has(t));
 
-  // Each filter category gets a labelled section with a vertical
-  // clickable list. The sidebar has the vertical budget to show all
-  // options at once - more discoverable than dropdowns.
-  filtersEl.appendChild(buildFilterSection('tone',
-    () => filterListEl('tone', toneItems, tones, TONE_DOTS)));
-  filtersEl.appendChild(buildFilterSection('color',
-    () => filterListEl('color', colorItems, colors, COLOR_DOTS)));
-  filtersEl.appendChild(buildFilterSection('resolution',
+  filtersEl.appendChild(buildFilterSection('tone', 't',
+    () => filterListEl('tone', toneItems, TONE_DOTS)));
+  filtersEl.appendChild(buildFilterSection('color', 'c',
+    () => filterListEl('color', colorItems, COLOR_DOTS)));
+  filtersEl.appendChild(buildFilterSection('resolution', 'r',
     () => rangeListEl('res_min', 'res_max', resItems)));
 }
 
-function buildFilterSection(label, contentFn) {
+function buildFilterSection(label, hotkey, contentFn) {
   const sec = el('div', 'filter-section');
-  sec.appendChild(el('div', 'filter-section-label', label));
+  const head = el('div', 'filter-section-label');
+  head.appendChild(el('span', null, label));
+  if (hotkey) head.appendChild(el('span', 'hk', hotkey));
+  sec.appendChild(head);
   sec.appendChild(contentFn());
   return sec;
 }
 
-// Single-select clickable list. Each row toggles the corresponding
-// filter when clicked. Optional dot map shows a colored swatch on the
-// left (for tone/color sections).
-function filterListEl(filterKey, values, counts, dotMap) {
+// Single-select clickable list. Each row uses the LIVE facet count so the
+// numbers reflect what selecting that value would yield given other filters.
+function filterListEl(filterKey, values, dotMap) {
   const list = el('div', 'flist');
+  const live = STATE.facetCounts[filterKey] || {};
   for (const v of values) {
+    const c = live[v] || 0;
     const item = el('div', 'flist-item');
     item.dataset.filter = filterKey;
     item.dataset.value = v;
+    item.tabIndex = 0;
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-pressed', String(STATE.filters[filterKey] === v));
     if (STATE.filters[filterKey] === v) item.classList.add('selected');
+    if (c === 0 && STATE.filters[filterKey] !== v) item.classList.add('zero');
     if (dotMap && dotMap[v]) {
       const dot = el('span', 'flist-dot');
+      dot.style.color = dotMap[v];
       dot.style.background = dotMap[v];
       item.appendChild(dot);
     }
     item.appendChild(el('span', 'flist-name', v));
-    item.appendChild(el('span', 'flist-count', String(counts.get(v) || 0)));
-    item.addEventListener('click', () => toggleFilter(filterKey, v));
+    item.appendChild(el('span', 'flist-count', String(c)));
+    const act = () => toggleFilter(filterKey, v);
+    item.addEventListener('click', act);
+    item.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
     list.appendChild(item);
   }
   return list;
 }
 
-// Resolution range list: each tier row has >= and <= toggle buttons
-// so the same list expresses both bounds. Clicking an already-active
-// op clears that bound.
+// Resolution range list: each tier row has >= and <= toggle buttons so one
+// list expresses both bounds. Clicking an active op clears that bound.
 function rangeListEl(minKey, maxKey, items) {
   const list = el('div', 'flist');
+  const liveMin = STATE.facetCounts[minKey] || {};
+  const liveMax = STATE.facetCounts[maxKey] || {};
   for (const k of items) {
     const row = el('div', 'flist-range');
-    row.appendChild(el('span', 'flist-name', k));
+    row.appendChild(el('span', 'rname', k));
+    const cMin = liveMin[k] || 0, cMax = liveMax[k] || 0;
+    const count = Math.min(cMin || cMax, cMax || cMin);
+    row.appendChild(el('span', 'rcount', String(count)));
+    if (!count) row.classList.add('zero');
 
     const minBtn = el('button', 'op-btn');
-    minBtn.type = 'button';
-    minBtn.textContent = '≥';
-    minBtn.title = `at least ${k}`;
+    minBtn.type = 'button'; minBtn.textContent = '>=';
+    minBtn.title = `at least ${k}`; minBtn.setAttribute('aria-label', `resolution at least ${k}`);
     if (STATE.filters[minKey] === k) minBtn.classList.add('active');
     minBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -911,9 +1174,8 @@ function rangeListEl(minKey, maxKey, items) {
     row.appendChild(minBtn);
 
     const maxBtn = el('button', 'op-btn');
-    maxBtn.type = 'button';
-    maxBtn.textContent = '≤';
-    maxBtn.title = `at most ${k}`;
+    maxBtn.type = 'button'; maxBtn.textContent = '<=';
+    maxBtn.title = `at most ${k}`; maxBtn.setAttribute('aria-label', `resolution at most ${k}`);
     if (STATE.filters[maxKey] === k) maxBtn.classList.add('active');
     maxBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -932,8 +1194,8 @@ function facetField(m, key) {
   return m[key];
 }
 
-// True if entry m passes the filter for `key` given value `v`. Handles
-// the range semantics for res_min / res_max (open-ended bounds).
+// True if entry m passes the filter for `key` given value `v`. Handles the
+// range semantics for res_min / res_max (open-ended bounds).
 function passesFilterKey(m, key, v) {
   if (!v) return true;
   if (key === 'res_min' || key === 'res_max') {
@@ -956,8 +1218,7 @@ function computeFacetCounts() {
     }
     for (const k of FILTER_KEYS) {
       // The count under k is "how many entries match if I set k to its
-      // value(s)" - so all OTHER filters must pass. Range filters
-      // (res_min/res_max) participate the same way.
+      // value(s)" - so all OTHER filters must pass.
       let match = true;
       for (const k2 of FILTER_KEYS) {
         if (k2 === k) continue;
@@ -967,17 +1228,11 @@ function computeFacetCounts() {
       const v = facetField(m, k);
       if (!v) continue;
       if (k === 'res_min') {
-        // Counts the entry under every tier <= entry's tier (would
-        // still pass a "min >= tier" filter).
         const entIdx = RES_TIERS.indexOf(v);
-        for (let i = 0; i <= entIdx; i++) {
-          out[k][RES_TIERS[i]] = (out[k][RES_TIERS[i]] || 0) + 1;
-        }
+        for (let i = 0; i <= entIdx; i++) out[k][RES_TIERS[i]] = (out[k][RES_TIERS[i]] || 0) + 1;
       } else if (k === 'res_max') {
         const entIdx = RES_TIERS.indexOf(v);
-        for (let i = entIdx; i < RES_TIERS.length; i++) {
-          out[k][RES_TIERS[i]] = (out[k][RES_TIERS[i]] || 0) + 1;
-        }
+        for (let i = entIdx; i < RES_TIERS.length; i++) out[k][RES_TIERS[i]] = (out[k][RES_TIERS[i]] || 0) + 1;
       } else {
         out[k][v] = (out[k][v] || 0) + 1;
       }
@@ -986,264 +1241,143 @@ function computeFacetCounts() {
   return out;
 }
 
-function updateFacetUI() {
-  for (const chip of filtersEl.querySelectorAll('.chip')) {
-    const k = chip.dataset.filter, v = chip.dataset.value;
-    const c = (STATE.facetCounts[k] || {})[v] || 0;
-    const num = chip.querySelector('.num');
-    if (num) num.textContent = String(c);
-    chip.classList.toggle('zero', c === 0);
-  }
-}
-
-function chipEl(filterKey, value, count) {
-  const chip = el('div', 'chip');
-  chip.dataset.filter = filterKey;
-  chip.dataset.value = value;
-  if (filterKey === 'color') {
-    const dot = el('span', 'dot');
-    dot.style.background = COLOR_DOTS[value] || '#999';
-    chip.appendChild(dot);
-  } else if (filterKey === 'tone') {
-    const dot = el('span', 'dot');
-    dot.style.background = TONE_DOTS[value] || '#999';
-    chip.appendChild(dot);
-  }
-  chip.appendChild(el('span', null, value));
-  chip.appendChild(el('span', 'num', String(count)));
-  chip.addEventListener('click', () => toggleFilter(filterKey, value));
-  if (STATE.filters[filterKey] === value) chip.classList.add('active');
-  return chip;
-}
-
-function dropdownEl(filterKey, counts, orderedItems, displayLabel, adornFn) {
-  const items = orderedItems || sortedKeys(counts);
-  const wrap = el('div', 'dd');
-  const btn = el('button', 'dd-btn');
-  btn.type = 'button';
-  const lab = el('span', 'dd-label', displayLabel || filterKey);
-  const val = el('span', 'dd-val', 'all');
-  const clr = el('span', 'dd-clear', '×');
-  clr.title = 'clear';
-  const caret = el('span', 'dd-caret', '▾');
-  btn.append(lab, val, clr, caret);
-
-  const menu = el('div', 'dd-menu');
-  const search = document.createElement('input');
-  search.type = 'search';
-  search.className = 'dd-search';
-  search.placeholder = `Search ${filterKey}...`;
-  const list = el('div', 'dd-list');
-  menu.append(search, list);
-
-  function refresh(query = '') {
-    list.replaceChildren();
-    const q = query.trim().toLowerCase();
-    const live = STATE.facetCounts[filterKey] || {};
-    const filtered = items.filter(k => !q || k.toLowerCase().includes(q));
-    for (const k of filtered) {
-      const c = live[k] || 0;
-      const item = el('div', 'dd-item');
-      if (STATE.filters[filterKey] === k) item.classList.add('selected');
-      if (c === 0) item.classList.add('zero');
-      // adornFn lets a caller add a left-side icon (e.g. a colored
-      // dot for the color filter) so items stay visually identifiable.
-      // Wrap dot + text in a single flex group so space-between
-      // doesn't blow them apart.
-      const left = el('span');
-      left.style.display = 'flex'; left.style.alignItems = 'center'; left.style.gap = '8px';
-      if (adornFn) {
-        const adorn = adornFn(k);
-        if (adorn) left.appendChild(adorn);
-      }
-      left.appendChild(el('span', null, k));
-      item.appendChild(left);
-      item.appendChild(el('span', 'dd-item-count', String(c)));
-      item.addEventListener('click', () => {
-        STATE.filters[filterKey] = k;
-        close(); paintBtn(); applyFilters();
-      });
-      list.appendChild(item);
-    }
-  }
-  function paintBtn() {
-    const current = STATE.filters[filterKey];
-    if (current) { btn.classList.add('active'); val.textContent = current; }
-    else { btn.classList.remove('active'); val.textContent = 'all'; }
-  }
-  function open() {
-    document.querySelectorAll('.dd-menu.open').forEach(m => m !== menu && m.classList.remove('open'));
-    menu.classList.add('open');
-    refresh(search.value);
-    setTimeout(() => search.focus(), 0);
-  }
-  function close() { menu.classList.remove('open'); }
-
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (e.target === clr || clr.contains(e.target)) {
-      STATE.filters[filterKey] = null;
-      paintBtn(); applyFilters();
-      return;
-    }
-    menu.classList.contains('open') ? close() : open();
-  });
-  menu.addEventListener('click', (e) => e.stopPropagation());
-  search.addEventListener('input', () => refresh(search.value));
-  search.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') close();
-    if (e.key === 'Enter') { const first = list.querySelector('.dd-item'); if (first) first.click(); }
-  });
-
-  wrap.append(btn, menu);
-  paintBtn();
-  return wrap;
-}
-
-function rangeDropdownEl(minKey, maxKey, items, displayLabel) {
-  const wrap = el('div', 'dd');
-
-  const btn = el('button', 'dd-btn');
-  btn.type = 'button';
-  const lab = el('span', 'dd-label', displayLabel);
-  const val = el('span', 'dd-val', 'all');
-  const clr = el('span', 'dd-clear', '×');
-  clr.title = 'clear';
-  const caret = el('span', 'dd-caret', '▾');
-  btn.append(lab, val, clr, caret);
-
-  const menu = el('div', 'dd-menu');
-  const list = el('div', 'dd-list');
-  menu.append(list);
-
-  function refresh() {
-    list.replaceChildren();
-    const liveMin = STATE.facetCounts[minKey] || {};
-    const liveMax = STATE.facetCounts[maxKey] || {};
-    for (const k of items) {
-      const row = el('div', 'dd-range');
-      row.appendChild(el('span', 'name', k));
-      // Count shown: how many wallpapers would match if you applied
-      // the currently-relevant bound to this tier. We bias toward the
-      // bound the user is more likely to be tweaking next, but really
-      // either is fine - we display the lower of the two so the count
-      // doesn't look misleadingly high.
-      const cMin = liveMin[k] || 0;
-      const cMax = liveMax[k] || 0;
-      const count = Math.min(cMin || cMax, cMax || cMin);
-      row.appendChild(el('span', 'count', String(count)));
-      if (!count) row.classList.add('zero');
-
-      const minBtn = el('button', 'op-btn');
-      minBtn.type = 'button';
-      minBtn.textContent = '>=';
-      minBtn.title = `at least ${k}`;
-      if (STATE.filters[minKey] === k) minBtn.classList.add('active');
-      minBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        STATE.filters[minKey] = STATE.filters[minKey] === k ? null : k;
-        paintBtn(); applyFilters(); refresh();
-      });
-      row.appendChild(minBtn);
-
-      const maxBtn = el('button', 'op-btn');
-      maxBtn.type = 'button';
-      maxBtn.textContent = '<=';
-      maxBtn.title = `at most ${k}`;
-      if (STATE.filters[maxKey] === k) maxBtn.classList.add('active');
-      maxBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        STATE.filters[maxKey] = STATE.filters[maxKey] === k ? null : k;
-        paintBtn(); applyFilters(); refresh();
-      });
-      row.appendChild(maxBtn);
-
-      list.appendChild(row);
-    }
-  }
-
-  function paintBtn() {
-    const mn = STATE.filters[minKey];
-    const mx = STATE.filters[maxKey];
-    if (!mn && !mx) {
-      btn.classList.remove('active');
-      val.textContent = 'all';
-    } else {
-      btn.classList.add('active');
-      if (mn && mx)      val.textContent = `${mn} .. ${mx}`;
-      else if (mn)        val.textContent = `>= ${mn}`;
-      else                val.textContent = `<= ${mx}`;
-    }
-  }
-
-  function open() {
-    document.querySelectorAll('.dd-menu.open').forEach(m => m !== menu && m.classList.remove('open'));
-    menu.classList.add('open');
-    refresh();
-  }
-  function close() { menu.classList.remove('open'); }
-
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (e.target === clr || clr.contains(e.target)) {
-      STATE.filters[minKey] = null;
-      STATE.filters[maxKey] = null;
-      paintBtn(); applyFilters();
-      return;
-    }
-    menu.classList.contains('open') ? close() : open();
-  });
-  menu.addEventListener('click', (e) => e.stopPropagation());
-
-  wrap.append(btn, menu);
-  paintBtn();
-  return wrap;
-}
-
-document.addEventListener('pointerdown', (e) => {
-  if (!e.target.closest('.dd')) {
-    document.querySelectorAll('.dd-menu.open').forEach(m => m.classList.remove('open'));
-  }
-});
-
+/* ---- filtering ----------------------------------------------------- */
 function toggleFilter(key, val) {
   STATE.filters[key] = STATE.filters[key] === val ? null : val;
-  syncChipState(); applyFilters();
+  applyFilters();
 }
-function syncChipState() {
-  for (const chip of filtersEl.querySelectorAll('.chip')) {
-    const k = chip.dataset.filter, v = chip.dataset.value;
-    chip.classList.toggle('active', STATE.filters[k] === v);
-  }
+
+function hasActiveFilters() {
+  return FILTER_KEYS.some(k => STATE.filters[k]) || !!STATE.filters.q;
 }
 
 function applyFilters(opts = {}) {
   const f = STATE.filters;
   const q = f.q.trim().toLowerCase();
+  STATE.mask.fill(0);
   STATE.filtered = STATE.entries.filter(([path, m]) => {
-    for (const k of FILTER_KEYS) {
-      if (!passesFilterKey(m, k, f[k])) return false;
-    }
+    for (const k of FILTER_KEYS) if (!passesFilterKey(m, k, f[k])) return false;
     if (q) {
       const hay = (path + ' ' + (m.title||'') + ' ' + (m.tags||[]).join(' ')).toLowerCase();
       if (!hay.includes(q)) return false;
     }
+    STATE.mask[m._idx] = 1;
     return true;
   });
-  $('#count').textContent = `${STATE.filtered.length}/${STATE.entries.length}`;
+  setCount(STATE.filtered.length, STATE.entries.length);
   STATE.rendered = 0;
+  STATE.firstPaint = true;
   grid.replaceChildren();
-  renderMore();
   STATE.facetCounts = computeFacetCounts();
-  // Rebuild the filter lists so selected state + counts stay in sync.
-  // ~50 items per build is fast enough to do on every filter change.
-  buildFilters();
+  renderMore();
+  buildFilters();           // refresh selected state + live counts
+  renderCrumbs();
+  drawHeat();
+  $('#reset').disabled = !hasActiveFilters();
   if (opts.writeUrl !== false) writeUrl();
-  // Keep the snapshot the popstate handler diffs against in sync with
-  // whatever filters we just applied.
   lastFiltersSnap = filtersSnapshot();
 }
 
+/* ---- status line breadcrumbs --------------------------------------- */
+function renderCrumbs() {
+  const wrap = $('#crumbs');
+  wrap.replaceChildren();
+  const parts = [];
+  if (STATE.filters.q) parts.push({ k: 'search', v: '"' + STATE.filters.q + '"', clear: () => { STATE.filters.q = ''; $('#q').value = ''; } });
+  if (STATE.filters.tone) parts.push({ k: 'tone', v: STATE.filters.tone, dot: TONE_DOTS[STATE.filters.tone], clear: () => STATE.filters.tone = null });
+  if (STATE.filters.color) parts.push({ k: 'color', v: STATE.filters.color, dot: COLOR_DOTS[STATE.filters.color], clear: () => STATE.filters.color = null });
+  if (STATE.filters.res_min || STATE.filters.res_max) {
+    const mn = STATE.filters.res_min, mx = STATE.filters.res_max;
+    const v = mn && mx ? `${mn}..${mx}` : mn ? `>=${mn}` : `<=${mx}`;
+    parts.push({ k: 'res', v, clear: () => { STATE.filters.res_min = null; STATE.filters.res_max = null; } });
+  }
+  if (!parts.length) { wrap.appendChild(el('span', 'crumbs-empty', 'no filters - showing everything')); return; }
+  for (const p of parts) {
+    const c = el('span', 'crumb');
+    c.tabIndex = 0; c.setAttribute('role', 'button');
+    c.setAttribute('aria-label', `remove ${p.k} filter ${p.v}`);
+    if (p.dot) { const d = el('span', 'crumb-dot'); d.style.background = p.dot; c.appendChild(d); }
+    c.appendChild(el('span', 'crumb-k', p.k + ':'));
+    c.appendChild(el('span', null, p.v));
+    c.appendChild(el('span', 'x', '×'));
+    const act = () => { p.clear(); applyFilters(); };
+    c.addEventListener('click', act);
+    c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
+    wrap.appendChild(c);
+  }
+}
+
+/* ---- heatmap (canvas spectrum + scrubber) -------------------------- */
+let heatCanvas, heatCtx, heatRAF = 0;
+function initHeatmap() {
+  heatCanvas = $('#heat');
+  if (!heatCanvas) return;
+  heatCtx = heatCanvas.getContext('2d');
+  const wrap = $('#heatwrap');
+  const cursor = $('#heatCursor');
+  const tip = $('#heatTip');
+
+  let scrubFrame = 0;
+  function onMove(e) {
+    const rect = heatCanvas.getBoundingClientRect();
+    if (!rect.width) return;
+    const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+    if (scrubFrame) return;
+    scrubFrame = requestAnimationFrame(() => {
+      scrubFrame = 0;
+      const n = STATE.entries.length;
+      const idx = Math.max(0, Math.min(n - 1, Math.floor(x / rect.width * n)));
+      const entry = STATE.entries[idx];
+      if (!entry) return;
+      const [path, m] = entry;
+      cursor.style.transform = `translateX(${x}px)`;
+      // Keep the tip inside the viewport horizontally.
+      const tipX = Math.max(80, Math.min(rect.width - 80, x));
+      tip.style.left = tipX + 'px';
+      $('#heatTipTitle').textContent = m.title || path.split('/').pop();
+      $('#heatTipMeta').textContent = `${m.dimensions || ''}  ${m.tone || ''}/${m.color || ''}`;
+      $('#heatTipRamp').style.background = m._ramp;
+      heatCanvas._hoverPath = path;
+    });
+  }
+  heatCanvas.addEventListener('pointermove', onMove);
+  heatCanvas.addEventListener('pointerenter', () => wrap.classList.add('scrub'));
+  heatCanvas.addEventListener('pointerleave', () => { wrap.classList.remove('scrub'); heatCanvas._hoverPath = null; });
+  heatCanvas.addEventListener('click', () => {
+    const p = heatCanvas._hoverPath;
+    if (p && STATE.byPath[p]) openLightbox(p, STATE.byPath[p]);
+  });
+
+  const ro = ('ResizeObserver' in window) ? new ResizeObserver(() => drawHeat()) : null;
+  if (ro) ro.observe(wrap); else window.addEventListener('resize', debounce(drawHeat, 120));
+  drawHeat();
+}
+function drawHeat() {
+  if (!heatCtx || !heatCanvas) return;
+  const rect = heatCanvas.getBoundingClientRect();
+  const cssW = rect.width, cssH = rect.height;
+  if (!cssW || !cssH) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  heatCanvas.width = Math.round(cssW * dpr);
+  heatCanvas.height = Math.round(cssH * dpr);
+  heatCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  heatCtx.clearRect(0, 0, cssW, cssH);
+
+  const n = STATE.entries.length;
+  if (!n) return;
+  const bw = cssW / n;
+  const anyFilter = hasActiveFilters();
+  for (let i = 0; i < n; i++) {
+    const m = STATE.entries[i][1];
+    const on = !anyFilter || STATE.mask[i];
+    heatCtx.globalAlpha = on ? 0.92 : 0.08;
+    heatCtx.fillStyle = m._barColor;
+    heatCtx.fillRect(i * bw, on ? 0 : cssH * 0.28, Math.max(1, bw + 0.7), on ? cssH : cssH * 0.44);
+  }
+  heatCtx.globalAlpha = 1;
+}
+
+/* ---- lazy images + infinite scroll --------------------------------- */
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
     if (e.isIntersecting && e.target.dataset.src) {
@@ -1253,23 +1387,23 @@ const io = new IntersectionObserver((entries) => {
       io.unobserve(img);
     }
   }
-}, { rootMargin: '300px' });
+}, { rootMargin: '400px' });
 
 const sentinelIo = new IntersectionObserver((entries) => {
   if (entries[0].isIntersecting) renderMore();
-}, { rootMargin: '600px' });
+}, { rootMargin: '700px' });
 
 function renderMore() {
   if (STATE.rendered === 0 && STATE.filtered.length === 0) {
     const wrap = el('div', 'empty');
     const icon = el('div', 'empty-icon');
     icon.setAttribute('aria-hidden', 'true');
-    icon.innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8 11h6"/></svg>';
+    icon.innerHTML = '<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8 11h6"/></svg>';
     wrap.appendChild(icon);
     wrap.appendChild(el('div', 'empty-big', 'No matches'));
-    wrap.appendChild(el('div', 'empty-sub', 'No themes match your current filters.'));
+    wrap.appendChild(el('div', 'empty-sub', 'Nothing matches your current filters.'));
     const b = el('button', 'empty-btn', 'Reset filters');
-    b.addEventListener('click', () => document.getElementById('reset').click());
+    b.addEventListener('click', () => $('#reset').click());
     wrap.appendChild(b);
     grid.appendChild(wrap);
     return;
@@ -1277,10 +1411,18 @@ function renderMore() {
   const oldSentinel = grid.querySelector('.sentinel');
   if (oldSentinel) oldSentinel.remove();
 
+  const reveal = STATE.firstPaint;
+  STATE.firstPaint = false;
   const end = Math.min(STATE.filtered.length, STATE.rendered + STATE.pageSize);
   const frag = document.createDocumentFragment();
   for (let i = STATE.rendered; i < end; i++) {
-    frag.appendChild(cardEl(STATE.filtered[i]));
+    const card = cardEl(STATE.filtered[i]);
+    if (reveal) {
+      card.classList.add('reveal');
+      // Cap the cascade so it is a wave, not a slog, across a full page.
+      card.style.setProperty('--rd', Math.min(i, 16) * 22 + 'ms');
+    }
+    frag.appendChild(card);
   }
   STATE.rendered = end;
 
@@ -1298,51 +1440,77 @@ function renderMore() {
 function cardEl([path, m]) {
   const card = el('div', 'card');
   card.title = m.title || path;
+  card.style.setProperty('--chip', m._chip);
 
   const imgWrap = el('div', 'card-image');
   const img = document.createElement('img');
   img.alt = m.title || path;
-  img.loading = 'lazy';
+  img.loading = 'lazy'; img.decoding = 'async';
   img.dataset.src = mediaUrl(m.thumb_path);
   img.addEventListener('load', () => img.classList.add('loaded'));
   io.observe(img);
   imgWrap.appendChild(img);
-  imgWrap.appendChild(el('div', 'badge', `${m.tone || ''} ${m.color || ''}`.trim()));
+
+  const badge = el('div', 'badge');
+  const bdot = el('span', 'bdot');
+  bdot.style.background = COLOR_DOTS[m.color] || '#999';
+  badge.appendChild(bdot);
+  badge.appendChild(el('span', null, `${m.tone || ''} ${m.color || ''}`.trim()));
+  imgWrap.appendChild(badge);
+  if (m.dimensions) {
+    const res = el('div', 'badge res', m.dimensions);
+    imgWrap.appendChild(res);
+  }
   card.appendChild(imgWrap);
 
-  // Card body is intentionally minimal on the overview: just title
-  // and a tiny variant count. The 16-color swatch strips moved to the
-  // lightbox only - they were too noisy at gallery scale.
   const body = el('div', 'card-body');
   body.appendChild(el('div', 'card-title', m.title || path.split('/').pop()));
   const variantCount = Object.keys(m.themes || {}).length;
-  body.appendChild(el('div', 'card-sub', `${variantCount} variants`));
-
+  const sub = el('div', 'card-sub');
+  sub.appendChild(el('span', 'vcount', `${variantCount} variants`));
+  body.appendChild(sub);
   card.appendChild(body);
+
+  const ramp = el('div', 'card-ramp');
+  ramp.style.background = m._ramp;
+  card.appendChild(ramp);
+
   card.setAttribute('role', 'button');
   card.tabIndex = 0;
   card.setAttribute('aria-label', (m.title || path.split('/').pop()) + ', open theme variants');
   const open = () => openLightbox(path, m);
   card.addEventListener('click', open);
   card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  // Keyboard-focus ring without stealing the mouse-click look.
+  card.addEventListener('focus', () => { if (card.matches(':focus-visible')) card.classList.add('kbf'); });
+  card.addEventListener('blur', () => card.classList.remove('kbf'));
   return card;
 }
 
+/* ---- lightbox ------------------------------------------------------ */
 const lb = $('#lb');
 const lbSide = $('#lbside');
 
 function openLightbox(path, m, opts = {}) {
-  const wrap = document.querySelector('.lb-image-wrap');
+  const wrap = lb.querySelector('.lb-image-wrap');
   wrap.replaceChildren();
   const img = document.createElement('img');
   img.src = mediaUrl(m.medium_path || path);
   img.alt = m.title || path;
   wrap.appendChild(img);
+
+  // Palette-reactive tint. --vibe is mixed INTO the dark base everywhere it
+  // is used, so even a pale/low-sat dominant stays contrast-safe.
+  lb.style.setProperty('--vibe', m._chip || 'var(--accent)');
+
   renderSide(path, m);
   if (!lb._opener) lb._opener = document.activeElement;
   lb.classList.add('open');
+  // Ramp the frost up on the next frame so the transition actually plays.
+  requestAnimationFrame(() => lb.classList.add('frost'));
   document.body.style.overflow = 'hidden';
-  requestAnimationFrame(() => { const c = document.getElementById('lbclose'); if (c) c.focus(); });
+  setMode('VIEW');
+  requestAnimationFrame(() => { const c = $('#lbclose'); if (c) c.focus(); });
 
   if (opts.push !== false) {
     const newUrl = buildUrl({ withHash: false }) + '#' + encodePath(path);
@@ -1359,45 +1527,30 @@ function copyText(text, target) {
   }
 }
 
-const ROLE_PREVIEW = [
-  ['background', 'bg'],
-  ['foreground', 'fg'],
-  ['accent', 'accent'],
-];
-
-function variantPanel(path, wallpaperEntry, scheme, theme) {
+function variantPanel(path, m, scheme, theme) {
   const label = VARIANT_LABEL[scheme] || scheme;
   const slug = theme.name || '';
 
   const panel = el('div', 'variant');
-  const HUE_BY_SCHEME = { 'tokyo-night': 'var(--blue)', 'gruvbox': 'var(--orange)', 'nord': 'var(--cyan)', 'material': 'var(--green)', 'aether': 'var(--purple)' };
   panel.style.setProperty('--vhue', HUE_BY_SCHEME[scheme] || 'var(--border)');
 
-  // Header row: variant name on the left, Apply button on the right.
-  // Putting Apply in the header (rather than below the ramp) makes the
-  // whole panel ~3 rows tall instead of ~5, fitting all four variants
-  // comfortably in the sidebar without scrolling.
   const head = el('div', 'variant-head');
-  head.appendChild(el('div', 'variant-name', label));
+  const name = el('div', 'variant-name');
+  name.appendChild(el('span', 'vdot'));
+  name.appendChild(el('span', null, label));
+  head.appendChild(name);
 
-  // Two buttons: Edit opens the theme editor in Aether so the user can
-  // tweak the palette and choose where to save it; Apply is the trusted
-  // one-click install path (silent + as_omarchy_theme=<slug>). Same
-  // aether:// endpoint, different flags.
+  // Two buttons: Edit opens the theme editor in Aether so the user can tweak
+  // the palette and choose where to save it; Apply is the trusted one-click
+  // install path (silent + as_omarchy_theme=<slug>). Same aether:// endpoint,
+  // different flags. These params are a contract with the Aether app.
   if (theme.colors_toml) {
-    // Wallpaper URL: use the original full-res file already on Hetzner
-    // (under dark/*, light/*) rather than the per-theme symlinked path,
-    // which we excluded from the omarchy-themes sync to avoid duplicate
-    // uploads. The path is the manifest entry's own key.
     const baseParams = new URLSearchParams();
     baseParams.set('colors', mediaUrl(theme.colors_toml));
     baseParams.set('wallpaper', mediaUrl(path));
 
     const actions = el('div', 'variant-actions');
 
-    // Edit: opens the editor. No silent / no as_omarchy_theme - the
-    // editor surfaces its own save UI so the user picks the install
-    // name and gets a chance to confirm before anything lands on disk.
     const editParams = new URLSearchParams(baseParams);
     editParams.set('edit', 'true');
     const edit = el('a', 'variant-edit');
@@ -1407,11 +1560,6 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
     edit.appendChild(document.createTextNode('Edit'));
     actions.appendChild(edit);
 
-    // Apply: trusted one-click install. silent=true skips Aether's
-    // confirmation dialog because the click already represents the
-    // user's explicit consent within our own gallery.
-    // as_omarchy_theme=<slug> tells Aether to install under
-    // ~/.config/omarchy/themes/<slug>/ so the theme name is stable.
     const applyParams = new URLSearchParams(baseParams);
     applyParams.set('silent', 'true');
     applyParams.set('as_omarchy_theme', slug);
@@ -1425,20 +1573,22 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
   }
   panel.appendChild(head);
 
-  // 16-color ANSI strip, click any swatch to copy its hex.
+  // 16-color ANSI strip; click any swatch to copy its hex. Real spans here
+  // (unlike the gradient on cards) because they are interactive.
   if (theme.colors) {
     const ramp = el('div', 'ramp');
     for (const k of ANSI_KEYS) {
+      const hex = theme.colors[k] || '';
       const sl = el('div', 'sl');
-      sl.style.background = theme.colors[k] || 'transparent';
-      sl.title = `${k}: ${theme.colors[k] || ''}`;
+      sl.style.background = hex || 'transparent';
+      sl.title = `${k}: ${hex}`;
       sl.style.cursor = 'pointer';
       sl.setAttribute('role', 'button');
       sl.tabIndex = 0;
-      sl.setAttribute('aria-label', `copy ${k} ${theme.colors[k] || ''}`);
+      sl.setAttribute('aria-label', `copy ${k} ${hex}`);
       const copySl = (e) => {
         e.stopPropagation();
-        const hex = theme.colors[k] || ''; if (!hex) return;
+        if (!hex) return;
         copyText(hex);
         sl.classList.add('copied'); setTimeout(() => sl.classList.remove('copied'), 650);
         showToast('Copied ' + hex, k, true);
@@ -1450,30 +1600,29 @@ function variantPanel(path, wallpaperEntry, scheme, theme) {
     panel.appendChild(ramp);
   }
 
-  // Footer: just the theme slug as a hint of what gets installed.
-  // Direct colors.toml / neovim.lua links removed - the Apply button
-  // handles installation, and power users can find the raw files at
-  // the URLs encoded in the aether:// link.
   const foot = el('div', 'variant-foot');
   foot.appendChild(el('span', 'slug', slug));
   panel.appendChild(foot);
-
   return panel;
 }
 
 function renderSide(path, m) {
   lbSide.replaceChildren();
 
+  // PLATE conceit: position within the current filtered set / filtered total.
+  const idx = STATE.filtered.findIndex(([p]) => p === path);
+  const total = STATE.filtered.length || STATE.entries.length;
+  const num = idx >= 0 ? idx + 1 : '--';
+  const pad = String(total).length;
+  const plate = el('div', 'lb-plate');
+  plate.appendChild(el('b', null, 'PLATE ' + String(num).padStart(pad, '0')));
+  plate.appendChild(el('i', null, ' / ' + total));
+  lbSide.appendChild(plate);
+
   lbSide.appendChild(el('div', 'lb-title', m.title || path.split('/').pop()));
-  lbSide.appendChild(el('div', 'lb-path', path));
 
   const kv = el('dl', 'kv');
-  const rows = [
-    ['res',    m.dimensions],
-    ['tone',   m.tone],
-    ['color',  m.color],
-  ];
-  for (const [k, v] of rows) {
+  for (const [k, v] of [['res', m.dimensions], ['tone', m.tone], ['color', m.color]]) {
     if (!v) continue;
     kv.appendChild(el('dt', null, k));
     kv.appendChild(el('dd', null, v));
@@ -1486,12 +1635,9 @@ function renderSide(path, m) {
     lbSide.appendChild(wrap);
   }
 
-  // Variants section -- one panel per packaged variant. Iterating in
-  // VARIANT_ORDER (not Object.keys order) keeps Deep > Warm > Cool >
-  // Material stable. Wrapped in a tight-gap container so the four
-  // panels stack without much air between them.
+  // Variants in fixed order Deep > Warm > Cool > Material > Aether.
   if (m.themes) {
-    lbSide.appendChild(el('div', 'lb-sec-label', 'apply'));
+    lbSide.appendChild(el('div', 'lb-sec-label', 'apply a variant'));
     const vlist = el('div', 'lb-variants');
     for (const scheme of VARIANT_ORDER) {
       const theme = m.themes[scheme];
@@ -1501,14 +1647,17 @@ function renderSide(path, m) {
     lbSide.appendChild(vlist);
   }
 
+  lbSide.appendChild(el('div', 'lb-path', path));
 }
 
 function closeLightbox(opts = {}) {
   if (!lb.classList.contains('open')) return;
   lb.classList.remove('open');
-  document.querySelector('.lb-image-wrap').replaceChildren();
+  lb.classList.remove('frost');
+  lb.querySelector('.lb-image-wrap').replaceChildren();
   document.body.style.overflow = '';
-  if (lb._opener && lb._opener.focus) { lb._opener.focus(); }
+  setMode(document.activeElement === $('#q') ? 'SEARCH' : 'NORMAL');
+  if (lb._opener && lb._opener.focus) lb._opener.focus();
   lb._opener = null;
 
   if (opts.pop !== false && history.state && history.state.lightbox) {
@@ -1520,9 +1669,7 @@ function closeLightbox(opts = {}) {
 $('#lbclose').addEventListener('click', () => closeLightbox());
 lb.addEventListener('click', (e) => { if (e.target === lb || e.target.classList.contains('lb-image-wrap')) closeLightbox(); });
 
-// Lightbox navigation: arrows (vertical + horizontal), vim keys h/j/k/l,
-// and Tab (Shift+Tab back). Moves to the adjacent wallpaper in the
-// currently-filtered list and wraps around at the ends.
+// Lightbox navigation across the filtered list, wrapping at the ends.
 function navLightbox(delta) {
   if (!lb.classList.contains('open')) return;
   const hashPath = decodeHashPath();
@@ -1534,31 +1681,54 @@ function navLightbox(delta) {
   const nextIdx = (idx + delta + list.length) % list.length;
   const [nextPath, nextEntry] = list[nextIdx];
   openLightbox(nextPath, nextEntry, { push: false });
-  history.replaceState({ lightbox: nextPath }, '',
-    buildUrl({ withHash: false }) + '#' + encodePath(nextPath));
+  history.replaceState({ lightbox: nextPath }, '', buildUrl({ withHash: false }) + '#' + encodePath(nextPath));
 }
 
+/* ---- mode pill ----------------------------------------------------- */
+function setMode(mode) { const el = $('#mode'); if (el) el.textContent = mode; }
+
+/* ---- global keyboard ----------------------------------------------- */
+function typingInField(e) {
+  const t = e.target;
+  return t && t.tagName && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName);
+}
+let lastG = 0;
 document.addEventListener('keydown', (e) => {
-  if (!lb.classList.contains('open')) return;
-  // Don't hijack keys while the user is typing into an input field.
-  if (e.target && e.target.tagName && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
-  if (e.key === 'Escape') return closeLightbox();
-  const prev = (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'h' || e.key === 'k'
-                || (e.key === 'Tab' && e.shiftKey));
-  const next = (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'l' || e.key === 'j'
-                || (e.key === 'Tab' && !e.shiftKey));
-  if (prev) { e.preventDefault(); navLightbox(-1); }
-  else if (next) { e.preventDefault(); navLightbox(+1); }
+  // When the lightbox is open it owns navigation.
+  if (lb.classList.contains('open')) {
+    if (typingInField(e)) { if (e.key === 'Escape') closeLightbox(); return; }
+    if (e.key === 'Escape') return closeLightbox();
+    const prev = (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'h' || e.key === 'k' || (e.key === 'Tab' && e.shiftKey));
+    const next = (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'l' || e.key === 'j' || (e.key === 'Tab' && !e.shiftKey));
+    if (prev) { e.preventDefault(); navLightbox(-1); }
+    else if (next) { e.preventDefault(); navLightbox(+1); }
+    return;
+  }
+
+  // The "/" focuses search from anywhere. Esc blurs/clears search focus.
+  if (!typingInField(e) && (e.key === '/' )) { e.preventDefault(); $('#q').focus(); return; }
+
+  // Hotkeys must NOT fire while typing in the search field (except Esc).
+  if (typingInField(e)) {
+    if (e.key === 'Escape') { e.target.blur(); setMode('NORMAL'); }
+    return;
+  }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+  switch (e.key) {
+    case 'x': if (hasActiveFilters()) $('#reset').click(); break;
+    case 'g': {
+      const now = e.timeStamp || 0;
+      if (now - lastG < 500) { window.scrollTo({ top: 0 }); lastG = 0; }
+      else lastG = now;
+      break;
+    }
+    case 'G': window.scrollTo({ top: document.body.scrollHeight }); break;
+  }
 });
 
-// Apply button click acknowledgement. The aether:// URL still fires
-// (we don't preventDefault) -- we just give the user immediate visual
-// confirmation that the click registered, since the browser provides
-// no feedback about whether the protocol handler accepted the URL.
-const TOAST = $('#toast');
-const TOAST_TITLE = $('#toast-title');
-const TOAST_DETAIL = $('#toast-detail');
-const TOAST_DOT = $('#toast-dot');
+/* ---- apply-button acknowledgement ---------------------------------- */
+const TOAST = $('#toast'), TOAST_TITLE = $('#toast-title'), TOAST_DETAIL = $('#toast-detail'), TOAST_DOT = $('#toast-dot');
 let toastTimer = null;
 function showToast(title, detail, ok = false) {
   TOAST_TITLE.textContent = title;
@@ -1569,8 +1739,6 @@ function showToast(title, detail, ok = false) {
   toastTimer = setTimeout(() => TOAST.classList.remove('show'), 2800);
 }
 
-// Lucide-style stroke SVGs as template strings. Tiny so each fits in
-// one line; sized at 11px to align next to 11px button text.
 const ICON_SVG = {
   play:   '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20"/></svg>',
   pencil: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
@@ -1582,16 +1750,12 @@ function makeIcon(name) {
   wrap.innerHTML = ICON_SVG[name] || '';
   return wrap.firstElementChild;
 }
-
-function setApplyContent(btn, label, mode /* 'play' | 'spin' | 'check' */) {
+function setApplyContent(btn, label, mode) {
   btn.replaceChildren();
   if (mode === 'spin') {
-    const spin = document.createElement('span');
-    spin.className = 'spin';
-    btn.appendChild(spin);
+    const spin = document.createElement('span'); spin.className = 'spin'; btn.appendChild(spin);
   } else if (mode) {
-    const ic = makeIcon(mode);
-    if (ic) btn.appendChild(ic);
+    const ic = makeIcon(mode); if (ic) btn.appendChild(ic);
   }
   btn.appendChild(document.createTextNode(label));
 }
@@ -1599,42 +1763,30 @@ function setApplyContent(btn, label, mode /* 'play' | 'spin' | 'check' */) {
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.variant-apply');
   if (!btn) return;
-  // Don't block the browser from opening aether://. We only update the UI.
+  // Do not block the browser from opening aether://. We only update the UI.
   const originalText = btn.dataset.originalText || (btn.textContent || 'Apply');
   btn.dataset.originalText = originalText;
-  // The label of the variant being applied (Deep / Warm / Cool / etc.)
-  // is rendered as the sibling .variant-name inside the same variant card,
-  // so the toast can name what's being applied without parsing the title.
   const panel = btn.closest('.variant');
   const nameEl = panel && panel.querySelector('.variant-name');
-  const slugStr = nameEl ? nameEl.textContent : '';
+  const slugStr = nameEl ? nameEl.textContent.trim() : '';
 
-  btn.classList.add('applying');
-  btn.classList.remove('sent');
+  btn.classList.add('applying'); btn.classList.remove('sent');
   setApplyContent(btn, 'Applying', 'spin');
-
   showToast('Applying theme...', slugStr ? `via aether:// (${slugStr})` : 'via aether://');
 
   setTimeout(() => {
-    btn.classList.remove('applying');
-    btn.classList.add('sent');
+    btn.classList.remove('applying'); btn.classList.add('sent');
     setApplyContent(btn, 'Sent', 'check');
     showToast('Theme sent to Aether', slugStr, true);
   }, 1400);
-
   setTimeout(() => {
     btn.classList.remove('sent');
     setApplyContent(btn, originalText, 'play');
   }, 3200);
 });
 
-// Snapshot the filter object so popstate can tell whether the navigation
-// actually changed which wallpapers are being shown, or only flipped
-// lightbox state (hash). Closing the lightbox should NOT rebuild the
-// grid - that wipes infinite-scroll progress and scroll position.
-function filtersSnapshot() {
-  return JSON.stringify(STATE.filters);
-}
+/* ---- history / popstate -------------------------------------------- */
+function filtersSnapshot() { return JSON.stringify(STATE.filters); }
 let lastFiltersSnap = '';
 
 window.addEventListener('popstate', () => {
@@ -1642,15 +1794,10 @@ window.addEventListener('popstate', () => {
   readUrl();
   const curr = filtersSnapshot();
   lastFiltersSnap = curr;
-
   if (curr !== prev) {
-    // Filters changed (browser back / forward across a real filter change).
-    // Re-render the gallery; otherwise leave it untouched.
     $('#q').value = STATE.filters.q || '';
-    buildFilters();
     applyFilters({ writeUrl: false });
   }
-
   const hashPath = decodeHashPath();
   const isOpen = lb.classList.contains('open');
   if (hashPath && STATE.byPath[hashPath]) {
@@ -1660,29 +1807,29 @@ window.addEventListener('popstate', () => {
   }
 });
 
+/* ---- search + reset ------------------------------------------------ */
 $('#q').addEventListener('input', debounce((e) => {
   STATE.filters.q = e.target.value;
   applyFilters();
-}, 120));
+}, 130));
+$('#q').addEventListener('focus', () => { if (!lb.classList.contains('open')) setMode('SEARCH'); });
+$('#q').addEventListener('blur', () => { if (!lb.classList.contains('open')) setMode('NORMAL'); });
 
 $('#reset').addEventListener('click', () => {
   STATE.filters = { tone: null, color: null, res_min: null, res_max: null, q: '' };
   $('#q').value = '';
-  buildFilters();
   applyFilters();
 });
 
+/* ---- boot ---------------------------------------------------------- */
 function showLoadError(err) {
   grid.replaceChildren();
   const wrap = el('div', 'empty');
-  wrap.appendChild(el('div', null, 'Could not load wallpapers.json.'));
-  wrap.appendChild(el('div', null, 'Error: ' + (err && err.message || String(err))));
+  wrap.appendChild(el('div', 'empty-big', 'Could not load themes'));
+  wrap.appendChild(el('div', 'empty-sub', 'Error: ' + (err && err.message || String(err))));
   grid.appendChild(wrap);
 }
-function hideLoader() {
-  const loader = document.getElementById('loading');
-  if (loader) loader.classList.add('hidden');
-}
+function hideLoader() { const l = $('#loading'); if (l) l.classList.add('hidden'); }
 
 load().then(hideLoader).catch(err => { hideLoader(); showLoadError(err); });
 
