@@ -984,12 +984,12 @@ const RES_TIERS = ['<=720p','720p','1080p','1440p','4K','5K','8K+'];
 /* Reference scheme keys in the manifest map to user-facing variant labels.
    The mapping intentionally hides the source-scheme identity; each variant's
    palette is wallpaper-derived. */
-const VARIANT_ORDER = ['mono', 'gruvbox', 'nord', 'material', 'aether'];
+const VARIANT_ORDER = ['palette', 'gruvbox', 'nord', 'material', 'aether'];
 const VARIANT_LABEL = {
-  'mono': 'Mono', 'gruvbox': 'Warm', 'nord': 'Cool', 'material': 'Material', 'aether': 'Aether',
+  'palette': 'Palette', 'gruvbox': 'Warm', 'nord': 'Cool', 'material': 'Material', 'aether': 'Aether',
 };
 const HUE_BY_SCHEME = {
-  'mono': 'var(--text-dim)', 'gruvbox': 'var(--orange)', 'nord': 'var(--cyan)',
+  'palette': 'var(--red)', 'gruvbox': 'var(--orange)', 'nord': 'var(--cyan)',
   'material': 'var(--green)', 'aether': 'var(--magenta)',
 };
 
