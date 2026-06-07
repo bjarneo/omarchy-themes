@@ -555,9 +555,49 @@
   }
   .badge .bdot { width: 7px; height: 7px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2); }
   .badge.res {
-    position: absolute; top: var(--space-2); right: var(--space-2); left: auto;
+    position: absolute; bottom: var(--space-2); right: var(--space-2); top: auto; left: auto;
     border-color: var(--border); color: var(--text-dim); font-variant-numeric: tabular-nums;
   }
+  /* Favourite star: a per-card toggle persisted to localStorage. No
+     backdrop-filter on purpose - one filter per card would reintroduce the
+     scroll-time compositing cost we deliberately removed from the badges. */
+  .fav-btn {
+    position: absolute; top: var(--space-2); right: var(--space-2); z-index: 2;
+    width: 30px; height: 30px; padding: 0; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: color-mix(in oklab, var(--bg) 74%, transparent);
+    border: 1px solid color-mix(in oklab, var(--border-2) 85%, transparent);
+    color: var(--text-dim); cursor: pointer; line-height: 0;
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
+  }
+  .fav-btn svg { width: 16px; height: 16px; display: block; }
+  .fav-btn svg polygon { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+  .fav-btn:hover { color: #f2c14e; border-color: color-mix(in oklab, #f2c14e 55%, var(--border-2)); transform: scale(1.08); }
+  .fav-btn:active { transform: scale(0.92); }
+  .fav-btn.is-fav { color: #f2c14e; border-color: color-mix(in oklab, #f2c14e 55%, transparent); background: color-mix(in oklab, #f2c14e 15%, color-mix(in oklab, var(--bg) 72%, transparent)); }
+  .fav-btn.is-fav svg polygon { fill: currentColor; stroke: currentColor; }
+  .fav-btn.pop { animation: fav-pop var(--dur-slow) var(--ease-out); }
+  @keyframes fav-pop { 0% { transform: scale(1); } 40% { transform: scale(1.32); } 100% { transform: scale(1); } }
+  .fav-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft); }
+
+  /* Sidebar Favourites filter toggle. */
+  .fav-toggle {
+    width: 100%;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: color-mix(in oklab, var(--bg-elev) 55%, transparent);
+    border: 1px solid var(--border); color: var(--text-dim);
+    border-radius: var(--radius-sm); padding: 8px 11px;
+    font-family: var(--mono); font-size: var(--fs-sm); cursor: pointer;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+  .fav-toggle .ft-star { color: #f2c14e; display: inline-flex; }
+  .fav-toggle .ft-star svg { width: 14px; height: 14px; display: block; }
+  .fav-toggle .ft-label { flex: 1; text-align: left; }
+  .fav-toggle .fav-n { font-size: var(--fs-2xs); color: var(--text-faint); font-variant-numeric: tabular-nums; }
+  .fav-toggle:hover { color: var(--text); border-color: var(--text-faint); }
+  .fav-toggle.active { color: var(--text); background: color-mix(in oklab, #f2c14e 16%, transparent); border-color: color-mix(in oklab, #f2c14e 55%, var(--border)); }
+  .fav-toggle.active .fav-n { color: #f2c14e; }
+  .fav-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft); }
   .card-body { padding: var(--space-3) var(--space-3) var(--space-2); display: flex; flex-direction: column; gap: 3px; }
   .card-title {
     font-weight: 600; font-size: var(--fs-sm); line-height: var(--lh-snug); letter-spacing: -0.005em; color: var(--text);
@@ -857,6 +897,12 @@
       <span class="slash" aria-hidden="true">/</span>
     </div>
 
+    <button class="fav-toggle" id="favToggle" type="button" aria-pressed="false" title="Show only favourites">
+      <span class="ft-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+      <span class="ft-label">Favourites</span>
+      <span class="fav-n">0</span>
+    </button>
+
     <!-- Filters are populated inline by buildFilters(). -->
     <div class="filters-inline" id="filters"></div>
 
@@ -966,6 +1012,8 @@ const STATE = {
   mask: null,        // Uint8Array: 1 if entry index passes the current filter
   firstPaint: true,  // gate the one-time reveal cascade to the first batch
   featured: null,    // 3 random entries (distinct colors), re-rolled each visit
+  favs: null,        // Set<path> of favourited themes, persisted to localStorage
+  favOnly: false,    // when true, show only favourited themes
 };
 
 const FILTER_KEYS = ['tone','color','res_min','res_max'];
@@ -975,11 +1023,13 @@ function readUrl() {
   const sp = new URLSearchParams(location.search);
   for (const k of FILTER_KEYS) STATE.filters[k] = sp.get(k) || null;
   STATE.filters.q = sp.get('q') || '';
+  STATE.favOnly = sp.get('fav') === '1';
 }
 function buildUrl({ withHash = true } = {}) {
   const sp = new URLSearchParams();
   for (const k of FILTER_KEYS) if (STATE.filters[k]) sp.set(k, STATE.filters[k]);
   if (STATE.filters.q) sp.set('q', STATE.filters.q);
+  if (STATE.favOnly) sp.set('fav', '1');
   const qs = sp.toString();
   const hash = withHash ? location.hash : '';
   return location.pathname + (qs ? '?' + qs : '') + hash;
@@ -1111,6 +1161,7 @@ async function load() {
   STATE.entries = Object.entries(data);
   STATE.byPath = data;
   STATE.mask = new Uint8Array(STATE.entries.length);
+  STATE.favs = loadFavs();
 
   setCount(STATE.entries.length, STATE.entries.length);
 
@@ -1303,7 +1354,7 @@ function toggleFilter(key, val) {
 }
 
 function hasActiveFilters() {
-  return FILTER_KEYS.some(k => STATE.filters[k]) || !!STATE.filters.q;
+  return STATE.favOnly || FILTER_KEYS.some(k => STATE.filters[k]) || !!STATE.filters.q;
 }
 
 function applyFilters(opts = {}) {
@@ -1311,6 +1362,7 @@ function applyFilters(opts = {}) {
   const q = f.q.trim().toLowerCase();
   STATE.mask.fill(0);
   STATE.filtered = STATE.entries.filter(([path, m]) => {
+    if (STATE.favOnly && STATE.favs && !STATE.favs.has(path)) return false;
     for (const k of FILTER_KEYS) if (!passesFilterKey(m, k, f[k])) return false;
     if (q) {
       const hay = (path + ' ' + (m.title||'') + ' ' + (m.tags||[]).join(' ')).toLowerCase();
@@ -1328,6 +1380,7 @@ function applyFilters(opts = {}) {
   buildFilters();           // refresh selected state + live counts
   renderCrumbs();
   updateFeaturedVisibility();
+  updateFavControl();
   drawHeat();
   $('#reset').disabled = !hasActiveFilters();
   if (opts.writeUrl !== false) writeUrl();
@@ -1456,9 +1509,10 @@ function renderMore() {
     icon.setAttribute('aria-hidden', 'true');
     icon.innerHTML = '<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8 11h6"/></svg>';
     wrap.appendChild(icon);
-    wrap.appendChild(el('div', 'empty-big', 'No matches'));
-    wrap.appendChild(el('div', 'empty-sub', 'Nothing matches your current filters.'));
-    const b = el('button', 'empty-btn', 'Reset filters');
+    const noFavs = STATE.favOnly && (!STATE.favs || STATE.favs.size === 0);
+    wrap.appendChild(el('div', 'empty-big', noFavs ? 'No favourites yet' : 'No matches'));
+    wrap.appendChild(el('div', 'empty-sub', noFavs ? 'Tap the star on any theme to save it here.' : 'Nothing matches your current filters.'));
+    const b = el('button', 'empty-btn', noFavs ? 'Browse all themes' : 'Reset filters');
     b.addEventListener('click', () => $('#reset').click());
     wrap.appendChild(b);
     grid.appendChild(wrap);
@@ -1493,6 +1547,66 @@ function renderMore() {
   }
 }
 
+/* ---- favourites (localStorage) ------------------------------------- */
+const FAV_KEY = 'omarchy-themes:favs';
+function loadFavs() {
+  try {
+    const raw = localStorage.getItem(FAV_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return new Set(Array.isArray(arr) ? arr : []);
+  } catch { return new Set(); }
+}
+function saveFavs() {
+  try { localStorage.setItem(FAV_KEY, JSON.stringify([...STATE.favs])); } catch {}
+}
+// A star button that toggles favourite state for `path`. The same path can
+// appear in the grid and the featured row at once, so syncFavButtons keeps
+// every copy in step.
+function favButton(path) {
+  const b = el('button', 'fav-btn');
+  b.type = 'button';
+  b.dataset.path = path;
+  const on = STATE.favs && STATE.favs.has(path);
+  if (on) b.classList.add('is-fav');
+  b.setAttribute('aria-pressed', String(!!on));
+  const lab = on ? 'Remove from favourites' : 'Add to favourites';
+  b.title = lab; b.setAttribute('aria-label', lab);
+  b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  // stopPropagation so the click does not also open the card's lightbox.
+  b.addEventListener('click', (e) => { e.stopPropagation(); toggleFav(path); });
+  b.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') e.stopPropagation(); });
+  return b;
+}
+function toggleFav(path) {
+  if (!STATE.favs) STATE.favs = new Set();
+  if (STATE.favs.has(path)) STATE.favs.delete(path);
+  else STATE.favs.add(path);
+  saveFavs();
+  syncFavButtons(path);
+  updateFavControl();
+  // In the favourites-only view, un-favouriting should drop the card.
+  if (STATE.favOnly) applyFilters();
+}
+function syncFavButtons(path) {
+  const on = STATE.favs.has(path);
+  for (const b of document.querySelectorAll('.fav-btn')) {
+    if (b.dataset.path !== path) continue;
+    b.classList.toggle('is-fav', on);
+    b.setAttribute('aria-pressed', String(on));
+    const lab = on ? 'Remove from favourites' : 'Add to favourites';
+    b.title = lab; b.setAttribute('aria-label', lab);
+    if (on) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); }
+  }
+}
+function updateFavControl() {
+  const t = $('#favToggle');
+  if (!t) return;
+  const nEl = t.querySelector('.fav-n');
+  if (nEl) nEl.textContent = String(STATE.favs ? STATE.favs.size : 0);
+  t.classList.toggle('active', STATE.favOnly);
+  t.setAttribute('aria-pressed', String(STATE.favOnly));
+}
+
 function cardEl([path, m], opts = {}) {
   const card = el('div', 'card');
   if (opts.featured) card.classList.add('featured-card');
@@ -1514,6 +1628,7 @@ function cardEl([path, m], opts = {}) {
   badge.appendChild(bdot);
   badge.appendChild(el('span', null, `${m.tone || ''} ${m.color || ''}`.trim()));
   imgWrap.appendChild(badge);
+  imgWrap.appendChild(favButton(path));
   if (m.dimensions) {
     const res = el('div', 'badge res', m.dimensions);
     imgWrap.appendChild(res);
@@ -1924,7 +2039,7 @@ document.addEventListener('click', (e) => {
 });
 
 /* ---- history / popstate -------------------------------------------- */
-function filtersSnapshot() { return JSON.stringify(STATE.filters); }
+function filtersSnapshot() { return JSON.stringify({ f: STATE.filters, fav: STATE.favOnly }); }
 let lastFiltersSnap = '';
 
 window.addEventListener('popstate', () => {
@@ -1955,7 +2070,13 @@ $('#q').addEventListener('blur', () => { if (!lb.classList.contains('open')) set
 
 $('#reset').addEventListener('click', () => {
   STATE.filters = { tone: null, color: null, res_min: null, res_max: null, q: '' };
+  STATE.favOnly = false;
   $('#q').value = '';
+  applyFilters();
+});
+
+$('#favToggle').addEventListener('click', () => {
+  STATE.favOnly = !STATE.favOnly;
   applyFilters();
 });
 
