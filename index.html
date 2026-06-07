@@ -438,6 +438,29 @@
     gap: var(--space-4);
   }
 
+  /* ---- FEATURED: 3 random picks, one per color, re-rolled each visit -- */
+  .featured { margin-bottom: var(--space-6); }
+  .featured-head { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
+  .featured-title { font-family: var(--display); font-weight: 700; font-size: var(--fs-md); letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
+  .featured-title svg { color: var(--accent); filter: drop-shadow(0 0 6px var(--accent-soft)); }
+  .featured-sub { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-faint); }
+  .featured-shuffle {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: none; border: 1px solid var(--border); color: var(--text-dim);
+    border-radius: var(--radius-sm); padding: 6px 11px;
+    font-family: var(--mono); font-size: var(--fs-xs); cursor: pointer;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
+  }
+  .featured-shuffle:hover { color: var(--text); border-color: var(--text-faint); background: color-mix(in oklab, var(--bg-elev) 60%, transparent); }
+  .featured-shuffle:active { transform: translateY(1px); }
+  .featured-shuffle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft); }
+  .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  .card.featured-card { box-shadow: 0 0 0 1px color-mix(in oklab, var(--chip) 28%, transparent), var(--shadow-1); }
+  .card.featured-card:hover { box-shadow: 0 0 0 1px color-mix(in oklab, var(--chip) 45%, transparent), 0 14px 34px -14px color-mix(in oklab, var(--chip) 60%, transparent), var(--shadow-2); }
+  @media (max-width: 880px) { .featured-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .featured-grid { grid-template-columns: 1fr; } .featured-shuffle span { display: none; } }
+
   /* ---- CARD: a color chip ------------------------------------------- */
   .card {
     --chip: var(--accent);
@@ -851,6 +874,7 @@
     </div>
   </div>
   <div class="gridwrap">
+    <section class="featured" id="featured" aria-label="Featured themes" hidden></section>
     <div class="grid" id="grid"></div>
   </div>
 </main>
@@ -914,6 +938,7 @@ const STATE = {
   pageSize: 80,
   mask: null,        // Uint8Array: 1 if entry index passes the current filter
   firstPaint: true,  // gate the one-time reveal cascade to the first batch
+  featured: null,    // 3 random entries (distinct colors), re-rolled each visit
 };
 
 const FILTER_KEYS = ['tone','color','res_min','res_max'];
@@ -1065,8 +1090,10 @@ async function load() {
   readUrl();
   $('#q').value = STATE.filters.q || '';
   buildFilters();
+  STATE.featured = pickFeatured();
   applyFilters({ writeUrl: false });
   initHeatmap();
+  renderFeatured();
 
   const hashPath = decodeHashPath();
   if (hashPath && STATE.byPath[hashPath]) {
@@ -1273,6 +1300,7 @@ function applyFilters(opts = {}) {
   renderMore();
   buildFilters();           // refresh selected state + live counts
   renderCrumbs();
+  updateFeaturedVisibility();
   drawHeat();
   $('#reset').disabled = !hasActiveFilters();
   if (opts.writeUrl !== false) writeUrl();
@@ -1438,8 +1466,9 @@ function renderMore() {
   }
 }
 
-function cardEl([path, m]) {
+function cardEl([path, m], opts = {}) {
   const card = el('div', 'card');
+  if (opts.featured) card.classList.add('featured-card');
   card.title = m.title || path;
   card.style.setProperty('--chip', m._chip);
 
@@ -1486,6 +1515,87 @@ function cardEl([path, m]) {
   card.addEventListener('focus', () => { if (card.matches(':focus-visible')) card.classList.add('kbf'); });
   card.addEventListener('blur', () => card.classList.remove('kbf'));
   return card;
+}
+
+/* ---- featured: 3 random picks, one per color, re-rolled each visit -- */
+// Group by color, shuffle the colors, take one random entry from each of the
+// first n - so the picks are always a different color and a fresh set every
+// page load (and every shuffle click).
+function pickFeatured(n = 3) {
+  const byColor = new Map();
+  for (const e of STATE.entries) {
+    const c = e[1].color;
+    if (!c) continue;
+    if (!byColor.has(c)) byColor.set(c, []);
+    byColor.get(c).push(e);
+  }
+  const colors = [...byColor.keys()];
+  for (let i = colors.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [colors[i], colors[j]] = [colors[j], colors[i]];
+  }
+  const picks = [];
+  for (const c of colors) {
+    if (picks.length >= n) break;
+    const arr = byColor.get(c);
+    picks.push(arr[Math.floor(Math.random() * arr.length)]);
+  }
+  return picks;
+}
+
+function shuffleIcon() {
+  const w = document.createElement('span');
+  w.style.display = 'inline-flex';
+  w.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>';
+  return w.firstElementChild;
+}
+function starIcon() {
+  const w = document.createElement('span');
+  w.style.display = 'inline-flex';
+  w.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  return w.firstElementChild;
+}
+
+function renderFeatured() {
+  const sec = $('#featured');
+  if (!sec) return;
+  sec.replaceChildren();
+  if (!STATE.featured || !STATE.featured.length) { sec.hidden = true; return; }
+
+  const head = el('div', 'featured-head');
+  const title = el('div', 'featured-title');
+  title.appendChild(starIcon());
+  title.appendChild(el('span', null, 'Featured'));
+  head.appendChild(title);
+  head.appendChild(el('div', 'featured-sub', STATE.featured.length + ' picks, fresh each visit'));
+
+  const shuffle = el('button', 'featured-shuffle');
+  shuffle.type = 'button';
+  shuffle.title = 'Pick a new set';
+  shuffle.setAttribute('aria-label', 'Shuffle featured themes');
+  shuffle.appendChild(shuffleIcon());
+  shuffle.appendChild(el('span', null, 'shuffle'));
+  shuffle.addEventListener('click', () => { STATE.featured = pickFeatured(); renderFeatured(); });
+  head.appendChild(shuffle);
+  sec.appendChild(head);
+
+  const g = el('div', 'featured-grid');
+  STATE.featured.forEach((entry, i) => {
+    const card = cardEl(entry, { featured: true });
+    card.classList.add('reveal');
+    card.style.setProperty('--rd', i * 60 + 'ms');
+    g.appendChild(card);
+  });
+  sec.appendChild(g);
+  updateFeaturedVisibility();
+}
+
+// Featured is a default-view hero. Hide it whenever any filter or search is
+// active so the result set stays clean.
+function updateFeaturedVisibility() {
+  const sec = $('#featured');
+  if (!sec) return;
+  sec.hidden = hasActiveFilters() || !(STATE.featured && STATE.featured.length);
 }
 
 /* ---- lightbox ------------------------------------------------------ */
