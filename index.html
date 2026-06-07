@@ -483,7 +483,6 @@
   .card.featured-card .card-title { font-size: var(--fs-base); font-weight: 700; }
   .card.featured-card .badge { font-size: var(--fs-2xs); }
   .card.featured-card:hover {
-    transform: translateY(-4px);
     box-shadow:
       0 0 0 1px color-mix(in oklab, var(--chip) 62%, transparent),
       0 20px 48px -16px color-mix(in oklab, var(--chip) 78%, transparent),
@@ -514,7 +513,6 @@
   }
   .card:active { transform: translateY(0) scale(0.997); transition-duration: var(--dur-fast); }
   .card:hover {
-    transform: translateY(-3px);
     border-color: color-mix(in oklab, var(--chip) 70%, var(--border));
     box-shadow:
       0 0 0 1px color-mix(in oklab, var(--chip) 38%, transparent),
@@ -576,9 +574,7 @@
      blank cell. Grows on hover. */
   .card-ramp {
     height: 8px; margin-top: 1px;
-    transition: height var(--dur) var(--ease);
   }
-  .card:hover .card-ramp { height: 14px; }
 
   /* First-paint reveal cascade. Only the very first batch gets it; later
      infinite-scroll batches just appear so scrolling stays smooth. */
