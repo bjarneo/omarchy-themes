@@ -127,9 +127,9 @@
     isolation: isolate;
     background-color: var(--bg);
     background-image:
-      radial-gradient(62% 50% at 10% -8%,  color-mix(in oklab, var(--blue) 13%, transparent), transparent 60%),
-      radial-gradient(58% 55% at 94% 6%,   color-mix(in oklab, var(--magenta) 11%, transparent), transparent 62%),
-      radial-gradient(72% 60% at 58% 112%, color-mix(in oklab, var(--cyan) 10%, transparent), transparent 64%);
+      radial-gradient(62% 50% at 10% -8%,  color-mix(in oklab, var(--blue) 6%, transparent), transparent 60%),
+      radial-gradient(58% 55% at 94% 6%,   color-mix(in oklab, var(--magenta) 5%, transparent), transparent 62%),
+      radial-gradient(72% 60% at 58% 112%, color-mix(in oklab, var(--cyan) 5%, transparent), transparent 64%);
     background-attachment: fixed;
     background-repeat: no-repeat;
   }
@@ -158,8 +158,8 @@
      weak GPUs during fast scroll, so they get a cheap semi-opaque fill. */
   .glass {
     background: var(--glass-bg);
-    -webkit-backdrop-filter: blur(20px) saturate(165%);
-    backdrop-filter: blur(20px) saturate(165%);
+    -webkit-backdrop-filter: blur(16px) saturate(130%);
+    backdrop-filter: blur(16px) saturate(130%);
     box-shadow: var(--glass-lip), var(--shadow-1);
   }
   @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
@@ -171,7 +171,7 @@
     position: fixed; top: 0; left: 0; bottom: 0;
     width: var(--sidebar-w);
     z-index: 50;
-    border-right: 1px solid color-mix(in oklab, var(--accent) 16%, var(--border));
+    border-right: 1px solid color-mix(in oklab, var(--accent) 8%, var(--border));
     overflow-y: auto; overscroll-behavior: contain;
   }
   .head-row {
@@ -421,16 +421,16 @@
   .featured {
     margin-bottom: var(--space-6);
     padding: var(--space-4) var(--space-4) var(--space-5);
-    border: 1px solid color-mix(in oklab, var(--accent) 22%, var(--border));
+    border: 1px solid color-mix(in oklab, var(--accent) 12%, var(--border));
     border-radius: var(--radius);
     background:
-      radial-gradient(130% 160% at 0% 0%, color-mix(in oklab, var(--accent) 9%, transparent), transparent 58%),
-      color-mix(in oklab, var(--bg-elev) 32%, transparent);
+      radial-gradient(130% 160% at 0% 0%, color-mix(in oklab, var(--accent) 4%, transparent), transparent 58%),
+      color-mix(in oklab, var(--bg-elev) 72%, transparent);
     box-shadow: var(--shadow-1), inset 0 1px 0 color-mix(in oklab, var(--text) 7%, transparent);
   }
   .featured-head { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
   .featured-title { font-family: var(--display); font-weight: 700; font-size: var(--fs-md); letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
-  .featured-title svg { color: var(--accent); filter: drop-shadow(0 0 6px var(--accent-soft)); }
+  .featured-title svg { color: var(--accent); }
   .featured-sub { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-faint); }
   .featured-shuffle {
     margin-left: auto;
@@ -444,25 +444,19 @@
   .featured-shuffle:active { transform: translateY(1px); }
   .featured-shuffle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft); }
   .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
-  /* Featured cards are larger and wear their --chip hue loudly: a 3px full
-     accent bar, a tinted border, and a colored glow ring at rest. */
+  /* Featured cards are larger but keep the same quiet chrome as the grid. */
   .card.featured-card {
-    border-top-width: 3px;
+    border-top-width: 2px;
     border-top-color: var(--chip);
-    border-color: color-mix(in oklab, var(--chip) 40%, var(--border));
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--chip) 45%, transparent),
-      0 12px 34px -16px color-mix(in oklab, var(--chip) 72%, transparent),
-      var(--shadow-1);
+    border-color: color-mix(in oklab, var(--chip) 24%, var(--border));
+    box-shadow: var(--shadow-1);
   }
   .card.featured-card .card-image { aspect-ratio: 3 / 2; }
   .card.featured-card .card-title { font-size: var(--fs-base); font-weight: 700; }
   .card.featured-card .badge { font-size: var(--fs-2xs); }
   .card.featured-card:hover {
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--chip) 62%, transparent),
-      0 20px 48px -16px color-mix(in oklab, var(--chip) 78%, transparent),
-      var(--shadow-2);
+    border-color: color-mix(in oklab, var(--chip) 35%, var(--border));
+    box-shadow: var(--shadow-1);
   }
   @media (max-width: 880px) { .featured-grid { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 560px) { .featured-grid { grid-template-columns: 1fr; } .featured-shuffle span { display: none; } }
@@ -489,14 +483,9 @@
   }
   .card:active { transform: translateY(0) scale(0.997); transition-duration: var(--dur-fast); }
   .card:hover {
-    border-color: color-mix(in oklab, var(--chip) 70%, var(--border));
-    box-shadow:
-      0 0 0 1px color-mix(in oklab, var(--chip) 38%, transparent),
-      0 14px 34px -14px color-mix(in oklab, var(--chip) 60%, transparent),
-      var(--shadow-2);
+    border-color: color-mix(in oklab, var(--chip) 35%, var(--border));
+    box-shadow: var(--shadow-1);
   }
-  /* Heatmap-linked pulse when the matching bar is scrubbed. */
-  .card.pulse { box-shadow: 0 0 0 2px var(--chip), 0 0 30px -6px var(--chip); }
   .card-image {
     position: relative; aspect-ratio: 16 / 10; overflow: hidden;
     background:
@@ -515,7 +504,7 @@
     transition: opacity 0.5s var(--ease), filter 0.5s var(--ease), transform 0.5s var(--ease);
   }
   .card-image img.loaded { opacity: 1; filter: blur(0); transform: scale(1); }
-  .card:hover .card-image img.loaded { transform: scale(1.035); }
+  .card:hover .card-image img.loaded { transform: scale(1.015); }
   .badge {
     position: absolute; top: var(--space-2); left: var(--space-2);
     display: inline-flex; align-items: center; gap: 5px;
