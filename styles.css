@@ -10,15 +10,15 @@
   :root {
     /* Tokyo Night palette - the same source variables omarchy.org uses,
        so the two sites share an identity. */
-    --bg: #1a1b26;        /* tokyo-night "night" background */
-    --bg-1: #16161e;      /* one notch under bg, used by the sidebar rail */
-    --bg-elev: #24283b;   /* "storm" background, used for cards */
-    --bg-elev-2: #2a2e44; /* one step elevated for chips / pills / panels */
-    --border: #2c3047;    /* hairline dividers, slightly deeper than terminal-black */
-    --border-2: #414868;  /* brighter divider for emphasis */
-    --text: #c0caf5;      /* terminal-white */
-    --text-dim: #9aa5ce;
-    --text-faint: #6f7aa6;
+    --bg: #161618;        /* page shell */
+    --bg-1: #0c0d11;      /* terminal chrome */
+    --bg-elev: #121318;   /* cards */
+    --bg-elev-2: #181a20; /* chips / pills / panels */
+    --border: #24252b;    /* hairline dividers */
+    --border-2: #343640;  /* brighter divider for emphasis */
+    --text: #e8e8ec;      /* terminal-white */
+    --text-dim: #a2a2aa;
+    --text-faint: #686872;
     /* Tokyo Night blue is the theme's signature UI highlight - focus rings,
        active controls, links, the apply button. One token drives the whole
        page's accent, keeping the identity consistent. */
@@ -60,14 +60,12 @@
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     /* Ink-tinted elevation (not pure black) so depth matches the palette. */
     --shadow-color: 230 40% 3%;
-    --shadow-1: 0 2px 8px hsl(var(--shadow-color) / 0.30);
-    --shadow-2: 0 12px 32px hsl(var(--shadow-color) / 0.42);
+    --shadow-1: 0 1px 0 hsl(var(--shadow-color) / 0.24);
+    --shadow-2: 0 18px 50px hsl(var(--shadow-color) / 0.34);
     --shadow-3: 0 28px 70px hsl(var(--shadow-color) / 0.55);
     /* Glass recipe knobs. */
-    --glass-bg: color-mix(in oklab, var(--bg) 72%, transparent);
-    --glass-lip: inset 0 1px 0 color-mix(in oklab, var(--text) 10%, transparent);
-    /* Sidebar layout width; main shifts right by this much. */
-    --sidebar-w: 250px;
+    --glass-bg: color-mix(in oklab, var(--bg-1) 94%, transparent);
+    --glass-lip: inset 0 1px 0 color-mix(in oklab, var(--text) 6%, transparent);
     /* Sticky chrome heights (status line + heatmap) used to offset content. */
     --topbar-h: 30px;
     --heat-h: 42px;
@@ -117,32 +115,21 @@
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   }
 
-  /* SIGNATURE: a living Tokyo Night aurora pinned behind everything.
-     Three oversized radial gradients (blue / magenta / cyan) drift slowly
-     so the room subtly breathes; the glass chrome floats above it and the
-     lightbox frosts it. background-attachment: fixed keeps it still while
-     the gallery scrolls. */
+  /* Refined terminal shell: mostly flat, with only a faint palette wash. */
   body {
     min-height: 100vh;
     isolation: isolate;
     background-color: var(--bg);
     background-image:
-      radial-gradient(62% 50% at 10% -8%,  color-mix(in oklab, var(--blue) 6%, transparent), transparent 60%),
-      radial-gradient(58% 55% at 94% 6%,   color-mix(in oklab, var(--magenta) 5%, transparent), transparent 62%),
-      radial-gradient(72% 60% at 58% 112%, color-mix(in oklab, var(--cyan) 5%, transparent), transparent 64%);
+      radial-gradient(42% 28% at 18% -12%, color-mix(in oklab, var(--blue) 4%, transparent), transparent 68%),
+      radial-gradient(44% 34% at 92% -8%,  color-mix(in oklab, var(--magenta) 3%, transparent), transparent 70%);
     background-attachment: fixed;
     background-repeat: no-repeat;
   }
-  /* The aurora is intentionally STATIC. Animating background-position here
-     would repaint the whole viewport every frame, forever, and force the
-     glass chrome above it to re-blur continuously - a heavy idle cost for a
-     drift almost nobody consciously notices. The depth comes from the
-     layered gradients and grain, not from motion. */
-  /* Fine film grain so no surface ever reads as a flat fill. SVG
-     feTurbulence as a tiled data-URI, overlay-blended at ~3.5%. */
+  /* Fine film grain so no surface reads as a flat fill. */
   body::before {
     content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    opacity: 0.04; mix-blend-mode: overlay;
+    opacity: 0.025; mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 160px 160px;
   }
@@ -158,37 +145,42 @@
      weak GPUs during fast scroll, so they get a cheap semi-opaque fill. */
   .glass {
     background: var(--glass-bg);
-    -webkit-backdrop-filter: blur(16px) saturate(130%);
-    backdrop-filter: blur(16px) saturate(130%);
+    -webkit-backdrop-filter: blur(10px) saturate(115%);
+    backdrop-filter: blur(10px) saturate(115%);
     box-shadow: var(--glass-lip), var(--shadow-1);
   }
   @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
     .glass { background: var(--bg-1); }
   }
 
-  /* ---- SIDEBAR ------------------------------------------------------- */
+  /* ---- TOP TERMINAL -------------------------------------------------- */
   header {
-    position: fixed; top: 0; left: 0; bottom: 0;
-    width: var(--sidebar-w);
-    z-index: 50;
-    border-right: 1px solid color-mix(in oklab, var(--accent) 8%, var(--border));
-    overflow-y: auto; overscroll-behavior: contain;
+    position: relative; top: 0; left: 0; right: 0;
+    width: auto; min-height: 0;
+    z-index: 70;
+    border-right: none;
+    border-bottom: 1px solid color-mix(in oklab, var(--text) 7%, transparent);
+    overflow: visible;
   }
   .head-row {
-    display: flex; flex-direction: column; align-items: stretch;
-    gap: var(--space-5);
-    padding: var(--space-5) var(--space-4) var(--space-4);
-    min-height: 100%;
+    width: min(100%, 1520px);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: auto minmax(260px, 540px) auto auto;
+    align-items: center;
+    gap: 12px 18px;
+    padding: 14px clamp(var(--space-3), 3vw, var(--space-6)) 12px;
+    min-height: 0;
   }
-  .brand { display: flex; flex-direction: column; gap: var(--space-3); }
+  .brand { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
   .brand-row {
     display: flex; align-items: center; gap: var(--space-2);
-    font-weight: 700; letter-spacing: -0.01em; font-size: var(--fs-md);
+    font-weight: 700; letter-spacing: -0.01em; font-size: var(--fs-base);
   }
   .brand-logo {
-    width: 26px; height: 26px; display: block; flex-shrink: 0;
+    width: 25px; height: 25px; display: block; flex-shrink: 0;
     border-radius: 7px;
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 30%, transparent), 0 4px 14px hsl(var(--shadow-color) / 0.5);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--text) 10%, transparent);
   }
   .brand-name { display: inline-flex; align-items: baseline; gap: 1px; }
   .brand-name b { font-weight: 700; }
@@ -205,19 +197,19 @@
   }
   @keyframes caret-blink { 50% { opacity: 0; } }
 
-  .count-row { display: flex; align-items: center; gap: var(--space-2); }
+  .count-row { display: flex; align-items: center; gap: var(--space-2); flex: none; }
   .count {
     font-family: var(--mono); font-size: var(--fs-xs); font-weight: 700;
-    letter-spacing: 0.04em; color: var(--accent);
-    background: var(--accent-soft);
-    border: 1px solid color-mix(in oklab, var(--accent) 42%, transparent);
-    padding: 3px var(--space-2); border-radius: var(--radius-xs);
+    letter-spacing: 0.02em; color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 3px 7px; border-radius: var(--radius-xs);
     font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1;
   }
-  .count-label { font-size: var(--fs-2xs); letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--text-faint); }
+  .count-label { display: none; }
 
   /* Search styled as a shell prompt. */
-  .search { width: 100%; position: relative; }
+  .search { width: 100%; position: relative; max-width: 540px; }
   .search .prompt {
     position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
     color: var(--accent); font-weight: 700; pointer-events: none;
@@ -225,15 +217,15 @@
   }
   .search input {
     width: 100%;
-    background: color-mix(in oklab, var(--bg-elev) 60%, transparent);
+    background: color-mix(in oklab, var(--text) 4%, transparent);
     color: var(--text);
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    padding: 9px 30px 9px 28px;
+    border: 1px solid color-mix(in oklab, var(--text) 9%, transparent); border-radius: 8px;
+    padding: 8px 30px 8px 28px;
     font-size: var(--fs-base); font-family: var(--mono); outline: none;
     transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background var(--dur) var(--ease);
   }
   .search input::placeholder { color: var(--text-faint); }
-  .search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); background: color-mix(in oklab, var(--bg-elev) 85%, transparent); }
+  .search input:focus { border-color: color-mix(in oklab, var(--accent) 45%, var(--border)); box-shadow: none; background: color-mix(in oklab, var(--text) 5%, transparent); }
   .search .slash {
     position: absolute; right: 9px; top: 50%; transform: translateY(-50%);
     font-size: var(--fs-2xs); color: var(--text-faint);
@@ -242,37 +234,43 @@
   }
   .search input:focus ~ .slash { opacity: 0; }
 
-  /* Filter sections: a labelled header above a vertical clickable list. */
-  .filters-inline { display: flex; flex-direction: column; gap: var(--space-5); }
-  .filter-section { display: flex; flex-direction: column; gap: 3px; }
+  /* Filter sections collapse into a compact terminal command row. */
+  .filters-inline {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 9px 14px;
+    padding-top: 11px;
+    border-top: 1px solid color-mix(in oklab, var(--text) 6%, transparent);
+  }
+  .filter-section { display: flex; align-items: center; gap: 7px; min-width: 0; }
   .filter-section-label {
     display: flex; align-items: center; justify-content: space-between;
     font-family: var(--mono); font-size: var(--fs-2xs);
     text-transform: uppercase; letter-spacing: var(--ls-label);
     color: var(--text-faint);
-    padding: 0 4px 4px;
+    padding: 0;
   }
   .filter-section-label .hk {
     font-size: var(--fs-3xs); letter-spacing: 0.04em;
     border: 1px solid var(--border); border-radius: 4px;
     padding: 0 4px; color: var(--text-faint);
   }
-  .flist { display: flex; flex-direction: column; gap: 1px; }
+  .flist { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
   .flist-item {
     display: flex; align-items: center; gap: var(--space-2);
-    padding: 6px 8px;
+    padding: 4px 9px;
     font-family: var(--mono); font-size: var(--fs-sm);
     color: var(--text-dim);
     cursor: pointer; user-select: none;
-    border-radius: var(--radius-xs);
-    border-left: 2px solid transparent;
+    border: 1px solid color-mix(in oklab, var(--text) 9%, transparent);
+    border-radius: 6px;
     transition: color var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease);
   }
-  .flist-item:hover { color: var(--text); background: color-mix(in oklab, var(--bg-elev) 70%, transparent); }
+  .flist-item:hover { color: var(--text); background: color-mix(in oklab, var(--text) 4%, transparent); }
   .flist-item.selected {
     color: var(--text);
-    background: color-mix(in oklab, var(--accent) 16%, transparent);
-    border-left-color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    border-color: color-mix(in oklab, var(--accent) 28%, var(--border));
   }
   .flist-item.zero { opacity: 0.36; }
   .flist-dot {
@@ -286,9 +284,9 @@
 
   /* Resolution range row: tier name + two compact min/max op buttons. */
   .flist-range {
-    display: grid; grid-template-columns: 1fr auto auto auto; gap: 6px;
+    display: grid; grid-template-columns: auto auto auto auto; gap: 6px;
     align-items: center;
-    padding: 4px 8px;
+    padding: 2px 0;
     font-family: var(--mono); font-size: var(--fs-sm);
     color: var(--text-dim);
   }
@@ -307,25 +305,25 @@
   .op-btn:active { transform: translateY(1px); }
   .op-btn.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 
-  /* Sidebar footer: reset + a compact keymap legend + links. */
-  .side-foot { margin-top: auto; display: flex; flex-direction: column; gap: var(--space-3); padding-top: var(--space-4); }
+  /* Header utilities: reset + optional keymap legend + links. */
+  .side-foot { margin-top: 0; display: flex; align-items: center; gap: var(--space-2); padding-top: 0; }
   .reset-btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 7px;
     background: none; border: 1px solid var(--border); color: var(--text-dim);
-    border-radius: var(--radius-sm); padding: 8px 10px;
+    border-radius: 8px; padding: 8px 10px;
     font-family: var(--mono); font-size: var(--fs-xs); cursor: pointer;
     transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
   }
   .reset-btn:hover { color: var(--text); border-color: var(--text-faint); background: color-mix(in oklab, var(--bg-elev) 60%, transparent); }
   .reset-btn[disabled] { opacity: 0.4; cursor: default; }
-  .keymap { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: var(--fs-3xs); color: var(--text-faint); font-family: var(--mono); }
+  .keymap { display: none; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: var(--fs-3xs); color: var(--text-faint); font-family: var(--mono); }
   .keymap div { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
   .kbd {
     font-size: var(--fs-3xs); border: 1px solid var(--border); border-radius: 4px;
     padding: 0 4px; color: var(--text-dim); background: color-mix(in oklab, var(--bg-elev) 50%, transparent);
     min-width: 14px; text-align: center;
   }
-  .side-links { display: flex; flex-wrap: wrap; gap: 6px; }
+  .side-links { display: none; flex-wrap: wrap; gap: 6px; }
   .side-links a {
     font-size: var(--fs-2xs); color: var(--text-faint); text-decoration: none;
     border: 1px solid var(--border); border-radius: var(--radius-xs);
@@ -335,29 +333,30 @@
   .side-links a:hover { color: var(--accent); border-color: color-mix(in oklab, var(--accent) 45%, var(--border)); }
 
   /* ---- MAIN + STICKY CHROME ----------------------------------------- */
-  main { margin-left: var(--sidebar-w); }
+  main { margin-left: 0; }
   .topchrome {
     position: sticky; top: 0; z-index: 40;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid color-mix(in oklab, var(--text) 7%, transparent);
   }
   /* tmux/lualine-style status line: mode pill, filter breadcrumbs, count. */
   .statusline {
     display: flex; align-items: center; gap: var(--space-2);
+    width: min(100%, 1520px); margin: 0 auto;
     height: var(--topbar-h); padding: 0 clamp(var(--space-3), 3vw, var(--space-6));
     font-family: var(--mono); font-size: var(--fs-xs);
-    border-bottom: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--text) 6%, transparent);
     overflow: hidden; white-space: nowrap;
   }
   .mode-pill {
     flex: none; font-weight: 700; font-size: var(--fs-2xs); letter-spacing: 0.1em;
     color: var(--accent-ink); background: var(--accent);
-    padding: 3px 8px; border-radius: var(--radius-xs);
+    padding: 3px 8px; border-radius: 5px;
   }
   .crumbs { display: flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; color: var(--text-dim); }
   .crumb {
     display: inline-flex; align-items: center; gap: 5px;
-    background: color-mix(in oklab, var(--bg-elev) 70%, transparent);
-    border: 1px solid var(--border); border-radius: var(--radius-xs);
+    background: color-mix(in oklab, var(--text) 4%, transparent);
+    border: 1px solid color-mix(in oklab, var(--text) 8%, transparent); border-radius: 5px;
     padding: 2px 4px 2px 8px; cursor: pointer; color: var(--text-dim);
     transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
   }
@@ -376,7 +375,7 @@
   /* SPECTRUM heatmap: all entries as one canvas, hue from color, dimmed
      when filtered out. Doubles as a scrubber - hover shows a chip, click
      opens that theme. One draw call, redrawn only on filter / resize. */
-  .heatwrap { position: relative; height: var(--heat-h); }
+  .heatwrap { position: relative; height: var(--heat-h); width: min(100%, 1520px); margin: 0 auto; }
   #heat { display: block; width: 100%; height: 100%; cursor: pointer; }
   .heat-cursor {
     position: absolute; top: 0; bottom: 0; left: 0; width: 1px;
@@ -404,29 +403,29 @@
   }
 
   .gridwrap {
-    width: min(100%, 1720px);
+    width: min(100%, 1520px);
     margin: 0 auto;
-    padding: var(--space-5) clamp(var(--space-3), 3vw, var(--space-6)) var(--space-7);
+    padding: 18px clamp(var(--space-3), 3vw, var(--space-6)) var(--space-7);
   }
   #grid { scroll-margin-top: calc(var(--topbar-h) + var(--heat-h) + var(--space-6)); }
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(clamp(220px, 20vw, 268px), 1fr));
-    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fill, minmax(clamp(230px, 22vw, 300px), 1fr));
+    gap: 14px;
   }
 
   /* ---- FEATURED: 3 random picks, one per color, re-rolled each visit -- */
   /* The row is a curated shelf with a faint accent wash, not just three
      more tiles. */
   .featured {
-    margin-bottom: var(--space-6);
-    padding: var(--space-4) var(--space-4) var(--space-5);
-    border: 1px solid color-mix(in oklab, var(--accent) 12%, var(--border));
-    border-radius: var(--radius);
+    margin-bottom: 18px;
+    padding: 14px;
+    border: 1px solid color-mix(in oklab, var(--text) 8%, transparent);
+    border-radius: 13px;
     background:
       radial-gradient(130% 160% at 0% 0%, color-mix(in oklab, var(--accent) 4%, transparent), transparent 58%),
-      color-mix(in oklab, var(--bg-elev) 72%, transparent);
-    box-shadow: var(--shadow-1), inset 0 1px 0 color-mix(in oklab, var(--text) 7%, transparent);
+      var(--bg-1);
+    box-shadow: 0 24px 70px -46px hsl(var(--shadow-color) / 0.7), inset 0 1px 0 color-mix(in oklab, var(--text) 6%, transparent);
   }
   .featured-head { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
   .featured-title { font-family: var(--display); font-weight: 700; font-size: var(--fs-md); letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 8px; color: var(--text); }
@@ -443,19 +442,19 @@
   .featured-shuffle:hover { color: var(--text); border-color: var(--text-faint); background: color-mix(in oklab, var(--bg-elev) 60%, transparent); }
   .featured-shuffle:active { transform: translateY(1px); }
   .featured-shuffle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft); }
-  .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
   /* Featured cards are larger but keep the same quiet chrome as the grid. */
   .card.featured-card {
     border-top-width: 2px;
     border-top-color: var(--chip);
-    border-color: color-mix(in oklab, var(--chip) 24%, var(--border));
+    border-color: color-mix(in oklab, var(--chip) 18%, var(--border));
     box-shadow: var(--shadow-1);
   }
   .card.featured-card .card-image { aspect-ratio: 3 / 2; }
   .card.featured-card .card-title { font-size: var(--fs-base); font-weight: 700; }
   .card.featured-card .badge { font-size: var(--fs-2xs); }
   .card.featured-card:hover {
-    border-color: color-mix(in oklab, var(--chip) 35%, var(--border));
+    border-color: color-mix(in oklab, var(--chip) 26%, var(--border));
     box-shadow: var(--shadow-1);
   }
   @media (max-width: 880px) { .featured-grid { grid-template-columns: 1fr 1fr; } }
@@ -465,10 +464,10 @@
   .card {
     --chip: var(--accent);
     position: relative;
-    background: color-mix(in oklab, var(--bg-elev) 86%, transparent);
-    border: 1px solid var(--border);
-    border-top: 2px solid color-mix(in oklab, var(--chip) 55%, var(--border));
-    border-radius: var(--radius);
+    background: var(--bg-elev);
+    border: 1px solid color-mix(in oklab, var(--text) 8%, transparent);
+    border-top: 1px solid color-mix(in oklab, var(--chip) 22%, var(--border));
+    border-radius: 9px;
     overflow: hidden; cursor: pointer;
     display: flex; flex-direction: column;
     transition: transform var(--dur) var(--ease-out), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease-out);
@@ -483,7 +482,7 @@
   }
   .card:active { transform: translateY(0) scale(0.997); transition-duration: var(--dur-fast); }
   .card:hover {
-    border-color: color-mix(in oklab, var(--chip) 35%, var(--border));
+    border-color: color-mix(in oklab, var(--chip) 26%, var(--border));
     box-shadow: var(--shadow-1);
   }
   .card-image {
@@ -512,8 +511,8 @@
        and ~80 cards are live during scroll, so real blur here would mean
        100+ simultaneous filters. The opaque ink keeps them legible over any
        wallpaper without the compositing cost. */
-    background: color-mix(in oklab, var(--bg) 88%, transparent); color: var(--text);
-    border: 1px solid color-mix(in oklab, var(--chip) 50%, var(--border));
+    background: color-mix(in oklab, var(--bg-1) 86%, transparent); color: var(--text);
+    border: 1px solid color-mix(in oklab, var(--text) 11%, transparent);
     padding: 3px 8px; border-radius: var(--radius-xs);
     font-size: var(--fs-3xs); letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--mono);
     z-index: 1;
@@ -547,12 +546,13 @@
 
   /* Sidebar Favourites filter toggle. */
   .fav-toggle {
-    width: 100%;
+    width: auto;
     display: inline-flex; align-items: center; gap: 8px;
     background: color-mix(in oklab, var(--bg-elev) 55%, transparent);
     border: 1px solid var(--border); color: var(--text-dim);
-    border-radius: var(--radius-sm); padding: 8px 11px;
+    border-radius: 8px; padding: 8px 11px;
     font-family: var(--mono); font-size: var(--fs-sm); cursor: pointer;
+    white-space: nowrap;
     transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
   }
   .fav-toggle .ft-star { color: #f2c14e; display: inline-flex; }
@@ -563,7 +563,7 @@
   .fav-toggle.active { color: var(--text); background: color-mix(in oklab, #f2c14e 16%, transparent); border-color: color-mix(in oklab, #f2c14e 55%, var(--border)); }
   .fav-toggle.active .fav-n { color: #f2c14e; }
   .fav-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 4px var(--accent-soft); }
-  .card-body { padding: var(--space-3) var(--space-3) var(--space-2); display: flex; flex-direction: column; gap: 3px; }
+  .card-body { padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 3px; }
   .card-title {
     font-weight: 600; font-size: var(--fs-sm); line-height: var(--lh-snug); letter-spacing: -0.005em; color: var(--text);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -777,15 +777,15 @@
 
   /* ---- RESPONSIVE: top-bar layout under 880px ----------------------- */
   @media (max-width: 880px) {
-    :root { --sidebar-w: 0px; }
     header {
-      position: sticky; top: 0; bottom: auto; right: 0;
+      position: relative; top: 0; bottom: auto; right: 0;
       width: auto; border-right: none;
-      border-bottom: 1px solid color-mix(in oklab, var(--accent) 16%, var(--border));
+      border-bottom: 1px solid color-mix(in oklab, var(--text) 7%, transparent);
       overflow-y: visible;
     }
     .head-row {
-      flex-direction: row; align-items: center; flex-wrap: wrap;
+      grid-template-columns: 1fr auto;
+      align-items: center;
       gap: var(--space-2) var(--space-4);
       padding: var(--space-3) clamp(var(--space-3), 4vw, var(--space-6));
       min-height: 0;
@@ -793,12 +793,12 @@
     .brand { flex-direction: row; align-items: center; gap: var(--space-3); }
     .count-row { gap: 6px; }
     .count-label { display: none; }
-    .search { flex: 1 1 240px; max-width: 420px; }
+    .search { grid-column: 1 / -1; max-width: none; }
     .filters-inline {
-      flex-basis: 100%; flex-direction: row; flex-wrap: wrap; gap: var(--space-3);
+      grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; gap: var(--space-3);
     }
     .filter-section { flex: 1 1 200px; }
-    .side-foot { flex-basis: 100%; margin-top: 0; flex-direction: row; align-items: center; justify-content: space-between; padding-top: var(--space-2); }
+    .side-foot { grid-column: 1 / -1; margin-top: 0; flex-direction: row; align-items: center; justify-content: flex-start; padding-top: var(--space-2); }
     .keymap { display: none; }
     .reset-btn { flex: none; }
     main { margin-left: 0; }
