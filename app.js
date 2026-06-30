@@ -413,7 +413,6 @@ function applyFilters(opts = {}) {
   updateFeaturedVisibility();
   updateFavControl();
   drawHeat();
-  document.body.classList.toggle('has-active-filters', activeFilters);
   $('#reset').disabled = !activeFilters;
   if (opts.writeUrl !== false) writeUrl();
   lastFiltersSnap = filtersSnapshot();
@@ -764,7 +763,7 @@ function renderFeatured() {
   updateFeaturedVisibility();
 }
 
-// Featured is a default-view hero. Hide it whenever any filter or search is
+// Featured is a default-view shelf. Hide it whenever any filter or search is
 // active so the result set stays clean.
 function updateFeaturedVisibility() {
   const sec = $('#featured');
