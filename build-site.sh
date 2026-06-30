@@ -3,6 +3,8 @@
 #
 # Produces:
 #   dist/index.html       (copied as-is)
+#   dist/styles.css       (copied as-is)
+#   dist/app.js           (copied as-is)
 #   dist/sw.js            (copied as-is)
 #   dist/wallpapers.js    (window.WALLPAPERS = {...};  with base URL injected)
 #
@@ -22,6 +24,8 @@ rm -rf "$OUT"
 mkdir -p "$OUT"
 
 cp index.html "$OUT/"
+cp styles.css "$OUT/"
+cp app.js "$OUT/"
 cp sw.js "$OUT/"
 # Static assets the page references: Omarchy logo + Cascadia Code fonts.
 # Skipped silently if missing so a partial checkout still builds.

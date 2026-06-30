@@ -1,6 +1,6 @@
-// Bump CACHE whenever the HTML / JS shape changes so the activate event
+// Bump CACHE whenever the HTML / CSS / JS shape changes so the activate event
 // drops the old cache and users pick up the new shell on next load.
-const CACHE = 'omarchy-themes-v51';
+const CACHE = 'omarchy-themes-v52';
 const CACHEABLE = /\.(jpe?g|png|webp|gif|json|html|css|js|toml|lua)$/i;
 
 self.addEventListener('install', () => self.skipWaiting());
@@ -13,10 +13,10 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// HTML + JS / JSON: network-first so a new deploy is picked up
+// HTML + CSS + JS / JSON: network-first so a new deploy is picked up
 // immediately. Images / toml / lua: cache-first (they're immutable on
 // the CDN side and form the bulk of bytes the site uses).
-const NETWORK_FIRST = /\.(html|js|json)$/i;
+const NETWORK_FIRST = /\.(html|css|js|json)$/i;
 
 self.addEventListener('fetch', (e) => {
   const req = e.request;
