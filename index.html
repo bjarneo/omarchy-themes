@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Omarchy Themes</title>
 <meta name="description" content="3,000+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#1a1b26">
 
 <!-- Favicons (sourced from omarchy.org). The PNG ships at 300x300 so
@@ -30,8 +30,20 @@
 <body>
 
 <div id="loading" class="loader">
-  <div class="loader-spinner" aria-hidden="true"></div>
-  <div class="loader-text">Loading themes</div>
+  <div class="state-label">LOADING<span></span></div>
+  <div class="loader-panel">
+    <div class="loader-head">
+      <span class="loader-brand"><b>omarchy</b><span>-themes</span></span>
+      <span class="loader-state"><span class="loader-spinner" aria-hidden="true"></span>loading... variants</span>
+    </div>
+    <div class="loader-grid" aria-hidden="true">
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <div class="loader-status">
+      <span>INDEXING</span>
+      <span>generating palettes...</span>
+    </div>
+  </div>
 </div>
 
 <main class="terminal-frame">
@@ -85,6 +97,7 @@
     </div>
   </div>
   <div class="gridwrap">
+    <section class="view-state" id="viewState" hidden></section>
     <section class="featured" id="featured" aria-label="Featured themes" hidden></section>
     <div class="grid" id="grid"></div>
   </div>
@@ -103,9 +116,16 @@
 </main>
 
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Theme details">
-  <button class="lb-close" id="lbclose" title="Close (esc)" aria-label="Close">&times;</button>
-  <div class="lb-image-wrap"></div>
-  <aside class="lb-side" id="lbside"></aside>
+  <div class="lb-panel">
+    <div class="lb-chrome">
+      <span class="lb-prompt" aria-hidden="true">&rsaquo;</span>
+      <span>aether preview <b id="lbChromeTitle">theme</b></span>
+      <button class="lb-close" id="lbclose" title="Close (esc)" aria-label="Close">esc&nbsp;&nbsp;&times;</button>
+    </div>
+    <div class="lb-image-wrap"></div>
+    <aside class="lb-side" id="lbside"></aside>
+    <div class="lb-foot">&crarr; apply&nbsp;&nbsp;&middot;&nbsp;&nbsp;f favourite&nbsp;&nbsp;&middot;&nbsp;&nbsp;y copy hex&nbsp;&nbsp;&middot;&nbsp;&nbsp;esc close</div>
+  </div>
 </div>
 
 <!-- Click-acknowledgement toast. Shown when an Apply link fires. We cannot

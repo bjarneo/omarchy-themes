@@ -406,6 +406,7 @@ function applyFilters(opts = {}) {
   STATE.rendered = 0;
   STATE.firstPaint = true;
   grid.replaceChildren();
+  renderViewState();
   STATE.facetCounts = computeFacetCounts();
   renderMore();
   buildFilters();           // refresh selected state + live counts
@@ -416,6 +417,30 @@ function applyFilters(opts = {}) {
   $('#reset').disabled = !activeFilters;
   if (opts.writeUrl !== false) writeUrl();
   lastFiltersSnap = filtersSnapshot();
+}
+
+function renderViewState() {
+  const state = $('#viewState');
+  if (!state) return;
+  state.replaceChildren();
+  state.hidden = true;
+  document.body.classList.toggle('fav-view', STATE.favOnly);
+  if (!STATE.favOnly) return;
+
+  state.hidden = false;
+  state.className = 'view-state favourites-state';
+  const label = el('div', 'state-label', 'FAVOURITES');
+  label.appendChild(document.createElement('span'));
+  state.appendChild(label);
+
+  const panel = el('div', 'state-panel');
+  const head = el('div', 'state-panel-head');
+  head.appendChild(el('span', 'state-star', '★'));
+  head.appendChild(el('b', null, 'favourites'));
+  head.appendChild(el('span', 'state-muted', '/ saved'));
+  head.appendChild(el('span', 'state-count', `${STATE.favs ? STATE.favs.size : 0} / ${STATE.entries.length}`));
+  panel.appendChild(head);
+  state.appendChild(panel);
 }
 
 /* ---- status line breadcrumbs --------------------------------------- */
@@ -536,14 +561,28 @@ const sentinelIo = new IntersectionObserver((entries) => {
 function renderMore() {
   if (STATE.rendered === 0 && STATE.filtered.length === 0) {
     const wrap = el('div', 'empty');
-    const icon = el('div', 'empty-icon');
-    icon.setAttribute('aria-hidden', 'true');
-    icon.innerHTML = '<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8 11h6"/></svg>';
-    wrap.appendChild(icon);
     const noFavs = STATE.favOnly && (!STATE.favs || STATE.favs.size === 0);
-    wrap.appendChild(el('div', 'empty-big', noFavs ? 'No favourites yet' : 'No matches'));
-    wrap.appendChild(el('div', 'empty-sub', noFavs ? 'Tap the star on any theme to save it here.' : 'Nothing matches your current filters.'));
-    const b = el('button', 'empty-btn', noFavs ? 'Browse all themes' : 'Reset filters');
+    const query = STATE.filters.q.trim();
+
+    const icon = el('div', 'empty-icon', '∅');
+    icon.setAttribute('aria-hidden', 'true');
+    wrap.appendChild(icon);
+
+    const copy = el('div');
+    const big = el('div', 'empty-big');
+    if (noFavs) {
+      big.textContent = 'no favourites saved';
+    } else if (query) {
+      big.append(document.createTextNode('no themes match '), el('span', null, '"' + query + '"'));
+    } else {
+      big.textContent = 'no themes match your filters';
+    }
+    copy.appendChild(big);
+    copy.appendChild(el('div', 'empty-sub', noFavs ? 'mark themes with the star to collect them here' : `clear your filters to browse all ${STATE.entries.length} variants`));
+    wrap.appendChild(copy);
+
+    const b = el('button', 'empty-btn');
+    b.append(el('span', 'kbd', 'esc'), document.createTextNode(noFavs ? 'browse all themes' : 'reset filters'));
     b.addEventListener('click', () => $('#reset').click());
     wrap.appendChild(b);
     grid.appendChild(wrap);
@@ -771,6 +810,17 @@ function openLightbox(path, m, opts = {}) {
   img.src = mediaUrl(m.medium_path || path);
   img.alt = m.title || path;
   wrap.appendChild(img);
+  const swatches = el('div', 'lb-preview-swatches');
+  const colors = Array.isArray(m.colors) ? m.colors.slice(0, 6) : [];
+  for (const c of colors) {
+    const sw = el('span');
+    sw.style.background = c;
+    swatches.appendChild(sw);
+  }
+  wrap.appendChild(swatches);
+
+  const chromeTitle = $('#lbChromeTitle');
+  if (chromeTitle) chromeTitle.textContent = (m.title || path.split('/').pop()).toLowerCase().replace(/\s+/g, '-');
 
   // Palette-reactive tint. --vibe is mixed INTO the dark base everywhere it
   // is used, so even a pale/low-sat dominant stays contrast-safe.
@@ -839,7 +889,7 @@ function variantPanel(path, m, scheme, theme) {
     const apply = el('a', 'variant-apply');
     apply.href = `aether://apply?${applyParams.toString()}`;
     apply.title = `Apply ${label} with Aether (installs as ${slug})`;
-    setApplyContent(apply, 'Apply', 'play');
+    setApplyContent(apply, 'aether apply ' + (slug || label.toLowerCase()), 'play');
     actions.appendChild(apply);
 
     head.appendChild(actions);
@@ -882,25 +932,32 @@ function variantPanel(path, m, scheme, theme) {
 function renderSide(path, m) {
   lbSide.replaceChildren();
 
-  // PLATE conceit: position within the current filtered set / filtered total.
-  const idx = STATE.filtered.findIndex(([p]) => p === path);
-  const total = STATE.filtered.length || STATE.entries.length;
-  const num = idx >= 0 ? idx + 1 : '--';
-  const pad = String(total).length;
-  const plate = el('div', 'lb-plate');
-  plate.appendChild(el('b', null, 'PLATE ' + String(num).padStart(pad, '0')));
-  plate.appendChild(el('i', null, ' / ' + total));
-  lbSide.appendChild(plate);
+  const titleWrap = el('div', 'lb-title-wrap');
+  const titleRow = el('div', 'lb-title-row');
+  titleRow.appendChild(el('span', 'lb-title', m.title || path.split('/').pop()));
+  if (m.tone) titleRow.appendChild(el('span', 'lb-tone', String(m.tone).toUpperCase()));
+  titleWrap.appendChild(titleRow);
+  const variantCount = Object.keys(m.themes || {}).length;
+  titleWrap.appendChild(el('div', 'lb-meta', `${variantCount} variants · ${m.dimensions || 'wallpaper'} · ${m.color || 'palette'}`));
+  lbSide.appendChild(titleWrap);
 
-  lbSide.appendChild(el('div', 'lb-title', m.title || path.split('/').pop()));
-
-  const kv = el('dl', 'kv');
-  for (const [k, v] of [['res', m.dimensions], ['tone', m.tone], ['color', m.color]]) {
-    if (!v) continue;
-    kv.appendChild(el('dt', null, k));
-    kv.appendChild(el('dd', null, v));
+  const palette = Array.isArray(m.colors) ? m.colors.slice(0, 10) : [];
+  if (palette.length) {
+    lbSide.appendChild(el('div', 'lb-sec-label', 'PALETTE'));
+    const pgrid = el('div', 'lb-palette');
+    palette.forEach((hex, i) => {
+      const row = el('button', 'lb-palette-row');
+      row.type = 'button';
+      row.title = 'Copy ' + hex;
+      row.appendChild(el('span', 'lb-palette-swatch'));
+      row.firstChild.style.background = hex;
+      row.appendChild(el('span', 'lb-palette-name', 'swatch ' + String(i + 1).padStart(2, '0')));
+      row.appendChild(el('span', 'lb-palette-hex', hex));
+      row.addEventListener('click', () => { copyText(hex); showToast('Copied ' + hex, 'palette swatch', true); });
+      pgrid.appendChild(row);
+    });
+    lbSide.appendChild(pgrid);
   }
-  lbSide.appendChild(kv);
 
   if (m.tags && m.tags.length) {
     const wrap = el('div', 'tags');
@@ -910,7 +967,7 @@ function renderSide(path, m) {
 
   // Variants in fixed order Deep > Warm > Cool > Material > Aether.
   if (m.themes) {
-    lbSide.appendChild(el('div', 'lb-sec-label', 'apply a variant'));
+    lbSide.appendChild(el('div', 'lb-sec-label', 'ONE-CLICK APPLY'));
     const vlist = el('div', 'lb-variants');
     for (const scheme of VARIANT_ORDER) {
       const theme = m.themes[scheme];
@@ -919,6 +976,17 @@ function renderSide(path, m) {
     }
     lbSide.appendChild(vlist);
   }
+
+  const actions = el('div', 'lb-actions');
+  const fav = el('button', 'lb-secondary-action', (STATE.favs && STATE.favs.has(path)) ? '★ saved  f' : '★ favourite  f');
+  fav.type = 'button';
+  fav.addEventListener('click', () => { toggleFav(path); fav.textContent = (STATE.favs && STATE.favs.has(path)) ? '★ saved  f' : '★ favourite  f'; });
+  actions.appendChild(fav);
+  const wallpaper = el('button', 'lb-secondary-action', '⤓ wallpaper  y');
+  wallpaper.type = 'button';
+  wallpaper.addEventListener('click', () => { copyText(mediaUrl(path)); showToast('Copied wallpaper URL', path, true); });
+  actions.appendChild(wallpaper);
+  lbSide.appendChild(actions);
 
   lbSide.appendChild(el('div', 'lb-path', path));
 }
@@ -971,6 +1039,9 @@ document.addEventListener('keydown', (e) => {
   if (lb.classList.contains('open')) {
     if (typingInField(e)) { if (e.key === 'Escape') closeLightbox(); return; }
     if (e.key === 'Escape') return closeLightbox();
+    const hashPath = decodeHashPath();
+    if (e.key === 'f' && hashPath) { e.preventDefault(); toggleFav(hashPath); renderSide(hashPath, STATE.byPath[hashPath]); return; }
+    if (e.key === 'y' && hashPath) { e.preventDefault(); copyText(mediaUrl(hashPath)); showToast('Copied wallpaper URL', hashPath, true); return; }
     const prev = (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'h' || e.key === 'k' || (e.key === 'Tab' && e.shiftKey));
     const next = (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'l' || e.key === 'j' || (e.key === 'Tab' && !e.shiftKey));
     if (prev) { e.preventDefault(); navLightbox(-1); }
