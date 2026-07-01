@@ -1478,7 +1478,7 @@
     position: fixed;
     top: 18px;
     left: 50%;
-    width: min(944px, calc(100vw - 36px));
+    width: min(1040px, calc(100vw - 36px));
     transform: translateX(-50%);
     display: flex;
     align-items: center;
@@ -1491,17 +1491,17 @@
     content: "";
     position: fixed;
     top: 24px;
-    left: calc(50% - min(472px, calc((100vw - 36px) / 2)) + 198px);
-    right: calc(50% - min(472px, calc((100vw - 36px) / 2)));
+    left: calc(50% - min(520px, calc((100vw - 36px) / 2)) + 198px);
+    right: calc(50% - min(520px, calc((100vw - 36px) / 2)));
     height: 1px;
     background: rgba(255,255,255,.08);
   }
   .lb-panel {
-    width: min(944px, calc(100vw - 36px));
+    width: min(1040px, calc(100vw - 36px));
     max-height: calc(100vh - 72px);
     display: grid;
-    grid-template-columns: minmax(320px, 540px) minmax(280px, 1fr);
-    grid-template-rows: auto minmax(0, 430px) auto;
+    grid-template-columns: minmax(380px, 620px) minmax(280px, 1fr);
+    grid-template-rows: auto minmax(0, 470px) auto;
     overflow: hidden;
     background: #0f1016;
     border: 1px solid rgba(255,255,255,.12);
@@ -1645,18 +1645,27 @@
   }
   .variant-head { padding: 0; }
   .variant-name { padding: 10px 0 10px 12px; color: #d8d8de; font-size: 12px; }
-  .variant-actions { margin-left: auto; padding: 7px; }
-  .variant-apply {
+  .variant-actions { margin-left: auto; padding: 7px; gap: 7px; }
+  .variant-apply,
+  .variant-edit {
     min-width: 0;
     padding: 10px 12px;
-    border: 0;
     border-radius: 7px;
-    background: #7aa2f7;
-    color: #0c0d11;
     font-size: 12px;
     font-weight: 700;
   }
-  .variant-edit { display: none; }
+  .variant-apply {
+    border: 0;
+    background: #7aa2f7;
+    color: #0c0d11;
+  }
+  .variant-edit {
+    display: inline-flex;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    color: #d8d8de;
+  }
+  .variant-edit:hover { color: #fff; border-color: rgba(255,255,255,.2); }
   .variant .ramp { height: 13px; }
   .variant-foot { display: none; }
   .lb-actions {

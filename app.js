@@ -889,7 +889,7 @@ function variantPanel(path, m, scheme, theme) {
     const apply = el('a', 'variant-apply');
     apply.href = `aether://apply?${applyParams.toString()}`;
     apply.title = `Apply ${label} with Aether (installs as ${slug})`;
-    setApplyContent(apply, 'aether apply ' + (slug || label.toLowerCase()), 'play');
+    setApplyContent(apply, 'Apply');
     actions.appendChild(apply);
 
     head.appendChild(actions);
@@ -1125,7 +1125,7 @@ document.addEventListener('click', (e) => {
   }, 1400);
   setTimeout(() => {
     btn.classList.remove('sent');
-    setApplyContent(btn, originalText, 'play');
+    setApplyContent(btn, originalText);
   }, 3200);
 });
 
