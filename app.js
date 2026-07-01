@@ -431,7 +431,7 @@ function renderCrumbs() {
     const v = mn && mx ? `${mn}..${mx}` : mn ? `>=${mn}` : `<=${mx}`;
     parts.push({ k: 'res', v, clear: () => { STATE.filters.res_min = null; STATE.filters.res_max = null; } });
   }
-  if (!parts.length) { wrap.appendChild(el('span', 'crumbs-empty', 'no filters - showing everything')); return; }
+  if (!parts.length) { wrap.appendChild(el('span', 'crumbs-empty', '~/omarchy/themes')); return; }
   for (const p of parts) {
     const c = el('span', 'crumb');
     c.tabIndex = 0; c.setAttribute('role', 'button');
@@ -652,31 +652,20 @@ function cardEl([path, m], opts = {}) {
   img.addEventListener('load', () => img.classList.add('loaded'));
   io.observe(img);
   imgWrap.appendChild(img);
-
-  const badge = el('div', 'badge');
-  const bdot = el('span', 'bdot');
-  bdot.style.background = COLOR_DOTS[m.color] || '#999';
-  badge.appendChild(bdot);
-  badge.appendChild(el('span', null, `${m.tone || ''} ${m.color || ''}`.trim()));
-  imgWrap.appendChild(badge);
   imgWrap.appendChild(favButton(path));
-  if (m.dimensions) {
-    const res = el('div', 'badge res', m.dimensions);
-    imgWrap.appendChild(res);
+
+  const overlay = el('div', 'card-overlay');
+  overlay.appendChild(el('span', 'card-title', m.title || path.split('/').pop()));
+  const swatches = el('div', 'card-swatches');
+  const colors = Array.isArray(m.colors) ? m.colors.slice(0, 5) : [];
+  for (const c of colors) {
+    const sw = el('span', 'card-swatch');
+    sw.style.background = c;
+    swatches.appendChild(sw);
   }
+  overlay.appendChild(swatches);
+  imgWrap.appendChild(overlay);
   card.appendChild(imgWrap);
-
-  const body = el('div', 'card-body');
-  body.appendChild(el('div', 'card-title', m.title || path.split('/').pop()));
-  const variantCount = Object.keys(m.themes || {}).length;
-  const sub = el('div', 'card-sub');
-  sub.appendChild(el('span', 'vcount', `${variantCount} variants`));
-  body.appendChild(sub);
-  card.appendChild(body);
-
-  const ramp = el('div', 'card-ramp');
-  ramp.style.background = m._ramp;
-  card.appendChild(ramp);
 
   card.setAttribute('role', 'button');
   card.tabIndex = 0;

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Omarchy Themes</title>
 <meta name="description" content="3,000+ Omarchy theme variants generated from curated wallpapers. One-click apply with Aether.">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#1a1b26">
 
 <!-- Favicons (sourced from omarchy.org). The PNG ships at 300x300 so
@@ -34,65 +34,46 @@
   <div class="loader-text">Loading themes</div>
 </div>
 
-<header class="glass">
-  <div class="head-row">
-    <div class="brand">
-      <div class="brand-row">
-        <img src="favicon.png" alt="Omarchy" class="brand-logo">
-        <span class="brand-name"><b>omarchy</b><span>-themes</span></span>
+<main class="terminal-frame">
+  <header class="glass">
+    <div class="head-row">
+      <div class="brand">
+        <div class="brand-row">
+          <img src="favicon.png" alt="Omarchy" class="brand-logo">
+          <span class="brand-name"><b>omarchy</b><span>-themes</span></span>
+        </div>
+      </div>
+
+      <div class="search">
+        <span class="prompt" aria-hidden="true">/</span>
+        <input id="q" type="search" placeholder="search themes, palettes, tags..." aria-label="Search themes" autocomplete="off" spellcheck="false">
         <span class="caret" aria-hidden="true"></span>
       </div>
-      <div class="count-row">
-        <span class="count" id="count">loading...</span>
-        <span class="count-label">variants</span>
+
+      <div class="header-meta">
+        <button class="fav-toggle" id="favToggle" type="button" aria-pressed="false" title="Show only favourites">
+          <span class="ft-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+          <span class="ft-label">favourites</span>
+          <span class="fav-sep">&middot;</span>
+          <span class="fav-n">0</span>
+        </button>
+        <div class="count-row">
+          <span class="count" id="count">loading...</span>
+          <span class="count-label">variants</span>
+        </div>
       </div>
     </div>
 
-    <div class="search">
-      <span class="prompt" aria-hidden="true">&#10095;</span>
-      <input id="q" type="search" placeholder="search title, tags, path" aria-label="Search themes" autocomplete="off" spellcheck="false">
-      <span class="slash" aria-hidden="true">/</span>
-    </div>
-
-    <button class="fav-toggle" id="favToggle" type="button" aria-pressed="false" title="Show only favourites">
-      <span class="ft-star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
-      <span class="ft-label">Favourites</span>
-      <span class="fav-n">0</span>
-    </button>
-
-    <!-- Filters are populated inline by buildFilters(). -->
-    <div class="filters-inline" id="filters"></div>
-
-    <div class="side-foot">
+    <div class="filter-row">
       <button class="reset-btn" id="reset" title="Clear all filters (x)">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-        <span>reset filters</span>
+        <span>all</span>
       </button>
-      <div class="keymap" aria-hidden="true">
-        <div><span class="kbd">/</span> search</div>
-        <div><span class="kbd">x</span> reset</div>
-        <div><span class="kbd">&larr;</span><span class="kbd">&rarr;</span> browse</div>
-        <div><span class="kbd">esc</span> close</div>
-        <div><span class="kbd">g</span><span class="kbd">G</span> top/end</div>
-        <div><span class="kbd">&crarr;</span> open</div>
-      </div>
-      <div class="side-links">
-        <a href="https://omarchy.org" target="_blank" rel="noopener">omarchy</a>
-      </div>
+    <!-- Filters are populated inline by buildFilters(). -->
+      <div class="filters-inline" id="filters"></div>
     </div>
-  </div>
-</header>
+  </header>
 
-<main>
   <div class="topchrome glass">
-    <div class="statusline">
-      <span class="mode-pill" id="mode">NORMAL</span>
-      <div class="crumbs" id="crumbs"></div>
-      <div class="status-right">
-        <span class="status-count" id="statusCount"></span>
-        <span class="status-hint"><span class="kbd">/</span> to search</span>
-      </div>
-    </div>
     <div class="heatwrap" id="heatwrap">
       <canvas id="heat" role="img" aria-label="Color distribution of all theme variants"></canvas>
       <div class="heat-cursor" id="heatCursor" aria-hidden="true"></div>
@@ -106,6 +87,18 @@
   <div class="gridwrap">
     <section class="featured" id="featured" aria-label="Featured themes" hidden></section>
     <div class="grid" id="grid"></div>
+  </div>
+
+  <div class="statusline">
+    <span class="mode-pill" id="mode">NORMAL</span>
+    <div class="crumbs" id="crumbs"></div>
+    <div class="status-right">
+      <span class="status-count" id="statusCount"></span>
+      <span class="status-hint"><span class="kbd">/</span> search</span>
+      <span class="status-hint"><span class="kbd">&larr;&rarr;</span> browse</span>
+      <span class="status-hint"><span class="kbd">&crarr;</span> open</span>
+      <span class="status-hint"><span class="kbd">esc</span> close</span>
+    </div>
   </div>
 </main>
 
