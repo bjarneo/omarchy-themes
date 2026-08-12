@@ -1123,7 +1123,10 @@
     background: rgba(255,255,255,.018);
   }
 
-  .heat-tip { background: rgba(12,13,17,.94); }
+  .heat-tip {
+    background: #0c0d11;
+    box-shadow: 0 12px 28px -14px rgba(0,0,0,.85);
+  }
 
   .gridwrap {
     width: 100%;
@@ -1778,9 +1781,10 @@
     .flist-item,
     .op-btn { border-color: rgba(0,0,0,.1); color: #7a756c; }
     .flist-item:hover { color: #1a1a1a; background: rgba(0,0,0,.035); }
-    .topchrome,
-    .heatwrap,
-    .statusline { background: rgba(0,0,0,.025); }
+     .topchrome,
+     .heatwrap,
+     .statusline { background: rgba(0,0,0,.025); }
+     .heat-tip { background: #f4f3ee; box-shadow: 0 12px 28px -14px rgba(34,28,18,.28); }
     .card,
     .card.featured-card { background: #e9e4d9; border-color: rgba(0,0,0,.12); }
     .mode-pill { color: #fff; }
