@@ -582,7 +582,7 @@ function renderMore() {
     wrap.appendChild(copy);
 
     const b = el('button', 'empty-btn');
-    b.append(el('span', 'kbd', 'esc'), document.createTextNode(noFavs ? 'browse all themes' : 'reset filters'));
+    b.append(el('span', 'kbd', 'x'), document.createTextNode(noFavs ? 'browse all themes' : 'reset filters'));
     b.addEventListener('click', () => $('#reset').click());
     wrap.appendChild(b);
     grid.appendChild(wrap);
@@ -687,10 +687,19 @@ function cardEl([path, m], opts = {}) {
   const img = document.createElement('img');
   img.alt = m.title || path;
   img.loading = 'lazy'; img.decoding = 'async';
-  img.dataset.src = mediaUrl(m.thumb_path);
+  const thumbUrl = mediaUrl(m.thumb_path);
   img.addEventListener('load', () => img.classList.add('loaded'));
-  io.observe(img);
+  img.addEventListener('error', () => imgWrap.classList.add('is-unavailable'));
+  if (thumbUrl) {
+    img.dataset.src = thumbUrl;
+    io.observe(img);
+  } else {
+    imgWrap.classList.add('is-unavailable');
+  }
   imgWrap.appendChild(img);
+  const fallback = el('div', 'image-fallback', 'preview unavailable');
+  fallback.setAttribute('role', 'status');
+  imgWrap.appendChild(fallback);
   imgWrap.appendChild(favButton(path));
 
   const overlay = el('div', 'card-overlay');
@@ -805,11 +814,16 @@ const lbSide = $('#lbside');
 
 function openLightbox(path, m, opts = {}) {
   const wrap = lb.querySelector('.lb-image-wrap');
+  wrap.classList.remove('is-unavailable');
   wrap.replaceChildren();
   const img = document.createElement('img');
   img.src = mediaUrl(m.medium_path || path);
   img.alt = m.title || path;
+  img.addEventListener('error', () => wrap.classList.add('is-unavailable'));
   wrap.appendChild(img);
+  const fallback = el('div', 'lb-image-fallback', 'Preview unavailable');
+  fallback.setAttribute('role', 'status');
+  wrap.appendChild(fallback);
   const swatches = el('div', 'lb-preview-swatches');
   const colors = Array.isArray(m.colors) ? m.colors.slice(0, 6) : [];
   for (const c of colors) {
@@ -841,13 +855,41 @@ function openLightbox(path, m, opts = {}) {
   }
 }
 
-function copyText(text, target) {
-  if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+async function copyText(text, target) {
+  let copied = false;
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    }
+  } catch {}
+  if (!copied) {
+    const active = document.activeElement;
+    const input = document.createElement('textarea');
+    input.value = text;
+    input.setAttribute('readonly', '');
+    input.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+    document.body.appendChild(input);
+    input.select();
+    try { copied = document.execCommand('copy'); } catch {}
+    input.remove();
+    if (active && active.focus) active.focus();
+  }
   if (target) {
     const orig = target.textContent;
-    target.textContent = 'copied';
+    target.textContent = copied ? 'copied' : 'copy failed';
     setTimeout(() => target.textContent = orig, 900);
   }
+  return copied;
+}
+
+async function copyAndNotify(text, title, detail) {
+  if (await copyText(text)) {
+    showToast(title, detail, true);
+    return true;
+  }
+  showToast('Copy failed', 'Clipboard access is unavailable');
+  return false;
 }
 
 function variantPanel(path, m, scheme, theme) {
@@ -909,12 +951,12 @@ function variantPanel(path, m, scheme, theme) {
       sl.setAttribute('role', 'button');
       sl.tabIndex = 0;
       sl.setAttribute('aria-label', `copy ${k} ${hex}`);
-      const copySl = (e) => {
+      const copySl = async (e) => {
         e.stopPropagation();
         if (!hex) return;
-        copyText(hex);
-        sl.classList.add('copied'); setTimeout(() => sl.classList.remove('copied'), 650);
-        showToast('Copied ' + hex, k, true);
+        if (await copyAndNotify(hex, 'Copied ' + hex, k)) {
+          sl.classList.add('copied'); setTimeout(() => sl.classList.remove('copied'), 650);
+        }
       };
       sl.addEventListener('click', copySl);
       sl.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') copySl(e); });
@@ -953,7 +995,7 @@ function renderSide(path, m) {
       row.firstChild.style.background = hex;
       row.appendChild(el('span', 'lb-palette-name', 'swatch ' + String(i + 1).padStart(2, '0')));
       row.appendChild(el('span', 'lb-palette-hex', hex));
-      row.addEventListener('click', () => { copyText(hex); showToast('Copied ' + hex, 'palette swatch', true); });
+      row.addEventListener('click', () => { copyAndNotify(hex, 'Copied ' + hex, 'palette swatch'); });
       pgrid.appendChild(row);
     });
     lbSide.appendChild(pgrid);
@@ -984,7 +1026,7 @@ function renderSide(path, m) {
   actions.appendChild(fav);
   const wallpaper = el('button', 'lb-secondary-action', '⤓ wallpaper  y');
   wallpaper.type = 'button';
-  wallpaper.addEventListener('click', () => { copyText(mediaUrl(path)); showToast('Copied wallpaper URL', path, true); });
+  wallpaper.addEventListener('click', () => { copyAndNotify(mediaUrl(path), 'Copied wallpaper URL', path); });
   actions.appendChild(wallpaper);
   lbSide.appendChild(actions);
 
@@ -1025,6 +1067,22 @@ function navLightbox(delta) {
   history.replaceState({ lightbox: nextPath }, '', buildUrl({ withHash: false }) + '#' + encodePath(nextPath));
 }
 
+function trapLightboxFocus(e) {
+  if (e.key !== 'Tab') return false;
+  const focusable = [...lb.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+    .filter(node => node.getClientRects().length);
+  if (!focusable.length) return true;
+  const index = focusable.indexOf(document.activeElement);
+  if (index < 0 || (!e.shiftKey && index === focusable.length - 1)) {
+    e.preventDefault();
+    focusable[0].focus();
+  } else if (e.shiftKey && index === 0) {
+    e.preventDefault();
+    focusable[focusable.length - 1].focus();
+  }
+  return true;
+}
+
 /* ---- mode pill ----------------------------------------------------- */
 function setMode(mode) { const el = $('#mode'); if (el) el.textContent = mode; }
 
@@ -1039,11 +1097,12 @@ document.addEventListener('keydown', (e) => {
   if (lb.classList.contains('open')) {
     if (typingInField(e)) { if (e.key === 'Escape') closeLightbox(); return; }
     if (e.key === 'Escape') return closeLightbox();
+    if (trapLightboxFocus(e)) return;
     const hashPath = decodeHashPath();
     if (e.key === 'f' && hashPath) { e.preventDefault(); toggleFav(hashPath); renderSide(hashPath, STATE.byPath[hashPath]); return; }
-    if (e.key === 'y' && hashPath) { e.preventDefault(); copyText(mediaUrl(hashPath)); showToast('Copied wallpaper URL', hashPath, true); return; }
-    const prev = (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'h' || e.key === 'k' || (e.key === 'Tab' && e.shiftKey));
-    const next = (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'l' || e.key === 'j' || (e.key === 'Tab' && !e.shiftKey));
+    if (e.key === 'y' && hashPath) { e.preventDefault(); copyAndNotify(mediaUrl(hashPath), 'Copied wallpaper URL', hashPath); return; }
+    const prev = e.key === 'ArrowLeft' || e.key === 'h';
+    const next = e.key === 'ArrowRight' || e.key === 'l';
     if (prev) { e.preventDefault(); navLightbox(-1); }
     else if (next) { e.preventDefault(); navLightbox(+1); }
     return;
@@ -1107,26 +1166,21 @@ function setApplyContent(btn, label, mode) {
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.variant-apply');
   if (!btn) return;
-  // Do not block the browser from opening aether://. We only update the UI.
+  // Do not block the browser from opening aether://. We can acknowledge this
+  // click, but cannot observe whether Aether accepted the protocol request.
   const originalText = btn.dataset.originalText || (btn.textContent || 'Apply');
   btn.dataset.originalText = originalText;
   const panel = btn.closest('.variant');
   const nameEl = panel && panel.querySelector('.variant-name');
   const slugStr = nameEl ? nameEl.textContent.trim() : '';
 
-  btn.classList.add('applying'); btn.classList.remove('sent');
-  setApplyContent(btn, 'Applying', 'spin');
-  showToast('Applying theme...', slugStr ? `via aether:// (${slugStr})` : 'via aether://');
-
+  btn.classList.add('applying');
+  setApplyContent(btn, 'Opening', 'spin');
+  showToast('Opening Aether request', slugStr ? `${slugStr} - requires Aether` : 'requires Aether');
   setTimeout(() => {
-    btn.classList.remove('applying'); btn.classList.add('sent');
-    setApplyContent(btn, 'Sent', 'check');
-    showToast('Theme sent to Aether', slugStr, true);
-  }, 1400);
-  setTimeout(() => {
-    btn.classList.remove('sent');
+    btn.classList.remove('applying');
     setApplyContent(btn, originalText);
-  }, 3200);
+  }, 1400);
 });
 
 /* ---- history / popstate -------------------------------------------- */

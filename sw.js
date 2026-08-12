@@ -1,6 +1,6 @@
 // Bump CACHE whenever the HTML / CSS / JS shape changes so the activate event
 // drops the old cache and users pick up the new shell on next load.
-const CACHE = 'omarchy-themes-v60';
+const CACHE = 'omarchy-themes-v61';
 const CACHEABLE = /\.(jpe?g|png|webp|gif|json|html|css|js|toml|lua)$/i;
 
 self.addEventListener('install', () => self.skipWaiting());
@@ -8,7 +8,9 @@ self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys
+        .filter(k => k.startsWith('omarchy-themes-') && k !== CACHE)
+        .map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -24,7 +26,10 @@ self.addEventListener('fetch', (e) => {
   if (req.headers.has('range')) return;
 
   const url = new URL(req.url);
-  if (url.origin !== location.origin) return;
+  // Only CDN images are handled cross-origin. The gallery's media is served
+  // there, while all other third-party requests stay outside this cache.
+  const isCrossOriginImage = url.origin !== location.origin && /\.(jpe?g|png|webp|gif)$/i.test(url.pathname);
+  if (url.origin !== location.origin && !isCrossOriginImage) return;
 
   const isHtmlNavigation = req.mode === 'navigate'
     || (req.destination === 'document');
@@ -32,7 +37,7 @@ self.addEventListener('fetch', (e) => {
   const cacheable = CACHEABLE.test(path) || isHtmlNavigation;
   if (!cacheable) return;
 
-  const useNetworkFirst = isHtmlNavigation || NETWORK_FIRST.test(path);
+  const useNetworkFirst = !isCrossOriginImage && (isHtmlNavigation || NETWORK_FIRST.test(path));
 
   e.respondWith((async () => {
     const cache = await caches.open(CACHE);
@@ -53,7 +58,7 @@ self.addEventListener('fetch', (e) => {
     if (cached) return cached;
     try {
       const res = await fetch(req);
-      if (res.ok && res.status === 200) cache.put(req, res.clone());
+      if ((res.ok && res.status === 200) || res.type === 'opaque') cache.put(req, res.clone());
       return res;
     } catch (err) {
       const fallback = await cache.match(req);
