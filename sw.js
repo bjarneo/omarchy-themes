@@ -1,6 +1,6 @@
 // Bump CACHE whenever the HTML / CSS / JS shape changes so the activate event
 // drops the old cache and users pick up the new shell on next load.
-const CACHE = 'omarchy-themes-v61';
+const CACHE = 'omarchy-themes-v62';
 const CACHEABLE = /\.(jpe?g|png|webp|gif|json|html|css|js|toml|lua)$/i;
 
 self.addEventListener('install', () => self.skipWaiting());

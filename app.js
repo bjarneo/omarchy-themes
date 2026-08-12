@@ -215,7 +215,7 @@ function setCount(filtered, total) {
   if (sc) {
     sc.replaceChildren();
     const b = el('b', null, String(filtered));
-    sc.append(b, document.createTextNode(` / ${total} themes`));
+    sc.append(b, document.createTextNode(` / ${total} wallpapers`));
   }
 }
 
@@ -573,16 +573,16 @@ function renderMore() {
     if (noFavs) {
       big.textContent = 'no favourites saved';
     } else if (query) {
-      big.append(document.createTextNode('no themes match '), el('span', null, '"' + query + '"'));
+      big.append(document.createTextNode('no wallpapers match '), el('span', null, '"' + query + '"'));
     } else {
-      big.textContent = 'no themes match your filters';
+      big.textContent = 'no wallpapers match your filters';
     }
     copy.appendChild(big);
-    copy.appendChild(el('div', 'empty-sub', noFavs ? 'mark themes with the star to collect them here' : `clear your filters to browse all ${STATE.entries.length} variants`));
+    copy.appendChild(el('div', 'empty-sub', noFavs ? 'mark wallpapers with the star to collect them here' : `clear your filters to browse all ${STATE.entries.length} wallpapers`));
     wrap.appendChild(copy);
 
     const b = el('button', 'empty-btn');
-    b.append(el('span', 'kbd', 'x'), document.createTextNode(noFavs ? 'browse all themes' : 'reset filters'));
+    b.append(el('span', 'kbd', 'x'), document.createTextNode(noFavs ? 'browse all wallpapers' : 'reset filters'));
     b.addEventListener('click', () => $('#reset').click());
     wrap.appendChild(b);
     grid.appendChild(wrap);
@@ -717,7 +717,7 @@ function cardEl([path, m], opts = {}) {
 
   card.setAttribute('role', 'button');
   card.tabIndex = 0;
-  card.setAttribute('aria-label', (m.title || path.split('/').pop()) + ', open theme variants');
+  card.setAttribute('aria-label', (m.title || path.split('/').pop()) + ', open five theme variants');
   const open = () => openLightbox(path, m);
   card.addEventListener('click', open);
   card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
@@ -782,7 +782,7 @@ function renderFeatured() {
   const shuffle = el('button', 'featured-shuffle');
   shuffle.type = 'button';
   shuffle.title = 'Pick a new set';
-  shuffle.setAttribute('aria-label', 'Shuffle featured themes');
+  shuffle.setAttribute('aria-label', 'Shuffle featured wallpapers');
   shuffle.appendChild(shuffleIcon());
   shuffle.appendChild(el('span', null, 'shuffle'));
   shuffle.addEventListener('click', () => { STATE.featured = pickFeatured(); renderFeatured(); });
